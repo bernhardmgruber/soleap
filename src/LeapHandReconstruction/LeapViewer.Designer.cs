@@ -46,6 +46,10 @@
             this.glControl.OpenGLInitialized += new System.EventHandler(this.glControl_OpenGLInitialized);
             this.glControl.OpenGLDraw += new SharpGL.RenderEventHandler(this.glControl_OpenGLDraw);
             this.glControl.Resized += new System.EventHandler(this.glControl_Resized);
+            this.glControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.glControl_MouseDown);
+            this.glControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.glControl_MouseMove);
+            this.glControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.glControl_MouseUp);
+            this.glControl.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.glControl_MouseWheel);
             // 
             // LeapViewer
             // 

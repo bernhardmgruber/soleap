@@ -38,6 +38,8 @@ namespace LeapHandReconstruction
                     Console.WriteLine("    Hand");
                     foreach (var finger in hand.Fingers)
                         Console.WriteLine("        Finger " + finger.TipPosition.ToString());
+                    foreach (var tool in hand.Tools)
+                        Console.WriteLine("        Tool " + tool.TipPosition.ToString());
                 }
 
                 viewer.DrawFrame(frame);
