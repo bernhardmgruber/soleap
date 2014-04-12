@@ -45,6 +45,58 @@ namespace LeapHandReconstruction
             gl.MatrixMode(MatrixMode.Modelview);
         }
 
+        private void DrawBox(OpenGL gl, float xlen, float ylen, float zlen)
+        {
+            float xlen2 = xlen / 2.0f;
+            float ylen2 = ylen / 2.0f;
+            float zlen2 = zlen / 2.0f;
+
+            gl.Begin(OpenGL.GL_LINES);
+
+            gl.Vertex(-xlen2, ylen2, zlen2);
+            gl.Vertex(xlen2, ylen2, zlen2);
+
+            gl.Vertex(-xlen2, -ylen2, zlen2);
+            gl.Vertex(xlen2, -ylen2, zlen2);
+
+            gl.Vertex(-xlen2, ylen2, -zlen2);
+            gl.Vertex(xlen2, ylen2, -zlen2);
+
+            gl.Vertex(-xlen2, -ylen2, -zlen2);
+            gl.Vertex(xlen2, -ylen2, -zlen2);
+
+            gl.Vertex(xlen2, -ylen2, zlen2);
+            gl.Vertex(xlen2, ylen2, zlen2);
+
+            gl.Vertex(-xlen2, -ylen2, zlen2);
+            gl.Vertex(-xlen2, ylen2, zlen2);
+
+            gl.Vertex(xlen2, -ylen2, -zlen2);
+            gl.Vertex(xlen2, ylen2, -zlen2);
+
+            gl.Vertex(-xlen2, -ylen2, -zlen2);
+            gl.Vertex(-xlen2, ylen2, -zlen2);
+
+            gl.Vertex(xlen2, ylen2, -zlen2);
+            gl.Vertex(xlen2, ylen2, zlen2);
+
+            gl.Vertex(-xlen2, ylen2, -zlen2);
+            gl.Vertex(-xlen2, ylen2, zlen2);
+
+            gl.Vertex(xlen2, -ylen2, -zlen2);
+            gl.Vertex(xlen2, -ylen2, zlen2);
+
+            gl.Vertex(-xlen2, -ylen2, -zlen2);
+            gl.Vertex(-xlen2, -ylen2, zlen2);
+
+            gl.End();
+        }
+
+        private void DrawCube(OpenGL gl, float l = 1.0f)
+        {
+            DrawBox(gl, l, l, l);
+        }
+
         private void DrawAxes()
         {
             float l = 500;
@@ -59,6 +111,11 @@ namespace LeapHandReconstruction
             gl.Vertex(0.0f, 0.0f, 0.0f);
             gl.Vertex(0.0f, 0.0f, l);
             gl.End();
+        }
+
+        private float radToDeg(float rad)
+        {
+            return rad * (float)180.0 / (float)Math.PI;
         }
 
         private void glControl_OpenGLDraw(object sender, SharpGL.RenderEventArgs args)
@@ -137,6 +194,28 @@ namespace LeapHandReconstruction
                 }
             }
             gl.End();
+
+            // the hand bvh
+            foreach (var hand in frame.Hands)
+            {
+                gl.PushMatrix();
+
+                var pos = hand.PalmPosition;
+                //gl.Translate(pos.x, pos.y, pos.z);
+                //gl.LoadIdentity();
+                //gl.Translate(0, 0, -500);
+
+                var eye = -hand.Direction;
+                //var eye = new Leap.Vector(1, 0, 0);
+                Console.WriteLine(eye.ToString());
+                var up = Vector.YAxis;
+                gl.LookAt(eye.x, eye.y, eye.z, 0.0f, 0.0f, 0.0f, up.y, up.y, up.z);
+                DrawCube(gl, 100);
+
+                gl.PopMatrix();
+            }
+
+
         }
 
 
