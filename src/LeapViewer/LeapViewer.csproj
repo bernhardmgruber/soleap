@@ -7,8 +7,8 @@
     <ProjectGuid>{CF796F53-08EF-45DE-94E6-A7DA5171EA60}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LeapHandReconstruction</RootNamespace>
-    <AssemblyName>LeapHandReconstruction</AssemblyName>
+    <RootNamespace>LeapViewer</RootNamespace>
+    <AssemblyName>LeapViewer</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
