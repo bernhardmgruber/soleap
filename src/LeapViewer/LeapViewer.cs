@@ -141,81 +141,82 @@ namespace LeapHandReconstruction
             // coord system
             DrawAxes();
 
-            // leap data
-            gl.PointSize(5.0f);
-            gl.Begin(BeginMode.Points);
-            foreach (var hand in frame.Hands)
+            if (frame != null)
             {
-                gl.Color(0.5, 0.0, 0.0);
-                gl.Vertex(hand.PalmPosition.ToFloatArray());
-                gl.Color(1.0, 0.0, 0.0);
-                gl.Vertex(hand.StabilizedPalmPosition.ToFloatArray());
-
-                foreach (var finger in hand.Fingers)
+                // leap data
+                gl.PointSize(5.0f);
+                gl.Begin(BeginMode.Points);
+                foreach (var hand in frame.Hands)
                 {
-                    gl.Color(0.0, 0.5, 0.0);
-                    gl.Vertex(finger.TipPosition.ToFloatArray());
-                    gl.Color(0.0, 1.0, 0.0);
-                    gl.Vertex(finger.StabilizedTipPosition.ToFloatArray());
+                    gl.Color(0.5, 0.0, 0.0);
+                    gl.Vertex(hand.PalmPosition.ToFloatArray());
+                    gl.Color(1.0, 0.0, 0.0);
+                    gl.Vertex(hand.StabilizedPalmPosition.ToFloatArray());
+
+                    foreach (var finger in hand.Fingers)
+                    {
+                        gl.Color(0.0, 0.5, 0.0);
+                        gl.Vertex(finger.TipPosition.ToFloatArray());
+                        gl.Color(0.0, 1.0, 0.0);
+                        gl.Vertex(finger.StabilizedTipPosition.ToFloatArray());
+                    }
+
+                    foreach (var tool in hand.Tools)
+                    {
+                        gl.Color(0.0, 0.0, 0.5);
+                        gl.Vertex(tool.TipPosition.ToFloatArray());
+                        gl.Color(0.0, 0.0, 1.0);
+                        gl.Vertex(tool.StabilizedTipPosition.ToFloatArray());
+                    }
                 }
+                gl.End();
 
-                foreach (var tool in hand.Tools)
+                gl.Begin(BeginMode.Lines);
+                foreach (var hand in frame.Hands)
                 {
-                    gl.Color(0.0, 0.0, 0.5);
-                    gl.Vertex(tool.TipPosition.ToFloatArray());
-                    gl.Color(0.0, 0.0, 1.0);
-                    gl.Vertex(tool.StabilizedTipPosition.ToFloatArray());
+                    gl.Color(0.75, 0.0, 0.0);
+                    gl.Vertex(hand.PalmPosition.ToFloatArray());
+                    gl.Vertex((hand.PalmPosition + hand.PalmNormal * 100.0f).ToFloatArray());
+
+                    gl.Vertex(hand.PalmPosition.ToFloatArray());
+                    gl.Vertex((hand.PalmPosition + hand.Direction * 100.0f).ToFloatArray());
+
+                    gl.Color(0.0, 0.75, 0.0);
+                    foreach (var finger in hand.Fingers)
+                    {
+                        gl.Vertex(finger.TipPosition.ToFloatArray());
+                        gl.Vertex((finger.TipPosition - finger.Direction * finger.Length).ToFloatArray());
+                    }
+
+                    gl.Color(0.0, 0.0, 0.75);
+                    foreach (var tool in hand.Tools)
+                    {
+                        gl.Vertex(tool.TipPosition.ToFloatArray());
+                        gl.Vertex((tool.TipPosition - tool.Direction * tool.Length).ToFloatArray());
+                    }
+                }
+                gl.End();
+
+                // the hand bvh
+                foreach (var hand in frame.Hands)
+                {
+                    gl.PushMatrix();
+
+                    var pos = hand.PalmPosition;
+                    //gl.Translate(pos.x, pos.y, pos.z);
+                    //gl.LoadIdentity();
+                    //gl.Translate(0, 0, -500);
+
+                    var eye = -hand.Direction;
+                    //var eye = new Leap.Vector(1, 0, 0);
+                    Console.WriteLine(eye.ToString());
+                    var up = Vector.YAxis;
+                    gl.LookAt(eye.x, eye.y, eye.z, 0.0f, 0.0f, 0.0f, up.y, up.y, up.z);
+                    DrawCube(gl, 100);
+
+                    gl.PopMatrix();
                 }
             }
-            gl.End();
-
-            gl.Begin(BeginMode.Lines);
-            foreach (var hand in frame.Hands)
-            {
-                gl.Color(0.75, 0.0, 0.0);
-                gl.Vertex(hand.PalmPosition.ToFloatArray());
-                gl.Vertex((hand.PalmPosition + hand.PalmNormal * 100.0f).ToFloatArray());
-
-                gl.Vertex(hand.PalmPosition.ToFloatArray());
-                gl.Vertex((hand.PalmPosition + hand.Direction * 100.0f).ToFloatArray());
-
-                gl.Color(0.0, 0.75, 0.0);
-                foreach (var finger in hand.Fingers)
-                {
-                    gl.Vertex(finger.TipPosition.ToFloatArray());
-                    gl.Vertex((finger.TipPosition - finger.Direction * finger.Length).ToFloatArray());
-                }
-
-                gl.Color(0.0, 0.0, 0.75);
-                foreach (var tool in hand.Tools)
-                {
-                    gl.Vertex(tool.TipPosition.ToFloatArray());
-                    gl.Vertex((tool.TipPosition - tool.Direction * tool.Length).ToFloatArray());
-                }
-            }
-            gl.End();
-
-            // the hand bvh
-            foreach (var hand in frame.Hands)
-            {
-                gl.PushMatrix();
-
-                var pos = hand.PalmPosition;
-                //gl.Translate(pos.x, pos.y, pos.z);
-                //gl.LoadIdentity();
-                //gl.Translate(0, 0, -500);
-
-                var eye = -hand.Direction;
-                //var eye = new Leap.Vector(1, 0, 0);
-                Console.WriteLine(eye.ToString());
-                var up = Vector.YAxis;
-                gl.LookAt(eye.x, eye.y, eye.z, 0.0f, 0.0f, 0.0f, up.y, up.y, up.z);
-                DrawCube(gl, 100);
-
-                gl.PopMatrix();
-            }
-
-
         }
 
 
