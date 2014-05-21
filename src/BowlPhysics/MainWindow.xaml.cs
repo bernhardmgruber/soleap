@@ -51,7 +51,7 @@ namespace BowlPhysics
 
         private void DrawAxes(OpenGL gl)
         {
-            float l = 0.5f;
+            float l = 10.0f;
             gl.Begin(BeginMode.Lines);
             gl.Color(1.0f, 0.0f, 0.0f);
             gl.Vertex(0.0f, 0.0f, 0.0f);
@@ -80,11 +80,7 @@ namespace BowlPhysics
 
             world.Update();
 
-            //gl.Enable(OpenGL.GL_LIGHTING);
-            gl.Enable(OpenGL.GL_COLOR_MATERIAL);
-            gl.Enable(OpenGL.GL_LIGHT0);
-            world.Draw();
-            gl.Disable(OpenGL.GL_LIGHTING);
+            world.DebugDraw(new OpenGLDebugDraw(gl));
         }
 
         private void Window_Closed(object sender, EventArgs e)

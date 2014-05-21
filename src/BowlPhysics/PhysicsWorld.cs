@@ -28,11 +28,10 @@ namespace BowlPhysics
 
         private long lastUpdate;
 
-        public PhysicsWorld(IDebugDraw debugDrawer)
+        public PhysicsWorld()
         {
             lastUpdate = Stopwatch.GetTimestamp();
             SetupPhysics();
-            world.DebugDrawer = debugDrawer;
         }
 
         private void SetupPhysics()
@@ -46,59 +45,57 @@ namespace BowlPhysics
 
             // create world and set gravity
             world = new DiscreteDynamicsWorld(dispatcher, broadphase, null, collisionConfig);
-            world.Gravity = new Vector3(0, -10, 0);
+            world.Gravity = new Vector3(0, -50, 0);
 
             // create static ground
-            BoxShape groundShape = new BoxShape(10, 1, 10);
+            BoxShape groundShape = new BoxShape(10, 0.5f, 10);
             collisionShapes.Add(groundShape);
 
             var ground = CreateRigidBody(0, Matrix.Identity, groundShape);
             ground.UserObject = "Ground";
             world.AddRigidBody(ground);
 
-            // create a few dynamic rigidbodies
-            const float mass = 1.0f;
+            // create two bowls
+            const float diameter = 3.0f;
+            const float height = 1.2f;
+            const float thickness = 0.2f;
 
-            BoxShape colShape = new BoxShape(1);
-            collisionShapes.Add(colShape);
+            float innerDiameter2 = (diameter - thickness) / 2.0f;
+            float diameter2 = diameter / 2.0f;
+            float thickness2 = thickness / 2.0f;
+            float height2 = height / 2.0f;
 
-            const float start_x = StartPosX - ArraySizeX / 2;
-            const float start_y = StartPosY;
-            const float start_z = StartPosZ - ArraySizeZ / 2;
-
-            int k, i, j;
-            for (k = 0; k < ArraySizeY; k++)
+            for (int i = 0; i < 2; i++)
             {
-                for (i = 0; i < ArraySizeX; i++)
-                {
-                    for (j = 0; j < ArraySizeZ; j++)
-                    {
-                        Matrix startTransform = Matrix.Translation(
-                            2 * i + start_x,
-                            2 * k + start_y,
-                            2 * j + start_z
-                        );
+                CompoundShape bowlShape = new CompoundShape();
+                bowlShape.AddChildShape(Matrix.Translation(-innerDiameter2, 0, 0), new BoxShape(thickness2, height2, diameter2));
+                bowlShape.AddChildShape(Matrix.Translation(+innerDiameter2, 0, 0), new BoxShape(thickness2, height2, diameter2));
+                bowlShape.AddChildShape(Matrix.Translation(0, 0, -innerDiameter2), new BoxShape(diameter2 - 2 * thickness2, height2, thickness2));
+                bowlShape.AddChildShape(Matrix.Translation(0, 0, +innerDiameter2), new BoxShape(diameter2 - 2 * thickness2, height2, thickness2));
+                bowlShape.AddChildShape(Matrix.Translation(0, -(height + thickness) / 2.0f, 0), new BoxShape(diameter2, thickness2, diameter2));
+                collisionShapes.Add(bowlShape);
 
-                        var body = CreateRigidBody(mass, startTransform, colShape);
-
-                        // make it drop from a height
-                        body.Translate(new Vector3(0, 20, 0));
-                        world.AddRigidBody(body);
-                    }
-                }
+                var bowl = CreateRigidBody(2.0f, Matrix.Translation(-5 + i * 10, 2, 0), bowlShape);
+                bowl.UserObject = "Bowl " + i;
+                world.AddRigidBody(bowl);
             }
 
-            SphereShape ballShape = new SphereShape(1);
+            // create the ball
+            SphereShape ballShape = new SphereShape(0.5f);
             collisionShapes.Add(ballShape);
 
-            var ballBody = CreateRigidBody(1.0f, Matrix.Translation(0, 30, 0), ballShape);
+            var ballBody = CreateRigidBody(1.0f, Matrix.Translation(-5, 5, 0), ballShape);
+            ballBody.UserObject = "Ball";
             world.AddRigidBody(ballBody);
 
         }
 
-        public void Draw()
+        public void DebugDraw(IDebugDraw debugDraw)
         {
+            world.DebugDrawer = debugDraw;
+
             world.DebugDrawWorld();
+
         }
 
         public void Update()

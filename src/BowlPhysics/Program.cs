@@ -16,8 +16,6 @@ namespace BowlPhysics
         {
             var kernel = new StandardKernel();
 
-            kernel.Bind<IDebugDraw>().To<OpenGLDebugDraw>();
-
             var app = new Application();
             app.Run(kernel.Get<MainWindow>());
         }
