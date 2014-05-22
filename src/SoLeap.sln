@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HandReconstruction", "HandReconstruction\HandReconstruction.csproj", "{C251CB00-099F-4033-9DE3-EEEC02BF13F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Device.Leap", "Device.Leap\Device.Leap.csproj", "{1A5D24A0-C7C6-4ACB-8EA4-BC02D0982919}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Device", "Device\Device.csproj", "{44DA60DB-0C2B-4E02-8EBA-55502ABB6F0E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C251CB00-099F-4033-9DE3-EEEC02BF13F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C251CB00-099F-4033-9DE3-EEEC02BF13F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C251CB00-099F-4033-9DE3-EEEC02BF13F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C251CB00-099F-4033-9DE3-EEEC02BF13F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A5D24A0-C7C6-4ACB-8EA4-BC02D0982919}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A5D24A0-C7C6-4ACB-8EA4-BC02D0982919}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A5D24A0-C7C6-4ACB-8EA4-BC02D0982919}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A5D24A0-C7C6-4ACB-8EA4-BC02D0982919}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44DA60DB-0C2B-4E02-8EBA-55502ABB6F0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44DA60DB-0C2B-4E02-8EBA-55502ABB6F0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44DA60DB-0C2B-4E02-8EBA-55502ABB6F0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44DA60DB-0C2B-4E02-8EBA-55502ABB6F0E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
