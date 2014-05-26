@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Device.Leap", "Device.Leap\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Device", "Device\Device.csproj", "{44DA60DB-0C2B-4E02-8EBA-55502ABB6F0E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{3728BAB2-86BA-4E16-8976-44EC40A2112F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{44DA60DB-0C2B-4E02-8EBA-55502ABB6F0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44DA60DB-0C2B-4E02-8EBA-55502ABB6F0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44DA60DB-0C2B-4E02-8EBA-55502ABB6F0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3728BAB2-86BA-4E16-8976-44EC40A2112F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3728BAB2-86BA-4E16-8976-44EC40A2112F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3728BAB2-86BA-4E16-8976-44EC40A2112F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3728BAB2-86BA-4E16-8976-44EC40A2112F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
