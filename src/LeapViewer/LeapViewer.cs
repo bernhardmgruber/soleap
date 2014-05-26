@@ -2,13 +2,7 @@
 using SharpGL;
 using SharpGL.Enumerations;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LeapHandReconstruction
@@ -20,6 +14,14 @@ namespace LeapHandReconstruction
         private bool tracking = false;
         private Point lastMousePos;
         private float xrot, yrot, zoom = -500.0f;
+
+        private static readonly double[][] FingerColors = {
+            new[] { 1.0, 0.0, 0.0 },
+            new[] { 0.0, 1.0, 0.0 },
+            new[] { 0.0, 0.0, 1.0 },
+            new[] { 1.0, 1.0, 0.0 },
+            new[] { 1.0, 0.0, 1.0 },
+        };
 
         public LeapViewer()
         {
@@ -141,28 +143,25 @@ namespace LeapHandReconstruction
             // coord system
             DrawAxes();
 
-            if (frame != null)
-            {
+            if (frame != null) {
                 // leap data
                 gl.PointSize(5.0f);
                 gl.Begin(BeginMode.Points);
-                foreach (var hand in frame.Hands)
-                {
+                foreach (var hand in frame.Hands) {
                     gl.Color(0.5, 0.0, 0.0);
                     gl.Vertex(hand.PalmPosition.ToFloatArray());
                     gl.Color(1.0, 0.0, 0.0);
                     gl.Vertex(hand.StabilizedPalmPosition.ToFloatArray());
 
-                    foreach (var finger in hand.Fingers)
-                    {
-                        gl.Color(0.0, 0.5, 0.0);
+                    int i = 0;
+                    foreach (var finger in hand.Fingers) {
+                        gl.Color(FingerColors[i]);
                         gl.Vertex(finger.TipPosition.ToFloatArray());
-                        gl.Color(0.0, 1.0, 0.0);
+                        gl.Color(FingerColors[i++]);
                         gl.Vertex(finger.StabilizedTipPosition.ToFloatArray());
                     }
 
-                    foreach (var tool in hand.Tools)
-                    {
+                    foreach (var tool in hand.Tools) {
                         gl.Color(0.0, 0.0, 0.5);
                         gl.Vertex(tool.TipPosition.ToFloatArray());
                         gl.Color(0.0, 0.0, 1.0);
@@ -172,8 +171,7 @@ namespace LeapHandReconstruction
                 gl.End();
 
                 gl.Begin(BeginMode.Lines);
-                foreach (var hand in frame.Hands)
-                {
+                foreach (var hand in frame.Hands) {
                     gl.Color(0.75, 0.0, 0.0);
                     gl.Vertex(hand.PalmPosition.ToFloatArray());
                     gl.Vertex((hand.PalmPosition + hand.PalmNormal * 100.0f).ToFloatArray());
@@ -181,16 +179,15 @@ namespace LeapHandReconstruction
                     gl.Vertex(hand.PalmPosition.ToFloatArray());
                     gl.Vertex((hand.PalmPosition + hand.Direction * 100.0f).ToFloatArray());
 
-                    gl.Color(0.0, 0.75, 0.0);
-                    foreach (var finger in hand.Fingers)
-                    {
+                    int i = 0;
+                    foreach (var finger in hand.Fingers) {
+                        gl.Color(FingerColors[i++]);
                         gl.Vertex(finger.TipPosition.ToFloatArray());
                         gl.Vertex((finger.TipPosition - finger.Direction * finger.Length).ToFloatArray());
                     }
 
                     gl.Color(0.0, 0.0, 0.75);
-                    foreach (var tool in hand.Tools)
-                    {
+                    foreach (var tool in hand.Tools) {
                         gl.Vertex(tool.TipPosition.ToFloatArray());
                         gl.Vertex((tool.TipPosition - tool.Direction * tool.Length).ToFloatArray());
                     }
@@ -198,8 +195,7 @@ namespace LeapHandReconstruction
                 gl.End();
 
                 // the hand bvh
-                foreach (var hand in frame.Hands)
-                {
+                foreach (var hand in frame.Hands) {
                     gl.PushMatrix();
 
                     var pos = hand.PalmPosition;
@@ -223,8 +219,7 @@ namespace LeapHandReconstruction
 
         private void glControl_MouseMove(object sender, MouseEventArgs e)
         {
-            if (tracking)
-            {
+            if (tracking) {
                 Point curMousePos = e.Location;
 
                 float deltaX = (float)(curMousePos.X - lastMousePos.X);

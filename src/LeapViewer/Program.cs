@@ -19,8 +19,7 @@ namespace LeapHandReconstruction
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            using (var leap = new LeapMotionDevice())
-            {
+            using (var leap = new LeapMotionDevice()) {
                 viewer = new LeapViewer();
                 leap.OnFrame += leap_OnFrame;
                 Application.Run(viewer);
@@ -29,15 +28,13 @@ namespace LeapHandReconstruction
 
         static void leap_OnFrame(Frame frame)
         {
-            viewer.Invoke(new Action(() =>
-            {
+            viewer.Invoke(new Action(() => {
                 Console.Clear();
                 Console.WriteLine("Frame");
-                foreach (var hand in frame.Hands)
-                {
+                foreach (var hand in frame.Hands) {
                     Console.WriteLine("    Hand");
                     foreach (var finger in hand.Fingers)
-                        Console.WriteLine("        Finger " + finger.TipPosition.ToString());
+                        Console.WriteLine("        Finger (" + finger.Type() + ") " + finger.TipPosition);
                     foreach (var tool in hand.Tools)
                         Console.WriteLine("        Tool " + tool.TipPosition.ToString());
                 }
