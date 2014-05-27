@@ -7,8 +7,8 @@
     <ProjectGuid>{3728BAB2-86BA-4E16-8976-44EC40A2112F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Common</RootNamespace>
-    <AssemblyName>Common</AssemblyName>
+    <RootNamespace>SoLeap.Common</RootNamespace>
+    <AssemblyName>SoLeap.Common</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Finger.cs" />
+    <Compile Include="Domain\Hand.cs" />
     <Compile Include="Domain\HandsFrame.cs" />
     <Compile Include="Interfaces\IHandFrameProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

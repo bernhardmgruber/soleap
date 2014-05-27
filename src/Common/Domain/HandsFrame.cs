@@ -1,30 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Media3D;
+﻿using System.Collections.Generic;
 
-namespace Common.Domain
+namespace SoLeap.Common.Domain
 {
-    public class Finger
-    {
-
-    }
-
-    public class Hand
-    {
-        public Vector3D HandDirection { get; set; }
-
-        public Point3D PalmPosition { get; set; }
-
-        public Vector3D PalmNormal { get; set; }
-
-        public IList<Finger> Fingers { get; set; }
-    }
-
     public class HandsFrame
     {
-        IList<Hand> Hands { get; set; }
+        public long Id { get; set; }
+
+        public IList<Hand> Hands { get; set; }
     }
 }

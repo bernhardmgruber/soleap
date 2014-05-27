@@ -1,16 +1,10 @@
-﻿using Common.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using SoLeap.Common.Domain;
 
-namespace Common.Interfaces
+namespace SoLeap.Common.Interfaces
 {
-    public delegate void HandFrameReadHandler(HandsFrame frame);
-
     public interface IHandFrameProvider
     {
-        event HandFrameReadHandler FrameReady;
+        event Action<HandsFrame> FrameReady;
     }
 }
