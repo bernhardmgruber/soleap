@@ -33,16 +33,15 @@
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Bone.cs" />
+    <Compile Include="Domain\BoneType.cs" />
     <Compile Include="Domain\Finger.cs" />
+    <Compile Include="Domain\FingerType.cs" />
     <Compile Include="Domain\Hand.cs" />
     <Compile Include="Domain\HandsFrame.cs" />
+    <Compile Include="Domain\JointType.cs" />
     <Compile Include="Interfaces\IHandFrameProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
