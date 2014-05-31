@@ -24,7 +24,7 @@ namespace BowlPhysics
     /// </summary>
     public partial class MainWindow : Window
     {
-        PhysicsWorld world;
+        BowlPhysicsWorld world;
 
         bool tracking = false;
         Point lastMousePos;
@@ -34,7 +34,7 @@ namespace BowlPhysics
         float zoom = -20.0f;
 
 
-        public MainWindow(PhysicsWorld world)
+        public MainWindow(BowlPhysicsWorld world)
         {
             InitializeComponent();
             this.world = world;
@@ -80,7 +80,8 @@ namespace BowlPhysics
 
             world.Update();
 
-            world.DebugDraw(new OpenGLDebugDraw(gl));
+            world.DebugDrawer = new OpenGLDebugDraw(gl);
+            world.DebugDraw();
         }
 
         private void Window_Closed(object sender, EventArgs e)

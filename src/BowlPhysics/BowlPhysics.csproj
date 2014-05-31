@@ -70,6 +70,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="PhysicsWorld.cs" />
+    <Compile Include="RubicsPhysicsWorld.cs" />
     <Compile Include="OpenGLDebugDraw.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -78,7 +80,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PhysicsWorld.cs" />
+    <Compile Include="BowlPhysicsWorld.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
