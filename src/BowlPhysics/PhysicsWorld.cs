@@ -75,7 +75,7 @@ namespace BowlPhysics
 
         public void Update(float deltaSeconds)
         {
-            Debug.WriteLine("world step " + deltaSeconds);
+            //Debug.WriteLine("world step " + deltaSeconds);
             World.StepSimulation(deltaSeconds);
             lastUpdate = Stopwatch.GetTimestamp();
         }

@@ -16,6 +16,9 @@ using System.Windows.Shapes;
 using BulletSharp;
 using SharpGL.SceneGraph;
 using SharpGL.Enumerations;
+using SoLeap.Device;
+using SharpGL.WPF;
+using System.Diagnostics;
 
 namespace BowlPhysics
 {
@@ -25,6 +28,7 @@ namespace BowlPhysics
     public partial class MainWindow : Window
     {
         PhysicsWorld world;
+        IHandsFrameProvider handsProvider;
 
         bool tracking = false;
         Point lastMousePos;
@@ -35,17 +39,66 @@ namespace BowlPhysics
 
         RigidBody userBox;
 
-        public MainWindow(PhysicsWorld world)
+        public MainWindow(PhysicsWorld world, IHandsFrameProvider handsProvider)
         {
             InitializeComponent();
             this.world = world;
+            this.handsProvider = handsProvider;
+
+            handsProvider.FrameReady += handsProvider_FrameReady;
 
             // create user box
             // TODO move this code somewhere into the physics code
             var shape = new BoxShape(0.5f);
             world.CollisionShapes.Add(shape);
-            userBox = world.CreateRigidBody(1.0f, BulletSharp.Matrix.Translation(0.0f, 4.0f, 0.0f), shape, "user box");
+            userBox = world.CreateRigidBody(0.0f, BulletSharp.Matrix.Translation(new Vector3(0.0f, 4.0f, 0.0f)), shape, "user box");
             userBox.Gravity = Vector3.Zero;
+        }
+
+        bool openglInitialized = false;
+        bool hasShutDown = false;
+
+        Vector3? lastLeapPosition;
+
+        void handsProvider_FrameReady(object sender, HandsFrame e)
+        {
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                if (hasShutDown)
+                    return;
+
+                if (e.Hands.Count() > 0)
+                {
+                    var palm = e.Hands.First().PalmPosition;
+
+                    var newPos = new Vector3((float)palm.X / 10.0f, (float)palm.Y / 10.0f, (float)palm.Z / 10.0f);
+                    newPos.Y -= 20;
+
+                    //Debug.WriteLine("got HandsFrame " + newPos);
+
+                    if (lastLeapPosition.HasValue)
+                    {
+                        var translate = newPos - lastLeapPosition.Value;
+
+                        // transform according to view
+                        var xRotMatrix = BulletSharp.Matrix.RotationX(-xrot * (float)Math.PI / 180.0f);
+                        var yRotMatrix = BulletSharp.Matrix.RotationY(-yrot * (float)Math.PI / 180.0f);
+
+                        var rotMatrix = BulletSharp.Matrix.Multiply(xRotMatrix, yRotMatrix);
+
+                        var transformedTranslate4 = BulletSharp.Vector3.Transform(translate, rotMatrix);
+                        var transformedTranslate3 = new Vector3(transformedTranslate4.X, transformedTranslate4.Y, transformedTranslate4.Z);
+
+                        //Debug.WriteLine("translate " + transformedTranslate3);
+
+                        userBox.Translate(transformedTranslate3);
+                    }
+
+                    lastLeapPosition = newPos;
+                }
+                if (openglInitialized)
+                    Render(glControl.OpenGL);
+            }));
         }
 
         private void OpenGLControl_OpenGLInitialized(object sender, OpenGLEventArgs args)
@@ -54,7 +107,7 @@ namespace BowlPhysics
 
             gl.Enable(OpenGL.GL_DEPTH_TEST);
             gl.ShadeModel(ShadeModel.Smooth);
-
+            openglInitialized = true;
         }
 
         private void DrawAxes(OpenGL gl)
@@ -73,10 +126,8 @@ namespace BowlPhysics
             gl.End();
         }
 
-        private void OpenGLControl_OpenGLDraw(object sender, OpenGLEventArgs args)
+        private void Render(OpenGL gl)
         {
-            var gl = args.OpenGL;
-
             gl.Clear(OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_COLOR_BUFFER_BIT);
             gl.LoadIdentity();
 
@@ -94,7 +145,9 @@ namespace BowlPhysics
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            handsProvider.FrameReady -= handsProvider_FrameReady;
             world.Dispose();
+            hasShutDown = true;
         }
 
         private void OpenGLControl_Resized(object sender, OpenGLEventArgs args)
@@ -171,7 +224,7 @@ namespace BowlPhysics
                     userBox.ApplyCentralImpulse(new Vector3(0, +impuls, 0));
                     break;
             }
-            
+
         }
     }
 }

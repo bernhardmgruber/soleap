@@ -7,7 +7,7 @@
         KeyDown="Window_KeyDown">
     <Grid>
         <sharpGL:OpenGLControl Name="glControl"
-                               OpenGLDraw="OpenGLControl_OpenGLDraw"
+                          
                                OpenGLInitialized="OpenGLControl_OpenGLInitialized"
                                Resized="OpenGLControl_Resized"
                                MouseDown="OpenGLControl_MouseDown"
