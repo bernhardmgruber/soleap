@@ -51,8 +51,7 @@ namespace BowlPhysics
             // TODO move this code somewhere into the physics code
             var shape = new BoxShape(0.5f);
             world.CollisionShapes.Add(shape);
-            userBox = world.CreateRigidBody(0.0f, BulletSharp.Matrix.Translation(new Vector3(0.0f, 4.0f, 0.0f)), shape, "user box");
-            userBox.Gravity = Vector3.Zero;
+            userBox = world.CreateRigidBody(1.0f, BulletSharp.Matrix.Translation(new Vector3(0.0f, 4.0f, 0.0f)), shape, "user box", true);
         }
 
         bool openglInitialized = false;
@@ -90,12 +89,15 @@ namespace BowlPhysics
                         var transformedTranslate3 = new Vector3(transformedTranslate4.X, transformedTranslate4.Y, transformedTranslate4.Z);
 
                         //Debug.WriteLine("translate " + transformedTranslate3);
-
-                        userBox.Translate(transformedTranslate3);
+                        
+                        //userBox.Translate(transformedTranslate3);
+                        var translationMatrix = BulletSharp.Matrix.Translation(transformedTranslate3);
+                        userBox.MotionState.WorldTransform = BulletSharp.Matrix.Multiply(userBox.MotionState.WorldTransform, translationMatrix);
                     }
 
                     lastLeapPosition = newPos;
                 }
+
                 if (openglInitialized)
                     Render(glControl.OpenGL);
             }));

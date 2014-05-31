@@ -127,7 +127,7 @@ namespace BowlPhysics
         /// <param name="shape">The shape that is used for collision detection with the body</param>
         /// <param name="userObject">An optional object assigned to the UserObject property of the rigid body</param>
         /// <returns>The newly created body. Usually this return value is not needed.</returns>
-        public RigidBody CreateRigidBody(float mass, Matrix startTransform, CollisionShape shape, object userObject = null)
+        public RigidBody CreateRigidBody(float mass, Matrix startTransform, CollisionShape shape, object userObject = null, bool isKinematic = false)
         {
             // rigidbody is dynamic if and only if mass is non zero, otherwise static
             bool isDynamic = (mass != 0.0f);
@@ -137,10 +137,16 @@ namespace BowlPhysics
                 shape.CalculateLocalInertia(mass, out localInertia);
 
             // using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-            var myMotionState = new DefaultMotionState(startTransform);
-            var rbInfo = new RigidBodyConstructionInfo(mass, myMotionState, shape, localInertia);
+            var rbInfo = new RigidBodyConstructionInfo(mass, new DefaultMotionState(startTransform), shape, localInertia);
             var body = new RigidBody(rbInfo);
             rbInfo.Dispose();
+
+            // kinematic settings
+            if (isKinematic)
+            {
+                body.CollisionFlags = body.CollisionFlags | CollisionFlags.KinematicObject;
+                body.ActivationState = ActivationState.DisableDeactivation;
+            }
 
             // set userobject, may be used to identify this body
             body.UserObject = userObject;
