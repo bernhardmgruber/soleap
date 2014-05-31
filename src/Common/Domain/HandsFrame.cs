@@ -1,11 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SoLeap.Common.Domain
 {
     public class HandsFrame
     {
-        public long Id { get; set; }
+        public long Id { get; private set; }
 
-        public IList<Hand> Hands { get; set; }
+        public DateTime TimeStamp { get; private set; }
+
+        public IEnumerable<Hand> Hands { get; private set; }
+
+        public HandsFrame(long id, DateTime timesStamp, IEnumerable<Hand> hands)
+        {
+            Id = id;
+            TimeStamp = timesStamp;
+            Hands = hands;
+        }
     }
 }

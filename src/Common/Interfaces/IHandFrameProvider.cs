@@ -5,6 +5,6 @@ namespace SoLeap.Common.Interfaces
 {
     public interface IHandFrameProvider
     {
-        event Action<HandsFrame> FrameReady;
+        event EventHandler<HandsFrame> FrameReady;
     }
 }
