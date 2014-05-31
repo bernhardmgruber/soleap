@@ -114,7 +114,8 @@
   <ItemGroup>
     <Compile Include="FrameConverter.cs" />
     <Compile Include="IFrameConverter.cs" />
-    <Compile Include="LeapHandsFrameProvider.cs" />
+    <Compile Include="LeapListener.cs" />
+    <Compile Include="LeapProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
