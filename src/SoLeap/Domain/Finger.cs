@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Media.Media3D;
 
-namespace SoLeap.Common.Domain
+namespace SoLeap.Domain
 {
     public class Finger
     {

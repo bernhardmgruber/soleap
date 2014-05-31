@@ -1,4 +1,4 @@
-﻿namespace SoLeap.Common.Domain
+﻿namespace SoLeap.Domain
 {
     public enum FingerType
     {

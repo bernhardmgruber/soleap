@@ -7,8 +7,8 @@
     <ProjectGuid>{44DA60DB-0C2B-4E02-8EBA-55502ABB6F0E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Device</RootNamespace>
-    <AssemblyName>Device</AssemblyName>
+    <RootNamespace>SoLeap.Device</RootNamespace>
+    <AssemblyName>SoLeap.Device</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,8 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HandInputFrame.cs" />
-    <Compile Include="IDevice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

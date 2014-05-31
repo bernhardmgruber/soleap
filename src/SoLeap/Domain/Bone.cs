@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media.Media3D;
 
-namespace SoLeap.Common.Domain
+namespace SoLeap.Domain
 {
     public class Bone
     {
@@ -10,9 +10,9 @@ namespace SoLeap.Common.Domain
 
         public Point3D PrevJoint { get; private set; }
 
-        public float Width { get; private set; }
+        public double Width { get; private set; }
 
-        public Bone(BoneType type, Point3D nextJoint, Point3D prevJoint, float width)
+        public Bone(BoneType type, Point3D nextJoint, Point3D prevJoint, double width)
         {
             Type = type;
             NextJoint = nextJoint;

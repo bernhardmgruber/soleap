@@ -1,7 +1,8 @@
-﻿namespace SoLeap.Common.Domain
+﻿namespace SoLeap.Domain
 {
     public enum JointType
     {
+        CarpalMetacarpal,
         MetacarpalProximal,
         ProximalIntermediate,
         IntermediateDistal,
