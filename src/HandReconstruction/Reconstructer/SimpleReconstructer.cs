@@ -41,15 +41,12 @@ namespace HandReconstruction.Reconstructer
             Vector3D dVec = target - fingerStart;
             double d = Math.Abs(dVec.Length);
 
-            if (s[0] + s[1] >= d)
-            {
+            if (s[0] + s[1] >= d) {
                 // the target is too far away, stretch finger
                 dVec.Normalize();
                 result.Add(fingerStart + dVec * s[0]);
                 result.Add(fingerStart + dVec * (s[0] + s[1]));
-            }
-            else
-            {
+            } else {
                 // angle between d and first segment
                 double beta = Math.Acos((s[0] * s[0] + d * d - s[1] * s[1]) / (2 * s[0] * d));
 
@@ -89,15 +86,14 @@ namespace HandReconstruction.Reconstructer
         /// <returns></returns>
         private Point3D forwardKinematic(Point3D start, Point3D target, IList<double> s, IList<double> a, Vector3D up)
         {
-            if(s.Count != a.Count)
+            if (s.Count != a.Count)
                 throw new ArgumentException("there must be equally as much angles as segments");
 
             Point3D p = start;
             Vector3D v = target - start;
             Vector3D right = Vector3D.CrossProduct(v, up);
 
-            for (int i = 0; i < s.Count; i++)
-            {
+            for (int i = 0; i < s.Count; i++) {
                 v = RotateAroundAxis(v, right, a[i]);
                 v.Normalize();
                 p = p + v * s[i];
@@ -113,20 +109,16 @@ namespace HandReconstruction.Reconstructer
             Vector3D dVec = start - target;
             double d = Math.Abs(dVec.Length);
 
-            if (s.Sum() >= d)
-            {
+            if (s.Sum() >= d) {
                 // the target is too far away, stretch finger
                 dVec.Normalize();
                 Point3D p = start;
                 result.Add(start);
-                foreach(double segment in s)
-                {
+                foreach (double segment in s) {
                     p = p + dVec * segment;
                     result.Add(p);
                 }
-            }
-            else
-            {
+            } else {
                 const double step = 1.0;
 
                 //
@@ -137,8 +129,7 @@ namespace HandReconstruction.Reconstructer
                 double alpha = +step;
 
                 double bestDelta = Math.Abs(s.Sum() - d); // current best delta to d
-                while (alpha >= -(360.0 / s.Count))
-                {
+                while (alpha >= -(360.0 / s.Count)) {
                     alpha -= step;
 
                     IList<double> a = new List<double>();
@@ -153,8 +144,7 @@ namespace HandReconstruction.Reconstructer
                     if (currentDelta < bestDelta)
                         // this iteration was successful
                         bestDelta = currentDelta;
-                    else
-                    {
+                    else {
                         // this iteration was unsuccessful, roll back the change to alpha and take it
                         alpha += step;
                         break;
@@ -166,8 +156,7 @@ namespace HandReconstruction.Reconstructer
                 //
 
                 double opposingEdge = s.Last();
-                for (int i = s.Count - 2; i > 0; i--)
-                {
+                for (int i = s.Count - 2; i > 0; i--) {
                     double edge1 = opposingEdge;
                     double edge2 = s[i];
                     double angle = 180.0 + alpha; // alpha is negative
@@ -175,7 +164,7 @@ namespace HandReconstruction.Reconstructer
                     opposingEdge = Math.Sqrt(edge1 * edge1 + edge2 * edge2 - 2 * edge1 * edge2 * Math.Cos(angle));
                 }
 
-                double beta = Math.Acos((s[0] * s[0] + d * d - opposingEdge * opposingEdge)/(2.0 * s[0] * d));
+                double beta = Math.Acos((s[0] * s[0] + d * d - opposingEdge * opposingEdge) / (2.0 * s[0] * d));
 
                 //
                 // Forward kinematic for final points
@@ -186,8 +175,7 @@ namespace HandReconstruction.Reconstructer
                 Vector3D v = dVec;
                 Vector3D right = Vector3D.CrossProduct(v, up);
                 Point3D p = start;
-                for (int i = 0; i < s.Count; i++)
-                {
+                for (int i = 0; i < s.Count; i++) {
                     v = RotateAroundAxis(v, right, i == 0 ? beta : alpha);
                     v.Normalize();
                     p = p + v * s[i];
@@ -200,18 +188,17 @@ namespace HandReconstruction.Reconstructer
 
         private IList<Point3D> inverseKinematic(Point3D fingerStart, Point3D target, IList<double> segmentLengths, Vector3D up)
         {
-            switch (segmentLengths.Count)
-            {
-                case 0:
-                    throw new ArgumentException("no segments");
-                case 1:
-                    Vector3D d = (fingerStart - target);
-                    d.Normalize();
-                    return new List<Point3D>() { fingerStart, fingerStart + d * segmentLengths[0] };
-                case 2:
-                    return inverseKinematic2(fingerStart, target, segmentLengths, up);
-                default:
-                    return inverseKinematicIterative(fingerStart, target, segmentLengths, up);
+            switch (segmentLengths.Count) {
+            case 0:
+                throw new ArgumentException("no segments");
+            case 1:
+                Vector3D d = (fingerStart - target);
+                d.Normalize();
+                return new List<Point3D>() { fingerStart, fingerStart + d * segmentLengths[0] };
+            case 2:
+                return inverseKinematic2(fingerStart, target, segmentLengths, up);
+            default:
+                return inverseKinematicIterative(fingerStart, target, segmentLengths, up);
             }
         }
 
@@ -223,8 +210,7 @@ namespace HandReconstruction.Reconstructer
             result.PalmPosition = input.PalmPosition;
             result.PalmNormal = input.PalmNormal;
 
-            for (int i = 0; i < 5; i++)
-            {
+            for (int i = 0; i < 5; i++) {
                 Vector3D palmToTip = input.TipPositions[i] - input.PalmPosition;
 
                 // make it normal to palmNormal
@@ -233,7 +219,7 @@ namespace HandReconstruction.Reconstructer
                 toFingerStart.Normalize();
 
                 Point3D fingerStart = input.PalmPosition + toFingerStart * calibration.FingerSegmentLengths[i][0];
-                
+
                 IList<double> segments = new List<double>(calibration.FingerSegmentLengths[i]);
                 segments.RemoveAt(0);
 
