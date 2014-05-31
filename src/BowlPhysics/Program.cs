@@ -16,6 +16,8 @@ namespace BowlPhysics
         {
             var kernel = new StandardKernel();
 
+            kernel.Bind<PhysicsWorld>().To<RubicsPhysicsWorld>();
+
             var app = new Application();
             app.Run(kernel.Get<MainWindow>());
         }

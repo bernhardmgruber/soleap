@@ -24,7 +24,7 @@ namespace BowlPhysics
     /// </summary>
     public partial class MainWindow : Window
     {
-        BowlPhysicsWorld world;
+        PhysicsWorld world;
 
         bool tracking = false;
         Point lastMousePos;
@@ -34,7 +34,7 @@ namespace BowlPhysics
         float zoom = -20.0f;
 
 
-        public MainWindow(BowlPhysicsWorld world)
+        public MainWindow(PhysicsWorld world)
         {
             InitializeComponent();
             this.world = world;
