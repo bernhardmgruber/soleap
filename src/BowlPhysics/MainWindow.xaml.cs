@@ -33,11 +33,19 @@ namespace BowlPhysics
         float yrot = 0.0f;
         float zoom = -20.0f;
 
+        RigidBody userBox;
 
         public MainWindow(PhysicsWorld world)
         {
             InitializeComponent();
             this.world = world;
+
+            // create user box
+            // TODO move this code somewhere into the physics code
+            var shape = new BoxShape(0.5f);
+            world.CollisionShapes.Add(shape);
+            userBox = world.CreateRigidBody(1.0f, BulletSharp.Matrix.Translation(0.0f, 4.0f, 0.0f), shape, "user box");
+            userBox.Gravity = Vector3.Zero;
         }
 
         private void OpenGLControl_OpenGLInitialized(object sender, OpenGLEventArgs args)
@@ -136,6 +144,34 @@ namespace BowlPhysics
         private void OpenGLControl_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             zoom += e.Delta / 120;
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            const float impuls = 4.0f;
+
+            switch (e.Key)
+            {
+                case Key.A:
+                    userBox.ApplyCentralImpulse(new Vector3(-impuls, 0, 0));
+                    break;
+                case Key.D:
+                    userBox.ApplyCentralImpulse(new Vector3(+impuls, 0, 0));
+                    break;
+                case Key.W:
+                    userBox.ApplyCentralImpulse(new Vector3(0, 0, -impuls));
+                    break;
+                case Key.S:
+                    userBox.ApplyCentralImpulse(new Vector3(0, 0, +impuls));
+                    break;
+                case Key.LeftCtrl:
+                    userBox.ApplyCentralImpulse(new Vector3(0, -impuls, 0));
+                    break;
+                case Key.Space:
+                    userBox.ApplyCentralImpulse(new Vector3(0, +impuls, 0));
+                    break;
+            }
+            
         }
     }
 }

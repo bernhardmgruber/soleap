@@ -31,10 +31,10 @@ namespace BowlPhysics
         protected BroadphaseInterface Broadphase { get; private set; }
 
         // the physics world
-        protected DiscreteDynamicsWorld World { get; private set; }
+        public DiscreteDynamicsWorld World { get; private set; } // FIXME, world should not be public
 
         // all shapes that are used in collision
-        protected AlignedCollisionShapeArray CollisionShapes { get; private set; }
+        public AlignedCollisionShapeArray CollisionShapes { get; private set; }
 
         // the last time a physics update of the secene was done
         private long lastUpdate;
@@ -127,7 +127,7 @@ namespace BowlPhysics
         /// <param name="shape">The shape that is used for collision detection with the body</param>
         /// <param name="userObject">An optional object assigned to the UserObject property of the rigid body</param>
         /// <returns>The newly created body. Usually this return value is not needed.</returns>
-        protected RigidBody CreateRigidBody(float mass, Matrix startTransform, CollisionShape shape, object userObject = null)
+        public RigidBody CreateRigidBody(float mass, Matrix startTransform, CollisionShape shape, object userObject = null)
         {
             // rigidbody is dynamic if and only if mass is non zero, otherwise static
             bool isDynamic = (mass != 0.0f);
