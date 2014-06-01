@@ -49,7 +49,7 @@ namespace BowlPhysics
 
             // create user box
             // TODO move this code somewhere into the physics code
-            var shape = new BoxShape(0.5f);
+            var shape = new BoxShape(1);
             world.CollisionShapes.Add(shape);
             userBox = world.CreateRigidBody(1.0f, BulletSharp.Matrix.Translation(new Vector3(0.0f, 4.0f, 0.0f)), shape, "user box", true);
         }
@@ -70,7 +70,7 @@ namespace BowlPhysics
                 {
                     var palm = e.Hands.First().PalmPosition;
 
-                    var newPos = new Vector3((float)palm.X / 10.0f, (float)palm.Y / 10.0f, (float)palm.Z / 10.0f);
+                    var newPos = new Vector3((float)palm.X / 5.0f, (float)palm.Y / 5.0f, (float)palm.Z / 5.0f);
                     newPos.Y -= 20;
 
                     //Debug.WriteLine("got HandsFrame " + newPos);
