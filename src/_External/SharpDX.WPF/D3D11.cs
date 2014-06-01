@@ -35,10 +35,13 @@ namespace SharpDX.WPF
         public D3D11(Device dev)
         {
             // REMARK: SharpDX.Direct3D.DriverType.Warp works without graphics card!
-            if (dev != null) {
+            if (dev != null)
+            {
                 //dev.AddReference();
                 m_device = dev;
-            } else {
+            }
+            else
+            {
                 m_device = DeviceUtil.Create11(DeviceCreationFlags.BgraSupport);
                 if (m_device == null)
                     throw new NotSupportedException();
@@ -51,7 +54,8 @@ namespace SharpDX.WPF
         /// <param name="a"></param>
         public D3D11(Adapter a)
         {
-            if (a == null) {
+            if (a == null)
+            {
                 m_device = DeviceUtil.Create11(DeviceCreationFlags.BgraSupport, FeatureLevel.Level_11_0);
                 if (m_device == null)
                     throw new NotSupportedException();
@@ -104,7 +108,8 @@ namespace SharpDX.WPF
             if (h < 1)
                 throw new ArgumentOutOfRangeException("h");
 
-            var desc = new Texture2DDescription {
+            var desc = new Texture2DDescription
+            {
                 BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
                 Format = Format.B8G8R8A8_UNorm,
                 Width = w,
@@ -122,7 +127,7 @@ namespace SharpDX.WPF
             Set(ref m_depthStencil, DXUtils.CreateTexture2D(this.m_device, w, h, BindFlags.DepthStencil, Format.D24_UNorm_S8_UInt));
             Set(ref m_depthStencilView, new DepthStencilView(this.m_device, m_depthStencil));
 
-            m_device.ImmediateContext.Rasterizer.SetViewport(new ViewportF(0, 0, w, h, 0.0f, 1.0f));
+            m_device.ImmediateContext.Rasterizer.SetViewports(new Viewport(0, 0, w, h, 0.0f, 1.0f));
             m_device.ImmediateContext.OutputMerger.SetTargets(m_depthStencilView, m_renderTargetView);
         }
 
@@ -193,8 +198,7 @@ namespace SharpDX.WPF
             get { return m_renderTargetOptionFlags; }
             set
             {
-                if (value == m_renderTargetOptionFlags)
-                    return;
+                if (value == m_renderTargetOptionFlags) return;
                 m_renderTargetOptionFlags = value;
                 OnPropertyChanged("RenderTargetOptionFlags");
             }

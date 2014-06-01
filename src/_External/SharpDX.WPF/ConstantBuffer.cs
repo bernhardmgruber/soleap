@@ -23,7 +23,8 @@ namespace SharpDX.Direct3D11
         /// 
         /// </summary>
         public ConstantBuffer(Direct3D11.Device device)
-            : this(device, new Direct3D11.BufferDescription {
+            : this(device, new Direct3D11.BufferDescription
+            {
                 Usage = Direct3D11.ResourceUsage.Default,
                 BindFlags = Direct3D11.BindFlags.ConstantBuffer,
                 CpuAccessFlags = Direct3D11.CpuAccessFlags.None,
@@ -98,13 +99,13 @@ namespace SharpDX.Direct3D11
                 m_bufvalue = value;
 
                 Marshal.StructureToPtr(value, m_dataStream.DataPointer, false);
-                var dataBox = new DataBox(m_dataStream.DataPointer, 0, 0);
+                var dataBox = new DataBox(m_dataStream.DataPointer, 0, 0);         
                 m_device.ImmediateContext.UpdateSubresource(dataBox, m_buffer, 0);
 
                 OnPropertyChanged("Value");
             }
         }
-
+        
 
 
         private Direct3D11.Device m_device;
@@ -137,7 +138,7 @@ namespace SharpDX.Direct3D10
         /// 
         /// </summary>
         public Direct3D10.Buffer Buffer { get { return m_buffer; } }
-
+       
         /// <summary>
         /// 
         /// </summary>
@@ -147,7 +148,8 @@ namespace SharpDX.Direct3D10
         /// 
         /// </summary>        
         public ConstantBuffer(Direct3D10.Device device)
-            : this(device, new Direct3D10.BufferDescription {
+            : this(device, new Direct3D10.BufferDescription
+            {
                 Usage = Direct3D10.ResourceUsage.Default,
                 BindFlags = Direct3D10.BindFlags.ConstantBuffer,
                 CpuAccessFlags = Direct3D10.CpuAccessFlags.None,
@@ -191,7 +193,7 @@ namespace SharpDX.Direct3D10
             GC.SuppressFinalize(this);
             Dispose(true);
         }
-
+       
         /// <summary>
         /// 
         /// </summary>
@@ -230,7 +232,7 @@ namespace SharpDX.Direct3D10
                 OnPropertyChanged("Value");
             }
         }
-
+        
         private Direct3D10.Device m_device;
         private Direct3D10.Buffer m_buffer;
         private DataStream m_dataStream;
