@@ -46,7 +46,7 @@ namespace SoLeap.LeapProvider
 
         private IList<Finger> ConvertFingers(FingerList leapFingers)
         {
-            //Contract.Ensures(Contract.Result<IList<Finger>>().All(f => f != null));
+            Contract.Ensures(Contract.Result<IList<Finger>>().All(f => f != null));
 
             var fingers = new List<Finger>(5) { null, null, null, null, null };
 
@@ -75,7 +75,7 @@ namespace SoLeap.LeapProvider
 
         private IList<Bone> ExtractBones(Leap.Finger leapFinger)
         {
-            //Contract.Ensures(Contract.Result<IList<Bone>>().All(b => b != null));
+            Contract.Ensures(Contract.Result<IList<Bone>>().All(b => b != null));
 
             var bones = new List<Bone>(4) { null, null, null, null };
 
@@ -100,7 +100,7 @@ namespace SoLeap.LeapProvider
 
         private IList<Point3D> ExtractJoints(Leap.Finger leapFinger)
         {
-            //Contract.Ensures(Contract.Result<IList<Point3D>>().All(b => b != default(Point3D)));
+            Contract.Ensures(Contract.Result<IList<Point3D>>().All(b => b != default(Point3D)));
 
             var joints = new List<Point3D>(5) { default(Point3D), default(Point3D), default(Point3D), default(Point3D), default(Point3D) };
 
