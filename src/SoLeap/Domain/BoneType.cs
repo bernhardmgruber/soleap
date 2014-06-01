@@ -2,9 +2,9 @@
 {
     public enum BoneType
     {
-        Metacarpal,
+        Metacarpal, // inside the hand
         Proximal,
         Intermediate,
-        Distal
+        Distal // frontmost
     }
 }

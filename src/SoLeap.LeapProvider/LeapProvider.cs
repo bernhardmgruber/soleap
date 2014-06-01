@@ -6,7 +6,7 @@ using SoLeap.Device;
 namespace SoLeap.LeapProvider
 {
     public class LeapProvider
-        : Listener, IHandsFrameProvider
+        : IDisposable, IHandsFrameProvider
     {
         private readonly Controller controller;
 
@@ -14,36 +14,34 @@ namespace SoLeap.LeapProvider
 
         public event EventHandler<HandsFrame> FrameReady;
 
+        private LeapListener listener;
+
         public LeapProvider(IFrameConverter frameConverter)
         {
             this.frameConverter = frameConverter;
 
+            listener = new LeapListener(this);
+
             controller = new Controller();
-            controller.AddListener(this);
+            controller.AddListener(listener);
         }
 
-        public override void OnConnect(Controller c)
-        {
-            Debug.WriteLine("Leap connected");
-        }
-
-        public override void OnDisconnect(Controller c)
-        {
-            Debug.WriteLine("Leap disconnected");
-        }
-
-        public override void OnFrame(Controller c)
+        /// <summary>
+        /// Called by leap listener
+        /// </summary>
+        /// <param name="f"></param>
+        public void ProcessFrame(Frame f)
         {
             var handler = FrameReady;
             if (handler != null) {
-                handler(this, frameConverter.Convert(c.Frame()));
+                handler(this, frameConverter.Convert(f));
             }
         }
 
-        public override void Dispose()
+        public void Dispose()
         {
-            base.Dispose();
-            controller.RemoveListener(this);
+            controller.RemoveListener(listener);
+            listener.Dispose();
             controller.Dispose();
         }
     }

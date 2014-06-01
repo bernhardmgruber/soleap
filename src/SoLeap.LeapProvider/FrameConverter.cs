@@ -37,7 +37,7 @@ namespace SoLeap.LeapProvider
             Point3D palmPosition = ConvertPosition(leapHand.PalmPosition);
             Vector3D palmNormal = ConvertDirection(leapHand.PalmNormal);
             double palmWidth = leapHand.PalmWidth;
-            double palmHeight = leapHand.PalmWidth / 10.0; // ToDo
+            double palmHeight = leapHand.PalmWidth / 10.0; // ToDo   lulz what the faq?
             Vector3D handDirection = ConvertDirection(leapHand.Direction);
             IList<Finger> fingers = ConvertFingers(leapHand.Fingers);
 
@@ -46,13 +46,19 @@ namespace SoLeap.LeapProvider
 
         private IList<Finger> ConvertFingers(FingerList leapFingers)
         {
-            Contract.Ensures(Contract.Result<IList<Finger>>().All(f => f != null));
+            //Contract.Ensures(Contract.Result<IList<Finger>>().All(f => f != null));
 
-            var fingers = new List<Finger>(5);
+            var fingers = new List<Finger>(5) { null, null, null, null, null };
 
             foreach (var leapFingerType in EnumUtils.GetValues<Leap.Finger.FingerType>()) {
                 FingerType fingerType = ConvertFingerType(leapFingerType);
-                var finger = leapFingers.FingerType(leapFingerType).Single();
+
+                // copy leapFingers because FingerList.FingerType() modifies the list
+                // see https://developer.leapmotion.com/documentation/skeletal/csharp/api/Leap.FingerList.html
+                var list = new FingerList();
+                list.Append(leapFingers);
+                var finger = list.FingerType(leapFingerType).Single();
+
                 fingers[(int)fingerType] = ConvertFinger(finger);
             }
 
@@ -69,9 +75,9 @@ namespace SoLeap.LeapProvider
 
         private IList<Bone> ExtractBones(Leap.Finger leapFinger)
         {
-            Contract.Ensures(Contract.Result<IList<Bone>>().All(b => b != null));
+            //Contract.Ensures(Contract.Result<IList<Bone>>().All(b => b != null));
 
-            var bones = new List<Bone>(4);
+            var bones = new List<Bone>(4) { null, null, null, null };
 
             foreach (var leapBoneType in EnumUtils.GetValues<Leap.Bone.BoneType>()) {
                 BoneType boneType = ConvertBoneType(leapBoneType);
@@ -94,9 +100,9 @@ namespace SoLeap.LeapProvider
 
         private IList<Point3D> ExtractJoints(Leap.Finger leapFinger)
         {
-            Contract.Ensures(Contract.Result<IList<Point3D>>().All(b => b != default(Point3D)));
+            //Contract.Ensures(Contract.Result<IList<Point3D>>().All(b => b != default(Point3D)));
 
-            var joints = new List<Point3D>(5);
+            var joints = new List<Point3D>(5) { default(Point3D), default(Point3D), default(Point3D), default(Point3D), default(Point3D) };
 
             var metacarpal = leapFinger.Bone(Leap.Bone.BoneType.TYPE_METACARPAL);
             joints[(int)JointType.CarpalMetacarpal] = ConvertPosition(metacarpal.PrevJoint);

@@ -1,5 +1,7 @@
 ﻿using BulletSharp;
 using Ninject;
+using SoLeap.Device;
+using SoLeap.LeapProvider;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +17,10 @@ namespace BowlPhysics
         public static void Main()
         {
             var kernel = new StandardKernel();
+
+            kernel.Bind<PhysicsWorld>().To<RubicsPhysicsWorld>();
+            kernel.Bind<IHandsFrameProvider>().To<LeapProvider>();
+            kernel.Bind<IFrameConverter>().To<FrameConverter>();
 
             var app = new Application();
             app.Run(kernel.Get<MainWindow>());
