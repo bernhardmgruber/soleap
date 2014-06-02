@@ -152,6 +152,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BufferedDebugDraw.cs" />
+    <Compile Include="PhysicsDebugDraw.cs" />
     <Compile Include="TestRenderer.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Page Include="MainWindow.xaml">
