@@ -35,9 +35,14 @@ namespace BowlPhysics
 
         float xrot = 0.0f;
         float yrot = 0.0f;
-        float zoom = -20.0f;
+        float zoom = -500.0f;
 
-        RigidBody userBox;
+        //RigidBody userBox;
+
+        PhysicsHand physicsHand;
+        GraphicsHand graphicsHand;
+
+        HandsFrame lastFrame = new HandsFrame();
 
         public MainWindow(PhysicsWorld world, IHandsFrameProvider handsProvider)
         {
@@ -45,62 +50,75 @@ namespace BowlPhysics
             this.world = world;
             this.handsProvider = handsProvider;
 
+            physicsHand = new PhysicsHand(world);
+            graphicsHand = new GraphicsHand(physicsHand);
+
             handsProvider.FrameReady += handsProvider_FrameReady;
 
             // create user box
             // TODO move this code somewhere into the physics code
-            var shape = new BoxShape(1);
-            world.CollisionShapes.Add(shape);
-            userBox = world.CreateRigidBody(1.0f, BulletSharp.Matrix.Translation(new Vector3(0.0f, 4.0f, 0.0f)), shape, "user box", true);
+            //var shape = new BoxShape(1);
+            //world.CollisionShapes.Add(shape);
+            //userBox = world.CreateRigidBody(1.0f, BulletSharp.Matrix.Translation(new Vector3(0.0f, 4.0f, 0.0f)), shape, "user box", true);
         }
 
-        bool openglInitialized = false;
-        bool hasShutDown = false;
+        //bool openglInitialized = false;
+        //bool hasShutDown = false;
 
-        Vector3? lastLeapPosition;
+        //Vector3? lastLeapPosition;
 
         void handsProvider_FrameReady(object sender, HandsFrame e)
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                if (hasShutDown)
-                    return;
+            lock (lastFrame)
+                lastFrame = e;
 
-                if (e.Hands.Count() > 0)
-                {
-                    var palm = e.Hands.First().PalmPosition;
+            //Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            //{
+            //    if (hasShutDown)
+            //        return;
 
-                    var newPos = new Vector3((float)palm.X / 5.0f, (float)palm.Y / 5.0f, (float)palm.Z / 5.0f);
-                    newPos.Y -= 20;
+            //    if (e.Hands.Count() > 0)
+            //    {
+            //        var h = e.Hands.First();
 
-                    //Debug.WriteLine("got HandsFrame " + newPos);
+            //        if (physicsHand.Calibrated)
+            //            physicsHand.Update(h);
+            //        else
+            //            physicsHand.Calibrate(h);
 
-                    if (lastLeapPosition.HasValue)
-                    {
-                        var translate = newPos - lastLeapPosition.Value;
+            //        //var palm = e.Hands.First().PalmPosition;
 
-                        // transform according to view
-                        var xRotMatrix = BulletSharp.Matrix.RotationX(-xrot * (float)Math.PI / 180.0f);
-                        var yRotMatrix = BulletSharp.Matrix.RotationY(-yrot * (float)Math.PI / 180.0f);
+            //        //var newPos = new Vector3((float)palm.X / 5.0f, (float)palm.Y / 5.0f, (float)palm.Z / 5.0f);
+            //        //newPos.Y -= 20;
 
-                        var rotMatrix = BulletSharp.Matrix.Multiply(xRotMatrix, yRotMatrix);
+            //        ////Debug.WriteLine("got HandsFrame " + newPos);
 
-                        var transformedTranslate4 = BulletSharp.Vector3.Transform(translate, rotMatrix);
-                        var transformedTranslate3 = new Vector3(transformedTranslate4.X, transformedTranslate4.Y, transformedTranslate4.Z);
+            //        //if (lastLeapPosition.HasValue)
+            //        //{
+            //        //    var translate = newPos - lastLeapPosition.Value;
 
-                        //Debug.WriteLine("translate " + transformedTranslate3);
-                        
-                        //userBox.Translate(transformedTranslate3);
-                        var translationMatrix = BulletSharp.Matrix.Translation(transformedTranslate3);
-                        userBox.MotionState.WorldTransform = BulletSharp.Matrix.Multiply(userBox.MotionState.WorldTransform, translationMatrix);
-                    }
+            //        //    // transform according to view
+            //        //    var xRotMatrix = BulletSharp.Matrix.RotationX(-xrot * (float)Math.PI / 180.0f);
+            //        //    var yRotMatrix = BulletSharp.Matrix.RotationY(-yrot * (float)Math.PI / 180.0f);
 
-                    lastLeapPosition = newPos;
-                }
+            //        //    var rotMatrix = BulletSharp.Matrix.Multiply(xRotMatrix, yRotMatrix);
 
-                if (openglInitialized)
-                    Render(glControl.OpenGL);
-            }));
+            //        //    var transformedTranslate4 = BulletSharp.Vector3.Transform(translate, rotMatrix);
+            //        //    var transformedTranslate3 = new Vector3(transformedTranslate4.X, transformedTranslate4.Y, transformedTranslate4.Z);
+
+            //        //    //Debug.WriteLine("translate " + transformedTranslate3);
+
+            //        //    //userBox.Translate(transformedTranslate3);
+            //        //    var translationMatrix = BulletSharp.Matrix.Translation(transformedTranslate3);
+            //        //    userBox.MotionState.WorldTransform = BulletSharp.Matrix.Multiply(userBox.MotionState.WorldTransform, translationMatrix);
+            //        //}
+
+            //        //lastLeapPosition = newPos;
+            //    }
+
+            //    if (openglInitialized)
+            //        Render(glControl.OpenGL);
+            //}));
         }
 
         private void OpenGLControl_OpenGLInitialized(object sender, OpenGLEventArgs args)
@@ -109,12 +127,18 @@ namespace BowlPhysics
 
             gl.Enable(OpenGL.GL_DEPTH_TEST);
             gl.ShadeModel(ShadeModel.Smooth);
-            openglInitialized = true;
+            //openglInitialized = true;
+        }
+
+        private void glControl_OpenGLDraw(object sender, OpenGLEventArgs args)
+        {
+            Update();
+            Render(args.OpenGL);
         }
 
         private void DrawAxes(OpenGL gl)
         {
-            float l = 10.0f;
+            float l = 200.0f;
             gl.Begin(BeginMode.Lines);
             gl.Color(1.0f, 0.0f, 0.0f);
             gl.Vertex(0.0f, 0.0f, 0.0f);
@@ -128,6 +152,23 @@ namespace BowlPhysics
             gl.End();
         }
 
+        private void Update()
+        {
+            world.Update();
+
+            lock (lastFrame)
+            {
+                var h = lastFrame.Hands.FirstOrDefault();
+                if (h != null)
+                {
+                    if (physicsHand.Calibrated)
+                        physicsHand.Update(h);
+                    else
+                        physicsHand.Calibrate(h);
+                }
+            }
+        }
+
         private void Render(OpenGL gl)
         {
             gl.Clear(OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_COLOR_BUFFER_BIT);
@@ -139,17 +180,28 @@ namespace BowlPhysics
 
             DrawAxes(gl);
 
-            world.Update();
+            //gl.Enable(OpenGL.GL_LIGHTING);
+            //gl.Enable(OpenGL.GL_LIGHT0);
+            //gl.Enable(OpenGL.GL_COLOR_MATERIAL);
 
-            world.DebugDrawer = new OpenGLDebugDraw(gl);
+            gl.PolygonMode(FaceMode.FrontAndBack, PolygonMode.Lines); // wireframe
+            gl.Color(1.0f, 0.7f, 0.0f);
+            if (physicsHand.Calibrated)
+                graphicsHand.Render(gl);
+
+            //gl.Disable(OpenGL.GL_LIGHTING);
+
+            //world.DebugDrawer = new OpenGLDebugDraw(gl);
+            //gl.PolygonMode(FaceMode.FrontAndBack, PolygonMode.Lines);
             world.DebugDraw();
+            //gl.PolygonMode(FaceMode.FrontAndBack, PolygonMode.Filled);
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
             handsProvider.FrameReady -= handsProvider_FrameReady;
             world.Dispose();
-            hasShutDown = true;
+            //hasShutDown = true;
         }
 
         private void OpenGLControl_Resized(object sender, OpenGLEventArgs args)
@@ -162,7 +214,7 @@ namespace BowlPhysics
             gl.LoadIdentity();
             double aspect = (double)width / (double)Math.Max(height, 1.0);
 
-            gl.Perspective(45.0, aspect, 0.1, 100.0);
+            gl.Perspective(45.0, aspect, 0.1, 1000.0);
 
             gl.MatrixMode(OpenGL.GL_MODELVIEW);
 
@@ -198,35 +250,35 @@ namespace BowlPhysics
 
         private void OpenGLControl_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            zoom += e.Delta / 120;
+            zoom += e.Delta / 120 * 10;
         }
 
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-            const float impuls = 4.0f;
+        //private void Window_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    const float impuls = 4.0f;
 
-            switch (e.Key)
-            {
-                case Key.A:
-                    userBox.ApplyCentralImpulse(new Vector3(-impuls, 0, 0));
-                    break;
-                case Key.D:
-                    userBox.ApplyCentralImpulse(new Vector3(+impuls, 0, 0));
-                    break;
-                case Key.W:
-                    userBox.ApplyCentralImpulse(new Vector3(0, 0, -impuls));
-                    break;
-                case Key.S:
-                    userBox.ApplyCentralImpulse(new Vector3(0, 0, +impuls));
-                    break;
-                case Key.LeftCtrl:
-                    userBox.ApplyCentralImpulse(new Vector3(0, -impuls, 0));
-                    break;
-                case Key.Space:
-                    userBox.ApplyCentralImpulse(new Vector3(0, +impuls, 0));
-                    break;
-            }
+        //    switch (e.Key)
+        //    {
+        //        case Key.A:
+        //            userBox.ApplyCentralImpulse(new Vector3(-impuls, 0, 0));
+        //            break;
+        //        case Key.D:
+        //            userBox.ApplyCentralImpulse(new Vector3(+impuls, 0, 0));
+        //            break;
+        //        case Key.W:
+        //            userBox.ApplyCentralImpulse(new Vector3(0, 0, -impuls));
+        //            break;
+        //        case Key.S:
+        //            userBox.ApplyCentralImpulse(new Vector3(0, 0, +impuls));
+        //            break;
+        //        case Key.LeftCtrl:
+        //            userBox.ApplyCentralImpulse(new Vector3(0, -impuls, 0));
+        //            break;
+        //        case Key.Space:
+        //            userBox.ApplyCentralImpulse(new Vector3(0, +impuls, 0));
+        //            break;
+        //    }
 
-        }
+        //}
     }
 }

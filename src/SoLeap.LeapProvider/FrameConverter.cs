@@ -37,11 +37,15 @@ namespace SoLeap.LeapProvider
             Point3D palmPosition = ConvertPosition(leapHand.PalmPosition);
             Vector3D palmNormal = ConvertDirection(leapHand.PalmNormal);
             double palmWidth = leapHand.PalmWidth;
-            double palmHeight = leapHand.PalmWidth / 10.0; // ToDo   lulz what the faq?
+            double palmHeight = leapHand.PalmWidth / 7.32; // magic, don't touch   lulz what the faq?
+            Matrix3D basis = ConvertMatrix(leapHand.Basis);
+            basis.OffsetX = palmPosition.X;
+            basis.OffsetY = palmPosition.Y;
+            basis.OffsetZ = palmPosition.Z;
             Vector3D handDirection = ConvertDirection(leapHand.Direction);
             IList<Finger> fingers = ConvertFingers(leapHand.Fingers);
 
-            return new Hand(leapHand.Id, palmPosition, palmNormal, palmWidth, palmHeight, handDirection, fingers);
+            return new Hand(leapHand.Id, palmPosition, palmNormal, palmWidth, palmHeight, basis, handDirection, fingers);
         }
 
         private IList<Finger> ConvertFingers(FingerList leapFingers)
@@ -93,9 +97,13 @@ namespace SoLeap.LeapProvider
             BoneType boneType = ConvertBoneType(leapBone.Type);
             Point3D nextJoint = ConvertPosition(leapBone.NextJoint);
             Point3D prevJoint = ConvertPosition(leapBone.PrevJoint);
+            Matrix3D basis = ConvertMatrix(leapBone.Basis);
+            basis.OffsetX = leapBone.Center.x;
+            basis.OffsetY = leapBone.Center.y;
+            basis.OffsetZ = leapBone.Center.z;
             double width = leapBone.Width;
 
-            return new Bone(boneType, nextJoint, prevJoint, width);
+            return new Bone(boneType, nextJoint, prevJoint, width, basis);
         }
 
         private IList<Point3D> ExtractJoints(Leap.Finger leapFinger)
@@ -123,6 +131,12 @@ namespace SoLeap.LeapProvider
         private Vector3D ConvertDirection(Vector leapVector)
         {
             return new Vector3D(leapVector.x, leapVector.y, leapVector.z);
+        }
+
+        private Matrix3D ConvertMatrix(Matrix leapMatrix)
+        {
+            float[] fs = leapMatrix.ToArray4x4();
+            return new Matrix3D(fs[0], fs[1], fs[2], fs[3], fs[4], fs[5], fs[6], fs[7], fs[8], fs[9], fs[10], fs[11], fs[12], fs[13], fs[14], fs[15]);
         }
 
         private FingerType ConvertFingerType(Leap.Finger.FingerType leapFingerType)

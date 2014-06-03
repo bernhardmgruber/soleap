@@ -18,7 +18,7 @@ namespace BowlPhysics
         {
             var kernel = new StandardKernel();
 
-            kernel.Bind<PhysicsWorld>().To<RubicsPhysicsWorld>();
+            kernel.Bind<PhysicsWorld>().To<BowlPhysicsWorld>();
             kernel.Bind<IHandsFrameProvider>().To<LeapProvider>();
             kernel.Bind<IFrameConverter>().To<FrameConverter>();
 

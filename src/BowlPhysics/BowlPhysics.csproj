@@ -111,6 +111,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="the hand\GraphicsHand.cs" />
+    <Compile Include="the hand\PhysicsHand.cs" />
     <Compile Include="PhysicsWorld.cs" />
     <Compile Include="RubicsPhysicsWorld.cs" />
     <Compile Include="OpenGLDebugDraw.cs" />

@@ -12,6 +12,11 @@ namespace SoLeap.Device
 
         public IEnumerable<Hand> Hands { get; private set; }
 
+        public HandsFrame()
+        {
+
+        }
+
         public HandsFrame(long id, DateTime timesStamp, IEnumerable<Hand> hands)
         {
             Id = id;

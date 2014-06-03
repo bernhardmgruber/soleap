@@ -12,12 +12,15 @@ namespace SoLeap.Domain
 
         public double Width { get; private set; }
 
-        public Bone(BoneType type, Point3D nextJoint, Point3D prevJoint, double width)
+        public Matrix3D Transformation { get; private set; }
+
+        public Bone(BoneType type, Point3D nextJoint, Point3D prevJoint, double width, Matrix3D transformation)
         {
             Type = type;
             NextJoint = nextJoint;
             PrevJoint = prevJoint;
             Width = width;
+            Transformation = transformation;
         }
     }
 }
