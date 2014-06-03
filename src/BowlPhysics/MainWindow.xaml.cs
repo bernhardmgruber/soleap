@@ -191,7 +191,7 @@ namespace BowlPhysics
 
             //gl.Disable(OpenGL.GL_LIGHTING);
 
-            //world.DebugDrawer = new OpenGLDebugDraw(gl);
+            world.DebugDrawer = new OpenGLDebugDraw(gl);
             //gl.PolygonMode(FaceMode.FrontAndBack, PolygonMode.Lines);
             world.DebugDraw();
             //gl.PolygonMode(FaceMode.FrontAndBack, PolygonMode.Filled);
@@ -214,7 +214,7 @@ namespace BowlPhysics
             gl.LoadIdentity();
             double aspect = (double)width / (double)Math.Max(height, 1.0);
 
-            gl.Perspective(45.0, aspect, 0.1, 1000.0);
+            gl.Perspective(45.0, aspect, 0.1, 3000.0);
 
             gl.MatrixMode(OpenGL.GL_MODELVIEW);
 

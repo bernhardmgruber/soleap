@@ -274,7 +274,7 @@ namespace BowlPhysics
             gl.PushMatrix();
             gl.MultMatrix(transform.ToArray());
 
-            float l = orthoLen;
+            float l = orthoLen * 10;
 
             gl.Begin(BeginMode.Lines);
             gl.Color(1.0f, 0.0f, 0.0f);
@@ -298,6 +298,7 @@ namespace BowlPhysics
 
         public void DrawTriangle(ref Vector3 v0, ref Vector3 v1, ref Vector3 v2, ref Vector3 __unnamed003, ref Vector3 __unnamed004, ref Vector3 __unnamed005, Color color, float alpha)
         {
+
             Debug.WriteLine("DrawTriangle");
         }
 

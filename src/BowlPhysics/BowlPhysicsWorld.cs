@@ -10,42 +10,48 @@ namespace BowlPhysics
 {
     public class BowlPhysicsWorld : PhysicsWorld
     {
+        const float bowlDiameter = 150f;
+        const float bowlHeight = 40f;
+        const float bowlThickness = 7f;
+
+        const float ballRadius = 25f;
+
+        const float sceneHeight = 100f;
+
+        const float gravity = 500f;
+
         public BowlPhysicsWorld()
-            : base(new Vector3(0, -50, 0)) { }
+            : base(new Vector3(0f, -gravity, 0f)) { }
         protected override void SetupScene()
         {
             // create static ground
-            BoxShape groundShape = new BoxShape(10, 0.5f, 10);
+            BoxShape groundShape = new BoxShape(1000f, 10f, 1000f);
             CollisionShapes.Add(groundShape);
 
-            CreateRigidBody(0, Matrix.Identity, groundShape, "Ground");
+            CreateRigidBody(0f, Matrix.Translation(0, sceneHeight, 0), groundShape, "Ground");
    
             // create two bowls
-            const float diameter = 3.0f;
-            const float height = 1.2f;
-            const float thickness = 0.2f;
-
-            float innerDiameter2 = (diameter - thickness) / 2.0f;
-            float diameter2 = diameter / 2.0f;
-            float thickness2 = thickness / 2.0f;
-            float height2 = height / 2.0f;
+            float innerDiameter2 = (bowlDiameter - bowlThickness) / 2.0f;
+            float diameter2 = bowlDiameter / 2.0f;
+            float thickness2 = bowlThickness / 2.0f;
+            float height2 = bowlHeight / 2.0f;
 
             CompoundShape bowlShape = new CompoundShape();
             bowlShape.AddChildShape(Matrix.Translation(-innerDiameter2, 0, 0), new BoxShape(thickness2, height2, diameter2));
             bowlShape.AddChildShape(Matrix.Translation(+innerDiameter2, 0, 0), new BoxShape(thickness2, height2, diameter2));
             bowlShape.AddChildShape(Matrix.Translation(0, 0, -innerDiameter2), new BoxShape(diameter2 - 2 * thickness2, height2, thickness2));
             bowlShape.AddChildShape(Matrix.Translation(0, 0, +innerDiameter2), new BoxShape(diameter2 - 2 * thickness2, height2, thickness2));
-            bowlShape.AddChildShape(Matrix.Translation(0, -(height + thickness) / 2.0f, 0), new BoxShape(diameter2, thickness2, diameter2));
+            bowlShape.AddChildShape(Matrix.Translation(0, -(bowlHeight + bowlThickness) / 2.0f, 0), new BoxShape(diameter2, thickness2, diameter2));
             CollisionShapes.Add(bowlShape);
 
-            for (int i = 0; i < 2; i++)
-                CreateRigidBody(2.0f, Matrix.Translation(-5 + i * 10, 2, 0), bowlShape, "Bowl " + i);
+            CreateRigidBody(30.0f, Matrix.Translation(-bowlDiameter, bowlHeight + bowlThickness + sceneHeight, 0), bowlShape, "Left bowl");
+            CreateRigidBody(30.0f, Matrix.Translation(+bowlDiameter, bowlHeight + bowlThickness + sceneHeight, 0), bowlShape, "Right bowl");
 
             // create the ball
-            SphereShape ballShape = new SphereShape(0.5f);
+            SphereShape ballShape = new SphereShape(ballRadius);
             CollisionShapes.Add(ballShape);
 
-            CreateRigidBody(1.0f, Matrix.Translation(-5, 5, 0), ballShape, "Ball");
+            CreateRigidBody(10.0f, Matrix.Translation(-bowlDiameter, bowlHeight * 2.0f + sceneHeight, 0), ballShape, "Ball");
         }
     }
 }
