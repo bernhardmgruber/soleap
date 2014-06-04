@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
+using System.Collections.Generic;
 using BulletSharp;
 
-namespace DemoFramework
+namespace SoLeap.Visualizer.DebugDraw
 {
-    public abstract class BufferedDebugDraw : DebugDraw
+    public abstract class BufferedDebugDraw : BulletSharp.DebugDraw
     {
         protected List<PositionColored> lines = new List<PositionColored>();
 
-        public override DebugDrawModes DebugMode { get; set; }
+        public override DebugDrawModes DebugMode { get { return DebugDrawModes.MaxDebugDrawMode; } set { } }
 
         protected virtual int ColorToInt(ref Color c)
         {
@@ -28,14 +28,14 @@ namespace DemoFramework
             lines.Add(new PositionColored(ref to, ColorToInt(ref toColor)));
         }
 
-        public override void DrawLine(ref Vector3 from, ref Vector3 to, Color color)
+        public override void DrawLine(ref Vector3 from, ref Vector3 to, Color Color)
         {
-            int intColor = ColorToInt(ref color);
+            int intColor = ColorToInt(ref Color);
             lines.Add(new PositionColored(ref from, intColor));
             lines.Add(new PositionColored(ref to, intColor));
         }
 
-        public override void DrawBox(ref Vector3 bbMin, ref Vector3 bbMax, Color color)
+        public override void DrawBox(ref Vector3 bbMin, ref Vector3 bbMax, Color Color)
         {
             var p1 = bbMin;
             var p2 = new Vector3(bbMax.X, bbMin.Y, bbMin.Z);
@@ -46,7 +46,7 @@ namespace DemoFramework
             var p7 = bbMax;
             var p8 = new Vector3(bbMin.X, bbMax.Y, bbMax.Z);
 
-            int intColor = ColorToInt(ref color);
+            int intColor = ColorToInt(ref Color);
             lines.Add(new PositionColored(ref p1, intColor)); lines.Add(new PositionColored(ref p2, intColor));
             lines.Add(new PositionColored(ref p2, intColor)); lines.Add(new PositionColored(ref p3, intColor));
             lines.Add(new PositionColored(ref p3, intColor)); lines.Add(new PositionColored(ref p4, intColor));
@@ -63,7 +63,7 @@ namespace DemoFramework
             lines.Add(new PositionColored(ref p8, intColor)); lines.Add(new PositionColored(ref p5, intColor));
         }
 
-        public override void DrawBox(ref Vector3 bbMin, ref Vector3 bbMax, ref Matrix trans, Color color)
+        public override void DrawBox(ref Vector3 bbMin, ref Vector3 bbMax, ref Matrix trans, Color Color)
         {
             var p1 = Vector3.TransformCoordinate(bbMin, trans);
             var p2 = Vector3.TransformCoordinate(new Vector3(bbMax.X, bbMin.Y, bbMin.Z), trans);
@@ -74,7 +74,7 @@ namespace DemoFramework
             var p7 = Vector3.TransformCoordinate(bbMax, trans);
             var p8 = Vector3.TransformCoordinate(new Vector3(bbMin.X, bbMax.Y, bbMax.Z), trans);
 
-            int intColor = ColorToInt(ref color);
+            int intColor = ColorToInt(ref Color);
             lines.Add(new PositionColored(ref p1, intColor)); lines.Add(new PositionColored(ref p2, intColor));
             lines.Add(new PositionColored(ref p2, intColor)); lines.Add(new PositionColored(ref p3, intColor));
             lines.Add(new PositionColored(ref p3, intColor)); lines.Add(new PositionColored(ref p4, intColor));
@@ -91,9 +91,9 @@ namespace DemoFramework
             lines.Add(new PositionColored(ref p8, intColor)); lines.Add(new PositionColored(ref p5, intColor));
         }
 
-        public override void DrawTriangle(ref Vector3 v0, ref Vector3 v1, ref Vector3 v2, Color color, float __unnamed004)
+        public override void DrawTriangle(ref Vector3 v0, ref Vector3 v1, ref Vector3 v2, Color Color, float __unnamed004)
         {
-            int intColor = ColorToInt(ref color);
+            int intColor = ColorToInt(ref Color);
             lines.Add(new PositionColored(ref v0, intColor));
             lines.Add(new PositionColored(ref v1, intColor));
             lines.Add(new PositionColored(ref v2, intColor));
@@ -112,12 +112,12 @@ namespace DemoFramework
             lines.Add(new PositionColored(start + new Vector3(0, 0, orthoLen), 0x0000ff));
         }
 
-        public override void DrawArc(ref Vector3 center, ref Vector3 normal, ref Vector3 axis, float radiusA, float radiusB, float minAngle, float maxAngle, Color color, bool drawSect)
+        public override void DrawArc(ref Vector3 center, ref Vector3 normal, ref Vector3 axis, float radiusA, float radiusB, float minAngle, float maxAngle, Color Color, bool drawSect)
         {
-            DrawArc(ref center, ref normal, ref axis, radiusA, radiusB, minAngle, maxAngle, color, drawSect, 10.0f);
+            DrawArc(ref center, ref normal, ref axis, radiusA, radiusB, minAngle, maxAngle, Color, drawSect, 10.0f);
         }
 
-        public override void DrawArc(ref Vector3 center, ref Vector3 normal, ref Vector3 axis, float radiusA, float radiusB, float minAngle, float maxAngle, Color color, bool drawSect, float stepDegrees)
+        public override void DrawArc(ref Vector3 center, ref Vector3 normal, ref Vector3 axis, float radiusA, float radiusB, float minAngle, float maxAngle, Color Color, bool drawSect, float stepDegrees)
         {
             Vector3 vx = axis;
             Vector3 vy = Vector3.Cross(normal, axis);
@@ -129,9 +129,9 @@ namespace DemoFramework
             Vector3 next = center + radiusA * vx * (float)Math.Cos(minAngle) + radiusB * vy * (float)Math.Sin(minAngle);
 
             if (drawSect)
-                DrawLine(ref center, ref next, color);
+                DrawLine(ref center, ref next, Color);
 
-            int intColor = ColorToInt(ref color);
+            int intColor = ColorToInt(ref Color);
             PositionColored last = new PositionColored(ref next, intColor);
             for (int i = 1; i <= nSteps; i++)
             {
@@ -143,12 +143,12 @@ namespace DemoFramework
             }
 
             if (drawSect)
-                DrawLine(ref center, ref next, color);
+                DrawLine(ref center, ref next, Color);
         }
 
-        public override void DrawContactPoint(ref Vector3 pointOnB, ref Vector3 normalOnB, float distance, int lifeTime, Color color)
+        public override void DrawContactPoint(ref Vector3 pointOnB, ref Vector3 normalOnB, float distance, int lifeTime, Color Color)
         {
-            int intColor = ColorToInt(ref color);
+            int intColor = ColorToInt(ref Color);
             Vector3 to = pointOnB + normalOnB * 1; // distance
             lines.Add(new PositionColored(ref pointOnB, intColor));
             lines.Add(new PositionColored(ref to, intColor));

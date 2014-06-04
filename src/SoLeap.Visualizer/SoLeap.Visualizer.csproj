@@ -111,6 +111,9 @@
     <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BulletSharp">
+      <HintPath>..\lib\bulletsharp_generic\BulletSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Caliburn.Micro">
       <HintPath>..\packages\Caliburn.Micro.Core.2.0.0\lib\net45\Caliburn.Micro.dll</HintPath>
     </Reference>
@@ -152,8 +155,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BufferedDebugDraw.cs" />
-    <Compile Include="PhysicsDebugDraw.cs" />
+    <Compile Include="DebugDraw\BufferedDebugDraw.cs" />
+    <Compile Include="DebugDraw\PositionColored.cs" />
+    <Compile Include="DebugDraw\SharpDX11DebugDraw.cs" />
     <Compile Include="TestRenderer.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Page Include="MainWindow.xaml">

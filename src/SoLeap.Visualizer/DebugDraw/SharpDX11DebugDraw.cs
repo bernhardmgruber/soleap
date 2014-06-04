@@ -4,9 +4,9 @@ using SharpDX.DXGI;
 using DataStream = global::SharpDX.DataStream;
 using Device = SharpDX.Direct3D11.Device;
 
-namespace DemoFramework.SharpDX11
+namespace SoLeap.Visualizer.DebugDraw
 {
-    public class PhysicsDebugDraw : BufferedDebugDraw
+    public class SharpDX11DebugDraw : BufferedDebugDraw
     {
         Device device;
         InputAssemblerStage inputAssembler;
@@ -16,9 +16,11 @@ namespace DemoFramework.SharpDX11
         Buffer vertexBuffer;
         VertexBufferBinding vertexBufferBinding;
 
-        public PhysicsDebugDraw(SharpDX11Graphics graphics)
+        public SharpDX11DebugDraw(DynamicsWorld world, Device device, byte[] shaderByteCode)
         {
-            device = graphics.Device;
+            world.DebugDrawer = this;
+
+            this.device = device;
             inputAssembler = device.ImmediateContext.InputAssembler;
             lineArray = new PositionColored[0];
 
@@ -27,7 +29,7 @@ namespace DemoFramework.SharpDX11
                 new InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0, InputClassification.PerVertexData, 0),
                 new InputElement("COLOR", 0, Format.R8G8B8A8_UNorm, 12, 0, InputClassification.PerVertexData, 0)
             };
-            inputLayout = new InputLayout(device, graphics.GetDebugDrawPass().Description.Signature, elements);
+            inputLayout = new InputLayout(device, shaderByteCode, elements);
 
             vertexBufferDesc = new BufferDescription()
             {
