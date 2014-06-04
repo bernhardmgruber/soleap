@@ -1,7 +1,6 @@
-﻿using System;
-using System.Diagnostics;
-using Leap;
+﻿using Leap;
 using SoLeap.Device;
+using System;
 
 namespace SoLeap.LeapProvider
 {
@@ -33,7 +32,8 @@ namespace SoLeap.LeapProvider
         public void ProcessFrame(Frame f)
         {
             var handler = FrameReady;
-            if (handler != null) {
+            if (handler != null)
+            {
                 handler(this, frameConverter.Convert(f));
             }
         }

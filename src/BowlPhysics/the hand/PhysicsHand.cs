@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Media3D;
 
 namespace BowlPhysics
@@ -67,7 +65,7 @@ namespace BowlPhysics
             }
         }
 
-        const bool useKinematicBodies = true;
+        private const bool useKinematicBodies = true;
 
         private readonly IPhysicsWorld world;
 

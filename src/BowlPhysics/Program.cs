@@ -1,12 +1,8 @@
-﻿using BulletSharp;
+﻿using BowlPhysics.Worlds;
 using Ninject;
 using SoLeap.Device;
 using SoLeap.LeapProvider;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace BowlPhysics
@@ -18,7 +14,7 @@ namespace BowlPhysics
         {
             var kernel = new StandardKernel();
 
-            kernel.Bind<IPhysicsWorld>().To<SimpleWallWorld>();
+            kernel.Bind<IPhysicsWorld>().To<CubesWorld>();
 
             kernel.Bind<IHandsFrameProvider>().To<LeapProvider>();
             kernel.Bind<IFrameConverter>().To<FrameConverter>();

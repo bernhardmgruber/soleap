@@ -1,15 +1,14 @@
-﻿using System;
+﻿using Leap;
+using SoLeap.Device;
+using SoLeap.Domain;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Windows.Media.Media3D;
-using Leap;
-using SoLeap.Device;
-using SoLeap.Domain;
-
-using Hand = SoLeap.Domain.Hand;
-using Finger = SoLeap.Domain.Finger;
 using Bone = SoLeap.Domain.Bone;
+using Finger = SoLeap.Domain.Finger;
+using Hand = SoLeap.Domain.Hand;
 
 namespace SoLeap.LeapProvider
 {
@@ -27,7 +26,8 @@ namespace SoLeap.LeapProvider
 
         private IEnumerable<Hand> ConvertHands(HandList leapHands)
         {
-            foreach (var hand in leapHands) {
+            foreach (var hand in leapHands)
+            {
                 yield return ConvertHand(hand);
             }
         }
@@ -54,7 +54,8 @@ namespace SoLeap.LeapProvider
 
             var fingers = new List<Finger>(5) { null, null, null, null, null };
 
-            foreach (var leapFingerType in EnumUtils.GetValues<Leap.Finger.FingerType>()) {
+            foreach (var leapFingerType in EnumUtils.GetValues<Leap.Finger.FingerType>())
+            {
                 FingerType fingerType = ConvertFingerType(leapFingerType);
 
                 // copy leapFingers because FingerList.FingerType() modifies the list
@@ -83,7 +84,8 @@ namespace SoLeap.LeapProvider
 
             var bones = new List<Bone>(4) { null, null, null, null };
 
-            foreach (var leapBoneType in EnumUtils.GetValues<Leap.Bone.BoneType>()) {
+            foreach (var leapBoneType in EnumUtils.GetValues<Leap.Bone.BoneType>())
+            {
                 BoneType boneType = ConvertBoneType(leapBoneType);
                 var bone = leapFinger.Bone(leapBoneType);
                 bones[(int)boneType] = ConvertBone(bone);
@@ -114,7 +116,8 @@ namespace SoLeap.LeapProvider
 
             var metacarpal = leapFinger.Bone(Leap.Bone.BoneType.TYPE_METACARPAL);
             joints[(int)JointType.CarpalMetacarpal] = ConvertPosition(metacarpal.PrevJoint);
-            foreach (var leapJointType in EnumUtils.GetValues<Leap.Finger.FingerJoint>()) {
+            foreach (var leapJointType in EnumUtils.GetValues<Leap.Finger.FingerJoint>())
+            {
                 var jointType = ConvertJointType(leapJointType);
                 var joint = leapFinger.JointPosition(leapJointType);
                 joints[(int)jointType] = ConvertPosition(joint);
@@ -155,4 +158,3 @@ namespace SoLeap.LeapProvider
         }
     }
 }
-

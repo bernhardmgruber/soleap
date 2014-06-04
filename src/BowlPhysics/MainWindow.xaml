@@ -12,6 +12,6 @@
                                MouseDown="OpenGLControl_MouseDown"
                                MouseUp="OpenGLControl_MouseUp"
                                MouseMove="OpenGLControl_MouseMove"
-                               MouseWheel="OpenGLControl_MouseWheel"/>
+                               MouseWheel="OpenGLControl_MouseWheel" />
     </Grid>
 </Window>

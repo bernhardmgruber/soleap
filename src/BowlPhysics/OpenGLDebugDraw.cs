@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
-using BulletSharp;
+﻿using BulletSharp;
 using SharpGL;
-using System.Diagnostics;
 using SharpGL.Enumerations;
+using System;
+using System.Diagnostics;
+using System.Drawing;
 
 namespace BowlPhysics
 {
     public class OpenGLDebugDraw : IDebugDraw
     {
-        OpenGL gl;
+        private OpenGL gl;
 
-        public DebugDrawModes DebugMode { get; set;}
+        public DebugDrawModes DebugMode { get; set; }
 
         public OpenGLDebugDraw(OpenGL gl)
         {
@@ -298,7 +294,6 @@ namespace BowlPhysics
 
         public void DrawTriangle(ref Vector3 v0, ref Vector3 v1, ref Vector3 v2, ref Vector3 __unnamed003, ref Vector3 __unnamed004, ref Vector3 __unnamed005, Color color, float alpha)
         {
-
             Debug.WriteLine("DrawTriangle");
         }
 

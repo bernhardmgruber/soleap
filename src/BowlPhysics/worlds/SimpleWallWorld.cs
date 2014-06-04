@@ -1,19 +1,14 @@
 ﻿using BulletSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BowlPhysics
+namespace BowlPhysics.Worlds
 {
-    class SimpleWallWorld : AbstractPhysicsWorld
+    internal class SimpleWallWorld : AbstractPhysicsWorld
     {
-        const float sceneHeight = 100f;
+        private const float sceneHeight = 100f;
 
-        const float gravity = 500f;
+        private const float gravity = 500f;
 
-        Vector3 wallDimensions2 = new Vector3(20f, 200f, 200f);
+        private Vector3 wallDimensions2 = new Vector3(20f, 200f, 200f);
 
         public SimpleWallWorld()
             : base(new Vector3(0f, -gravity, 0f)) { }
@@ -25,7 +20,7 @@ namespace BowlPhysics
             Add(groundShape);
 
             CreateAndAddRigidBody(0f, Matrix.Translation(0, sceneHeight, 0), groundShape, "Ground");
-   
+
             // create walls
             BoxShape wallShape = new BoxShape(wallDimensions2);
             Add(wallShape);

@@ -1,10 +1,5 @@
 ﻿using BulletSharp;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BowlPhysics
 {
@@ -27,6 +22,7 @@ namespace BowlPhysics
 
         // configuration
         private CollisionConfiguration collisionConfig;
+
         private Dispatcher dispatcher;
         private BroadphaseInterface broadphase;
 

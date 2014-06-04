@@ -1,27 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BulletSharp;
-using System.Diagnostics;
+﻿using BulletSharp;
 
-namespace BowlPhysics
+namespace BowlPhysics.Worlds
 {
-    public class BowlPhysicsWorld : AbstractPhysicsWorld
+    public class BowlWorld : AbstractPhysicsWorld
     {
-        const float bowlDiameter = 150f;
-        const float bowlHeight = 40f;
-        const float bowlThickness = 7f;
+        private const float bowlDiameter = 150f;
+        private const float bowlHeight = 40f;
+        private const float bowlThickness = 7f;
 
-        const float ballRadius = 25f;
+        private const float ballRadius = 25f;
 
-        const float sceneHeight = 100f;
+        private const float sceneHeight = 100f;
 
-        const float gravity = 500f;
+        private const float gravity = 500f;
 
-        public BowlPhysicsWorld()
+        public BowlWorld()
             : base(new Vector3(0f, -gravity, 0f)) { }
+
         protected override void SetupScene()
         {
             // create static ground
@@ -29,7 +24,7 @@ namespace BowlPhysics
             Add(groundShape);
 
             CreateAndAddRigidBody(0f, Matrix.Translation(0, sceneHeight, 0), groundShape, "Ground");
-   
+
             // create two bowls
             float innerDiameter2 = (bowlDiameter - bowlThickness) / 2.0f;
             float diameter2 = bowlDiameter / 2.0f;

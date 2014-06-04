@@ -107,16 +107,17 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="worlds\abstract\IPhysicsWorld.cs" />
-    <Compile Include="worlds\SimpleWallWorld.cs" />
+    <Compile Include="Worlds\abstract\IPhysicsWorld.cs" />
+    <Compile Include="Worlds\CubesWorld.cs" />
+    <Compile Include="Worlds\SimpleWallWorld.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="the hand\GraphicsHand.cs" />
     <Compile Include="the hand\PhysicsHand.cs" />
-    <Compile Include="worlds\abstract\AbstractPhysicsWorld.cs" />
-    <Compile Include="worlds\RubicsPhysicsWorld.cs" />
+    <Compile Include="Worlds\abstract\AbstractPhysicsWorld.cs" />
+    <Compile Include="Worlds\RubicsWorld.cs" />
     <Compile Include="OpenGLDebugDraw.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -125,7 +126,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="worlds\BowlPhysicsWorld.cs" />
+    <Compile Include="Worlds\BowlWorld.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

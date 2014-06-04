@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BulletSharp;
-using System.Diagnostics;
+﻿using BulletSharp;
+using System;
 
-namespace BowlPhysics
+namespace BowlPhysics.Worlds
 {
-    public class RubicsPhysicsWorld : AbstractPhysicsWorld
+    public class RubicsWorld : AbstractPhysicsWorld
     {
-        public RubicsPhysicsWorld()
+        public RubicsWorld()
             : base(new Vector3(0, -10, 0)) { }
 
-        const float subCubeSize = 1.5f;
-        const float subCubeMass = 1.0f;
-        const float bevel = 0.2f;
+        private const float subCubeSize = 1.5f;
+        private const float subCubeMass = 1.0f;
+        private const float bevel = 0.2f;
 
-        const float subCubeGap = 0.1f;
+        private const float subCubeGap = 0.1f;
 
         private CollisionShape CreateSubCubeShape()
         {
@@ -42,7 +37,7 @@ namespace BowlPhysics
                 for (int y = 0; y < 3; y++)
                     for (int x = 0; x < 3; x++)
                         //if ((x == 1 && y == 1) || (x == 1 && z == 1) || (y == 1 && z == 1))
-                        //if(x == y && y == z) 
+                        //if(x == y && y == z)
                         bodies[x, y, z] = CreateAndAddRigidBody(
                             subCubeMass,
                             Matrix.Translation((x - 1) * (1.0f + subCubeGap), (y - 1) * (1.0f + subCubeGap), (z - 1) * (1.0f + subCubeGap)),
@@ -69,17 +64,17 @@ namespace BowlPhysics
 
             float cubeDist2_r3 = cubeDist2 * (float)Math.Sqrt(3);
 
-           Add(new Point2PointConstraint(bodies[0, 0, 0], bodies[1, 1, 1], new Vector3(-cubeDist2_r3), Vector3.Zero));
-           Add(new Point2PointConstraint(bodies[1, 1, 1], bodies[2, 2, 2], Vector3.Zero, new Vector3(+cubeDist2_r3)));
+            Add(new Point2PointConstraint(bodies[0, 0, 0], bodies[1, 1, 1], new Vector3(-cubeDist2_r3), Vector3.Zero));
+            Add(new Point2PointConstraint(bodies[1, 1, 1], bodies[2, 2, 2], Vector3.Zero, new Vector3(+cubeDist2_r3)));
 
-           Add(new Point2PointConstraint(bodies[2, 0, 0], bodies[1, 1, 1], new Vector3(+cubeDist2_r3, -cubeDist2_r3, -cubeDist2_r3), Vector3.Zero));
-           Add(new Point2PointConstraint(bodies[1, 1, 1], bodies[0, 2, 2], Vector3.Zero, new Vector3(-cubeDist2_r3, +cubeDist2_r3, +cubeDist2_r3)));
+            Add(new Point2PointConstraint(bodies[2, 0, 0], bodies[1, 1, 1], new Vector3(+cubeDist2_r3, -cubeDist2_r3, -cubeDist2_r3), Vector3.Zero));
+            Add(new Point2PointConstraint(bodies[1, 1, 1], bodies[0, 2, 2], Vector3.Zero, new Vector3(-cubeDist2_r3, +cubeDist2_r3, +cubeDist2_r3)));
 
-           Add(new Point2PointConstraint(bodies[2, 2, 0], bodies[1, 1, 1], new Vector3(+cubeDist2_r3, +cubeDist2_r3, -cubeDist2_r3), Vector3.Zero));
-           Add(new Point2PointConstraint(bodies[1, 1, 1], bodies[0, 0, 2], Vector3.Zero, new Vector3(-cubeDist2_r3, -cubeDist2_r3, +cubeDist2_r3)));
+            Add(new Point2PointConstraint(bodies[2, 2, 0], bodies[1, 1, 1], new Vector3(+cubeDist2_r3, +cubeDist2_r3, -cubeDist2_r3), Vector3.Zero));
+            Add(new Point2PointConstraint(bodies[1, 1, 1], bodies[0, 0, 2], Vector3.Zero, new Vector3(-cubeDist2_r3, -cubeDist2_r3, +cubeDist2_r3)));
 
-           Add(new Point2PointConstraint(bodies[0, 2, 0], bodies[1, 1, 1], new Vector3(-cubeDist2_r3, +cubeDist2_r3, -cubeDist2_r3), Vector3.Zero));
-           Add(new Point2PointConstraint(bodies[1, 1, 1], bodies[2, 0, 2], Vector3.Zero, new Vector3(+cubeDist2_r3, -cubeDist2_r3, +cubeDist2_r3)));
+            Add(new Point2PointConstraint(bodies[0, 2, 0], bodies[1, 1, 1], new Vector3(-cubeDist2_r3, +cubeDist2_r3, -cubeDist2_r3), Vector3.Zero));
+            Add(new Point2PointConstraint(bodies[1, 1, 1], bodies[2, 0, 2], Vector3.Zero, new Vector3(+cubeDist2_r3, -cubeDist2_r3, +cubeDist2_r3)));
 
             // add distance constraints between center and edges
             float cubeDist2_r2 = cubeDist2 * (float)Math.Sqrt(2);

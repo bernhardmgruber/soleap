@@ -2,10 +2,6 @@
 using SharpGL;
 using SharpGL.Enumerations;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BowlPhysics
 {
@@ -92,7 +88,8 @@ namespace BowlPhysics
                     s.MeshInterface.GetLockedReadOnlyVertexIndexData(out stream, out numVertes, out type, out vertexStride, out indexStream, out indexStride, out numFaces, out indicesType);
 
                     gl.Begin(BeginMode.Triangles);
-                    for (int i = 0; i < numVertes; i++) {
+                    for (int i = 0; i < numVertes; i++)
+                    {
                         long offset = stream.Position;
                         float v1 = stream.Read<float>();
                         float v2 = stream.Read<float>();

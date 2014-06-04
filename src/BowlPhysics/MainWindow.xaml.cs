@@ -1,24 +1,11 @@
 ﻿using SharpGL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using BulletSharp;
-using SharpGL.SceneGraph;
 using SharpGL.Enumerations;
+using SharpGL.SceneGraph;
 using SoLeap.Device;
-using SharpGL.WPF;
-using System.Diagnostics;
+using System;
+using System.Linq;
+using System.Windows;
+using System.Windows.Input;
 
 namespace BowlPhysics
 {
@@ -27,20 +14,20 @@ namespace BowlPhysics
     /// </summary>
     public partial class MainWindow : Window
     {
-        IPhysicsWorld world;
-        IHandsFrameProvider handsProvider;
+        private IPhysicsWorld world;
+        private IHandsFrameProvider handsProvider;
 
-        bool tracking = false;
-        Point lastMousePos;
+        private bool tracking = false;
+        private Point lastMousePos;
 
-        float xrot = 0.0f;
-        float yrot = 0.0f;
-        float zoom = -500.0f;
+        private float xrot = 0.0f;
+        private float yrot = 0.0f;
+        private float zoom = -500.0f;
 
-        PhysicsHand physicsHand;
-        GraphicsHand graphicsHand;
+        private PhysicsHand physicsHand;
+        private GraphicsHand graphicsHand;
 
-        HandsFrame lastFrame = new HandsFrame();
+        private HandsFrame lastFrame = new HandsFrame();
 
         public MainWindow(IPhysicsWorld world, IHandsFrameProvider handsProvider)
         {
@@ -54,7 +41,7 @@ namespace BowlPhysics
             handsProvider.FrameReady += handsProvider_FrameReady;
         }
 
-        void handsProvider_FrameReady(object sender, HandsFrame e)
+        private void handsProvider_FrameReady(object sender, HandsFrame e)
         {
             lock (lastFrame)
                 lastFrame = e;

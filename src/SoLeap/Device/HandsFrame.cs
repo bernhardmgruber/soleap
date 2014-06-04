@@ -1,6 +1,6 @@
-﻿using System;
+﻿using SoLeap.Domain;
+using System;
 using System.Collections.Generic;
-using SoLeap.Domain;
 
 namespace SoLeap.Device
 {
@@ -14,7 +14,6 @@ namespace SoLeap.Device
 
         public HandsFrame()
         {
-
         }
 
         public HandsFrame(long id, DateTime timesStamp, IEnumerable<Hand> hands)
