@@ -11,35 +11,35 @@ namespace BowlPhysics
     /// <summary>
     /// Abstract base class for all bullet based physic scenes
     /// </summary>
-    public abstract class PhysicsWorld : System.IDisposable
+    public abstract class AbstractPhysicsWorld : IPhysicsWorld
     {
         public Vector3 Gravity
         {
-            get { return World.Gravity; }
-            set { World.Gravity = value; }
+            get { return world.Gravity; }
+            set { world.Gravity = value; }
         }
 
         public IDebugDraw DebugDrawer
         {
-            get { return World.DebugDrawer; }
-            set { World.DebugDrawer = value; }
+            get { return world.DebugDrawer; }
+            set { world.DebugDrawer = value; }
         }
 
         // configuration
-        protected CollisionConfiguration CollisionConfig { get; private set; }
-        protected Dispatcher Dispatcher { get; private set; }
-        protected BroadphaseInterface Broadphase { get; private set; }
+        private CollisionConfiguration collisionConfig;
+        private Dispatcher dispatcher;
+        private BroadphaseInterface broadphase;
 
         // the physics world
-        public DiscreteDynamicsWorld World { get; private set; } // FIXME, world should not be public
+        private DiscreteDynamicsWorld world;
 
         // all shapes that are used in collision
-        public AlignedCollisionShapeArray CollisionShapes { get; private set; }
+        private AlignedCollisionShapeArray collisionShapes;
 
         // the last time a physics update of the secene was done
         private long lastUpdate;
 
-        public PhysicsWorld(Vector3 gravity)
+        protected AbstractPhysicsWorld(Vector3 gravity)
         {
             lastUpdate = Stopwatch.GetTimestamp();
             SetupPhysics(gravity);
@@ -47,16 +47,16 @@ namespace BowlPhysics
 
         private void SetupPhysics(Vector3 gravity)
         {
-            CollisionShapes = new AlignedCollisionShapeArray();
+            collisionShapes = new AlignedCollisionShapeArray();
 
             // collision configuration contains default setup for memory, collision setup
-            CollisionConfig = new DefaultCollisionConfiguration();
-            Dispatcher = new CollisionDispatcher(CollisionConfig);
-            Broadphase = new DbvtBroadphase();
+            collisionConfig = new DefaultCollisionConfiguration();
+            dispatcher = new CollisionDispatcher(collisionConfig);
+            broadphase = new DbvtBroadphase();
 
             // create world and set gravity
-            World = new DiscreteDynamicsWorld(Dispatcher, Broadphase, null, CollisionConfig);
-            World.Gravity = gravity;
+            world = new DiscreteDynamicsWorld(dispatcher, broadphase, null, collisionConfig);
+            world.Gravity = gravity;
 
             SetupScene();
         }
@@ -76,47 +76,47 @@ namespace BowlPhysics
         public void Update(float deltaSeconds)
         {
             //Debug.WriteLine("world step " + deltaSeconds);
-            World.StepSimulation(deltaSeconds);
+            world.StepSimulation(deltaSeconds);
             lastUpdate = Stopwatch.GetTimestamp();
         }
 
         public void DebugDraw()
         {
-            World.DebugDrawWorld();
+            world.DebugDrawWorld();
         }
 
         public void Dispose()
         {
             //remove/dispose constraints
-            for (int i = World.NumConstraints - 1; i >= 0; i--)
+            for (int i = world.NumConstraints - 1; i >= 0; i--)
             {
-                TypedConstraint constraint = World.GetConstraint(i);
-                World.RemoveConstraint(constraint);
+                TypedConstraint constraint = world.GetConstraint(i);
+                world.RemoveConstraint(constraint);
                 constraint.Dispose();
             }
 
             //remove the rigidbodies from the dynamics world and delete them
-            for (int i = World.NumCollisionObjects - 1; i >= 0; i--)
+            for (int i = world.NumCollisionObjects - 1; i >= 0; i--)
             {
-                CollisionObject obj = World.CollisionObjectArray[i];
+                CollisionObject obj = world.CollisionObjectArray[i];
                 RigidBody body = obj as RigidBody;
                 if (body != null && body.MotionState != null)
                     body.MotionState.Dispose();
-                World.RemoveCollisionObject(obj);
+                world.RemoveCollisionObject(obj);
                 obj.Dispose();
             }
 
-            World.Dispose();
+            world.Dispose();
 
             //delete collision shapes
-            foreach (CollisionShape shape in CollisionShapes)
+            foreach (CollisionShape shape in collisionShapes)
                 shape.Dispose();
-            CollisionShapes.Clear();
-            CollisionShapes.Dispose();
+            collisionShapes.Clear();
+            collisionShapes.Dispose();
 
-            Broadphase.Dispose();
-            Dispatcher.Dispose();
-            CollisionConfig.Dispose();
+            broadphase.Dispose();
+            dispatcher.Dispose();
+            collisionConfig.Dispose();
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace BowlPhysics
         /// <param name="shape">The shape that is used for collision detection with the body</param>
         /// <param name="userObject">An optional object assigned to the UserObject property of the rigid body</param>
         /// <returns>The newly created body. Usually this return value is not needed.</returns>
-        public RigidBody CreateRigidBody(float mass, Matrix startTransform, CollisionShape shape, object userObject = null, bool isKinematic = false)
+        public RigidBody CreateAndAddRigidBody(float mass, Matrix startTransform, CollisionShape shape, object userObject = null, bool isKinematic = false)
         {
             // rigidbody is dynamic if and only if mass is non zero, otherwise static
             bool isDynamic = (mass != 0.0f);
@@ -152,9 +152,19 @@ namespace BowlPhysics
             body.UserObject = userObject;
 
             // add it to the world
-            World.AddRigidBody(body);
+            world.AddRigidBody(body);
 
             return body;
+        }
+
+        public void Add(CollisionShape shape)
+        {
+            collisionShapes.Add(shape);
+        }
+
+        public void Add(TypedConstraint constraint)
+        {
+            world.AddConstraint(constraint);
         }
     }
 }

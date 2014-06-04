@@ -14,72 +14,66 @@ namespace BowlPhysics
     public class PhysicsHand
     {
         private IDictionary<FingerType, IDictionary<BoneType, CollisionShape>> fingerShapes;
-        public IDictionary<FingerType, IDictionary<BoneType, CollisionShape>> FingerShapes
-        {
-            get
-            {
-                assertCalibrated();
-                return fingerShapes;
-            }
-        }
+        //public IDictionary<FingerType, IDictionary<BoneType, CollisionShape>> FingerShapes
+        //{
+        //    get
+        //    {
+        //        assertCalibrated();
+        //        return fingerShapes;
+        //    }
+        //}
 
         public IDictionary<FingerType, IDictionary<BoneType, RigidBody>> fingerBodies;
-        public IDictionary<FingerType, IDictionary<BoneType, RigidBody>> FingerBodies
-        {
-            get
-            {
-                assertCalibrated();
-                return fingerBodies;
-            }
-        }
+        //public IDictionary<FingerType, IDictionary<BoneType, RigidBody>> FingerBodies
+        //{
+        //    get
+        //    {
+        //        assertCalibrated();
+        //        return fingerBodies;
+        //    }
+        //}
 
         private CollisionShape palmShape;
-        public CollisionShape PalmShape
-        {
-            get
-            {
-                assertCalibrated();
-                return palmShape;
-            }
-        }
+        //public CollisionShape PalmShape
+        //{
+        //    get
+        //    {
+        //        assertCalibrated();
+        //        return palmShape;
+        //    }
+        //}
 
         private RigidBody palmBody;
-        public RigidBody PalmBody
-        {
-            get
-            {
-                assertCalibrated();
-                return palmBody;
-            }
-        }
+        //public RigidBody PalmBody
+        //{
+        //    get
+        //    {
+        //        assertCalibrated();
+        //        return palmBody;
+        //    }
+        //}
 
         public IEnumerable<Tuple<CollisionShape, Matrix>> AllShapesWithTransformations
         {
             get
             {
-                assertCalibrated();
+                AssertCalibrated();
 
-                // damn, that code duplication ...
-                foreach (var fingerType in EnumUtils.GetValues<FingerType>())
-                {
-                    foreach (var boneType in EnumUtils.GetValues<BoneType>())
-                    {
-                        if (boneType == BoneType.Metacarpal)
-                            continue; // skip the bones inside the hand
+                var list = new List<Tuple<CollisionShape, Matrix>>();
+                ForAllBones((fingerType, boneType) => list.Add(new Tuple<CollisionShape, Matrix>(fingerShapes[fingerType][boneType], fingerBodies[fingerType][boneType].MotionState.WorldTransform)));
+                list.Add(new Tuple<CollisionShape, Matrix>(palmShape, palmBody.MotionState.WorldTransform));
 
-                        yield return new Tuple<CollisionShape, Matrix>(fingerShapes[fingerType][boneType], fingerBodies[fingerType][boneType].MotionState.WorldTransform);
-                    }
-                }
-
-                yield return new Tuple<CollisionShape, Matrix>(palmShape, palmBody.MotionState.WorldTransform); 
+                return list;
             }
         }
 
-        private readonly PhysicsWorld world;
+        const bool useKinematicBodies = true;
+
+        private readonly IPhysicsWorld world;
 
         public bool Calibrated { get; private set; }
 
-        public PhysicsHand(PhysicsWorld world)
+        public PhysicsHand(IPhysicsWorld world)
         {
             this.world = world;
 
@@ -101,35 +95,29 @@ namespace BowlPhysics
             RigidBody body;
 
             // create fingers
-            foreach (var fingerType in EnumUtils.GetValues<FingerType>())
+            ForAllBones((fingerType, boneType) =>
             {
-                foreach (var boneType in EnumUtils.GetValues<BoneType>())
-                {
-                    if (boneType == BoneType.Metacarpal)
-                        continue; // skip the bones inside the hand
+                // get the bone
+                Bone bone = hand.GetFinger(fingerType).GetBone(boneType);
 
-                    // get the bone
-                    Bone bone = hand.GetFinger(fingerType).GetBone(boneType);
+                string userObjectString = "Finger " + fingerType + " " + boneType;
 
-                    string userObjectString = "Finger " + fingerType + " " + boneType;
+                // build collision shape
+                float length = (float)(bone.PrevJoint - bone.NextJoint).Length;
+                float width = (float)bone.Width;
+                float height = (float)bone.Width;
 
-                    // build collision shape
-                    float length = (float)(bone.PrevJoint - bone.NextJoint).Length;
-                    float width = (float)bone.Width;
-                    float height = (float)bone.Width;
+                shape = new BoxShape(width / 2.0f, height / 2.0f, length / 2.0f);
+                shape.UserObject = userObjectString;
+                world.Add(shape);
 
-                    shape = new BoxShape(width / 2.0f, height / 2.0f, length / 2.0f);
-                    shape.UserObject = userObjectString;
-                    world.CollisionShapes.Add(shape);
+                // create rigid body
+                body = world.CreateAndAddRigidBody(1.0f, ConvertMatrix(bone.Transformation), shape, userObjectString, useKinematicBodies);
 
-                    // create rigid body
-                    body = world.CreateRigidBody(1.0f, ConvertMatrix(bone.Transformation), shape, userObjectString, true);
-
-                    // store shape and body
-                    fingerShapes[fingerType][boneType] = shape;
-                    fingerBodies[fingerType][boneType] = body;
-                }
-            }
+                // store shape and body
+                fingerShapes[fingerType][boneType] = shape;
+                fingerBodies[fingerType][boneType] = body;
+            });
 
             // create palm ground shape by collecting all corner points of the palm
             IList<Vector3> groundShapePoints = new List<Vector3>();
@@ -205,20 +193,50 @@ namespace BowlPhysics
             // create shape from triangle mesh
             palmShape = new ConvexTriangleMeshShape(mesh);
             palmShape.UserObject = "palm";
-            world.CollisionShapes.Add(palmShape);
+            world.Add(palmShape);
 
             // create rigid body
-            palmBody = world.CreateRigidBody(1.0f, ConvertMatrix(hand.PalmTransformation), palmShape, "palm", true);
+            palmBody = world.CreateAndAddRigidBody(1.0f, ConvertMatrix(hand.PalmTransformation), palmShape, "palm", useKinematicBodies);
 
             Calibrated = true;
         }
 
         public void Update(Hand hand)
         {
-            assertCalibrated();
+            AssertCalibrated();
 
             // update fingers
-            // TODO, code duplication with Calibrate() method
+            ForAllBones((fingerType, boneType) =>
+            {
+                // grab body
+                RigidBody body = fingerBodies[fingerType][boneType];
+
+                // find corresponding bone
+                Bone bone = hand.GetFinger(fingerType).GetBone(boneType);
+
+                // apply bone basis to the rigid body's world transformation
+                UpdateBody(body, bone.Transformation);
+            });
+
+            // update palm
+            UpdateBody(palmBody, hand.PalmTransformation);
+        }
+
+        private void UpdateBody(RigidBody body, Matrix3D transformation)
+        {
+            var newT = ConvertMatrix(transformation);
+            var oldT = body.MotionState.WorldTransform;
+            var delta = Matrix.Multiply(Matrix.Invert(oldT), newT);
+
+            //body.ProceedToTransform(newT);
+            //body.ApplyCentralForce(newT.Origin);
+            body.MotionState.WorldTransform = newT;
+            //body.ClearForces();
+            //body.LinearVelocity = delta.Origin;
+        }
+
+        private void ForAllBones(Action<FingerType, BoneType> func)
+        {
             foreach (var fingerType in EnumUtils.GetValues<FingerType>())
             {
                 foreach (var boneType in EnumUtils.GetValues<BoneType>())
@@ -226,19 +244,9 @@ namespace BowlPhysics
                     if (boneType == BoneType.Metacarpal)
                         continue; // skip the bones inside the hand
 
-                    // grab body
-                    RigidBody body = fingerBodies[fingerType][boneType];
-
-                    // find corresponding bone
-                    Bone bone = hand.GetFinger(fingerType).GetBone(boneType);
-
-                    // apply bone basis to the rigid body's world transformation
-                    body.MotionState.WorldTransform = ConvertMatrix(bone.Transformation);
+                    func(fingerType, boneType);
                 }
             }
-
-            // update palm
-            palmBody.MotionState.WorldTransform = ConvertMatrix(hand.PalmTransformation);
         }
 
         private Matrix ConvertMatrix(Matrix3D m)
@@ -274,7 +282,7 @@ namespace BowlPhysics
             return new Vector3((float)p.X, (float)p.Y, (float)p.Z);
         }
 
-        private void assertCalibrated()
+        private void AssertCalibrated()
         {
             if (!Calibrated)
                 throw new InvalidOperationException("Hand is not initialized");
