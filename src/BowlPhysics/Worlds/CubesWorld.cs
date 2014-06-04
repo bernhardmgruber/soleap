@@ -6,10 +6,10 @@ namespace BowlPhysics.Worlds
     public class CubesWorld : AbstractPhysicsWorld
     {
         public CubesWorld()
-            : base(new Vector3(0, -100, 0)) { }
+            : base(new Vector3(0, -500, 0)) { }
 
-        private const float cubeSize = 100f;
-        private const int numberOfCubes = 16;
+        private const float cubeSize = 40f;
+        private const int numberOfCubes = 5;
 
         private const float floorHeight = 100f;
 
