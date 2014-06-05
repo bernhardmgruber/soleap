@@ -102,6 +102,24 @@
     <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
     <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CONTRACTS_FULL</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;CONTRACTS_FULL</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BulletSharp">
       <HintPath>..\lib\bulletsharp_generic\BulletSharp.dll</HintPath>
@@ -111,13 +129,13 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Device\IHandsFrameProvider.cs" />
+    <Compile Include="Devices\IHandsFrameProvider.cs" />
     <Compile Include="Domain\Bone.cs" />
     <Compile Include="Domain\BoneType.cs" />
     <Compile Include="Domain\Finger.cs" />
     <Compile Include="Domain\FingerType.cs" />
     <Compile Include="Domain\Hand.cs" />
-    <Compile Include="Device\HandsFrame.cs" />
+    <Compile Include="Devices\HandsFrame.cs" />
     <Compile Include="Domain\JointType.cs" />
     <Compile Include="Helper\DoubleExtensions.cs" />
     <Compile Include="Helper\EnumUtils.cs" />

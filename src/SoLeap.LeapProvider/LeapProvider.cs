@@ -1,5 +1,5 @@
 ﻿using Leap;
-using SoLeap.Device;
+using SoLeap.Devices;
 using System;
 
 namespace SoLeap.LeapProvider

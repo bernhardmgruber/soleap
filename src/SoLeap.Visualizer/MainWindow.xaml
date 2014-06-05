@@ -4,13 +4,29 @@
         xmlns:wpf="clr-namespace:SharpDX.WPF;assembly=SharpDX.WPF"
         xmlns:visualizer="clr-namespace:SoLeap.Visualizer"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="SoLeap.Visualizer.MainWindow"
-        Title="SoLeap - Hand Reconstruction" Height="350" Width="525">
+        Title="SoLeap - Hand Reconstruction" Height="600" Width="1000">
     <Grid>
-        <wpf:DXElement>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="200" />
+        </Grid.ColumnDefinitions>
+
+        <wpf:DXElement Grid.Column="0">
             <wpf:DXElement.Renderer>
                 <visualizer:TestRenderer />
                 <!--<visualizer:T5_Transformation />-->
             </wpf:DXElement.Renderer>
         </wpf:DXElement>
+        <StackPanel Grid.Column="1" Orientation="Vertical">
+            <GroupBox Header="Scene">
+                <StackPanel>
+                    <ComboBox Name="sceneBox" ItemsSource="{Binding SceneNames}" SelectedItem="{Binding SelectedSceneName}" />
+                    <Button Content="Reload scenee" Command="{Binding ReloadSceneCommand}" />
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Leap Motion">
+                <Button Content="Recalibrate using current frame" Command="{Binding RecalibrateCommand}" />
+            </GroupBox>
+        </StackPanel>
     </Grid>
 </Window>

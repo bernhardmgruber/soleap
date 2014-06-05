@@ -110,6 +110,26 @@
     <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
     <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CONTRACTS_FULL</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BulletSharp">
       <HintPath>..\lib\bulletsharp_generic\BulletSharp.dll</HintPath>
@@ -158,6 +178,7 @@
     <Compile Include="DebugDraw\BufferedDebugDraw.cs" />
     <Compile Include="DebugDraw\PositionColored.cs" />
     <Compile Include="DebugDraw\SharpDX11DebugDraw.cs" />
+    <Compile Include="RelayCommand.cs" />
     <Compile Include="TestRenderer.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Page Include="MainWindow.xaml">
@@ -203,6 +224,22 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SoLeap.Hand\SoLeap.Hand.csproj">
+      <Project>{54ee30bd-a633-4b1b-87c3-eed5bdd62122}</Project>
+      <Name>SoLeap.Hand</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SoLeap.LeapProvider\SoLeap.LeapProvider.csproj">
+      <Project>{1a5d24a0-c7c6-4acb-8ea4-bc02d0982919}</Project>
+      <Name>SoLeap.LeapProvider</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SoLeap.Worlds\SoLeap.Worlds.csproj">
+      <Project>{7c85e90f-802a-4cd2-81c8-43719e705ec3}</Project>
+      <Name>SoLeap.Worlds</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SoLeap\SoLeap.csproj">
+      <Project>{3728bab2-86ba-4e16-8976-44ec40a2112f}</Project>
+      <Name>SoLeap</Name>
+    </ProjectReference>
     <ProjectReference Include="..\_External\SharpDX.WPF\SharpDX.WPF.csproj">
       <Project>{587d723b-36b2-49e2-9018-e3abd4b8bba6}</Project>
       <Name>SharpDX.WPF</Name>

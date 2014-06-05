@@ -11,6 +11,7 @@ namespace SoLeap.Visualizer
         : D3D11
     {
         #region Shader Code
+
         private const string VertexShaderCode = @"
 float4 VShader(float4 position : POSITION) : SV_POSITION
 {
@@ -24,7 +25,8 @@ float4 PShader(float4 position : SV_POSITION) : SV_TARGET
     return float4(1.0f, 0.0f, 0.0f, 1.0f);
 }
 ";
-        #endregion
+
+        #endregion Shader Code
 
         private readonly VertexShader vertexShader;
         private readonly PixelShader pixelShader;
@@ -36,7 +38,8 @@ float4 PShader(float4 position : SV_POSITION) : SV_TARGET
         {
             using (var vsBytecode = ShaderBytecode.Compile(VertexShaderCode, "VShader", "vs_4_0", ShaderFlags.EnableStrictness | ShaderFlags.Debug))
             using (var psBytecode = ShaderBytecode.Compile(PixelShaderCode, "PShader", "ps_4_0", ShaderFlags.EnableStrictness | ShaderFlags.Debug))
-            using (var inputSignature = ShaderSignature.GetInputSignature(vsBytecode)) {
+            using (var inputSignature = ShaderSignature.GetInputSignature(vsBytecode))
+            {
                 vertexShader = new VertexShader(Device, vsBytecode);
                 pixelShader = new PixelShader(Device, psBytecode);
 

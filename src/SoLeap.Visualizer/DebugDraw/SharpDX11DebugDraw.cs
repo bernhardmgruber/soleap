@@ -8,13 +8,13 @@ namespace SoLeap.Visualizer.DebugDraw
 {
     public class SharpDX11DebugDraw : BufferedDebugDraw
     {
-        Device device;
-        InputAssemblerStage inputAssembler;
-        InputLayout inputLayout;
-        BufferDescription vertexBufferDesc;
-        PositionColored[] lineArray;
-        Buffer vertexBuffer;
-        VertexBufferBinding vertexBufferBinding;
+        private SharpDX.Direct3D11.Device device;
+        private InputAssemblerStage inputAssembler;
+        private InputLayout inputLayout;
+        private BufferDescription vertexBufferDesc;
+        private PositionColored[] lineArray;
+        private Buffer vertexBuffer;
+        private VertexBufferBinding vertexBufferBinding;
 
         public SharpDX11DebugDraw(DynamicsWorld world, Device device, byte[] shaderByteCode)
         {

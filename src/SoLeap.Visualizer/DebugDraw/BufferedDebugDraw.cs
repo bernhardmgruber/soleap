@@ -1,7 +1,7 @@
-﻿using System;
-using System.Drawing;
+﻿using BulletSharp;
+using System;
 using System.Collections.Generic;
-using BulletSharp;
+using System.Drawing;
 
 namespace SoLeap.Visualizer.DebugDraw
 {

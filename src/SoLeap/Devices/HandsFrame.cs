@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SoLeap.Device
+namespace SoLeap.Devices
 {
     public class HandsFrame
     {

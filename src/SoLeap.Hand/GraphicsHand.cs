@@ -1,16 +1,13 @@
 ﻿using BulletSharp;
-using SoLeap.Domain;
-
-using System.Linq;
-using SharpDX;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using SharpDX.Direct3D11;
-using System;
-using SoLeap.Worlds;
-using System.Diagnostics;
-using SharpDX.DXGI;
 using SharpDX.Direct3D;
+using SharpDX.Direct3D11;
+using SharpDX.DXGI;
+using SoLeap.Worlds;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace SoLeap.Hand
 {
@@ -23,7 +20,7 @@ namespace SoLeap.Hand
         private IList<Tuple<int, int>> shapeRanges;
         private SharpDX.Direct3D11.Buffer vertexBuffer;
         private SharpDX.Direct3D11.Buffer matrixBuffer;
-        private InputLayout inputLayout;
+        private SharpDX.Direct3D11.InputLayout inputLayout;
         private IList<SharpDX.Matrix> transformations;
 
         private struct Vertex
@@ -34,8 +31,8 @@ namespace SoLeap.Hand
                 this.position = position;
             }
 
-            SharpDX.Vector3 normal;
-            SharpDX.Vector3 position;
+            private SharpDX.Vector3 normal;
+            private SharpDX.Vector3 position;
         }
 
         public GraphicsHand(SharpDX.Direct3D11.Device device, byte[] inputSignature, IPhysicsWorld world, Domain.Hand hand)
@@ -212,6 +209,8 @@ namespace SoLeap.Hand
         private void CleanupRessources()
         {
             vertexBuffer.Dispose();
+            matrixBuffer.Dispose();
+            inputLayout.Dispose();
         }
 
         public void Update(Domain.Hand hand)

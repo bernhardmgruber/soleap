@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SoLeap.Device
+namespace SoLeap.Devices
 {
     public interface IHandsFrameProvider
     {
