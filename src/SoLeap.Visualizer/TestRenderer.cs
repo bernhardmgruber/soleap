@@ -4,6 +4,7 @@ using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.WPF;
+using SoLeap.Visualizer.ViewModels;
 
 namespace SoLeap.Visualizer
 {
@@ -34,8 +35,12 @@ float4 PShader(float4 position : SV_POSITION) : SV_TARGET
 
         private readonly Buffer vertexBuffer;
 
-        public TestRenderer()
+        private MainWindowViewModel model;
+
+        public TestRenderer(MainWindowViewModel model)
         {
+            this.model = model;
+
             using (var vsBytecode = ShaderBytecode.Compile(VertexShaderCode, "VShader", "vs_4_0", ShaderFlags.EnableStrictness | ShaderFlags.Debug))
             using (var psBytecode = ShaderBytecode.Compile(PixelShaderCode, "PShader", "ps_4_0", ShaderFlags.EnableStrictness | ShaderFlags.Debug))
             using (var inputSignature = ShaderSignature.GetInputSignature(vsBytecode))
@@ -57,6 +62,8 @@ float4 PShader(float4 position : SV_POSITION) : SV_TARGET
 
         public override void RenderScene(DrawEventArgs args)
         {
+            model.Update();
+
             var context = Device.ImmediateContext;
 
             context.ClearRenderTargetView(RenderTargetView, Color.Aquamarine);

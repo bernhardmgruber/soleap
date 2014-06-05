@@ -99,7 +99,10 @@ namespace SoLeap.Visualizer.ViewModels
             }
         }
 
-        private void Update()
+        /// <summary>
+        /// Called by the renderer to update the models data using leap input and bullet
+        /// </summary>
+        internal void Update()
         {
             if (currentWorld != null)
             {
