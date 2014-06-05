@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoLeap.LeapProvider", "SoLe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoLeap", "SoLeap\SoLeap.csproj", "{3728BAB2-86BA-4E16-8976-44EC40A2112F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoLeap.Worlds", "SoLeap.Worlds\SoLeap.Worlds.csproj", "{7C85E90F-802A-4CD2-81C8-43719E705EC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoLeap.Hand", "SoLeap.Hand\SoLeap.Hand.csproj", "{54EE30BD-A633-4B1B-87C3-EED5BDD62122}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -27,6 +31,14 @@ Global
 		{3728BAB2-86BA-4E16-8976-44EC40A2112F}.Debug|x64.Build.0 = Debug|x64
 		{3728BAB2-86BA-4E16-8976-44EC40A2112F}.Release|x64.ActiveCfg = Release|x64
 		{3728BAB2-86BA-4E16-8976-44EC40A2112F}.Release|x64.Build.0 = Release|x64
+		{7C85E90F-802A-4CD2-81C8-43719E705EC3}.Debug|x64.ActiveCfg = Debug|x64
+		{7C85E90F-802A-4CD2-81C8-43719E705EC3}.Debug|x64.Build.0 = Debug|x64
+		{7C85E90F-802A-4CD2-81C8-43719E705EC3}.Release|x64.ActiveCfg = Release|x64
+		{7C85E90F-802A-4CD2-81C8-43719E705EC3}.Release|x64.Build.0 = Release|x64
+		{54EE30BD-A633-4B1B-87C3-EED5BDD62122}.Debug|x64.ActiveCfg = Debug|x64
+		{54EE30BD-A633-4B1B-87C3-EED5BDD62122}.Debug|x64.Build.0 = Debug|x64
+		{54EE30BD-A633-4B1B-87C3-EED5BDD62122}.Release|x64.ActiveCfg = Release|x64
+		{54EE30BD-A633-4B1B-87C3-EED5BDD62122}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

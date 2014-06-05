@@ -2,6 +2,8 @@
 using SharpGL.Enumerations;
 using SharpGL.SceneGraph;
 using SoLeap.Device;
+using SoLeap.Hand;
+using SoLeap.Worlds;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,8 +29,6 @@ namespace BowlPhysics
         private float zoom = -500.0f;
 
         private IDictionary<long, GraphicsHand> hands = new Dictionary<long, GraphicsHand>();
-
-        private GraphicsHand graphicsHand;
 
         private HandsFrame lastFrame = new HandsFrame();
 

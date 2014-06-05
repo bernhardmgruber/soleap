@@ -1,7 +1,7 @@
 ﻿using BulletSharp;
 using System.Diagnostics;
 
-namespace BowlPhysics
+namespace SoLeap.Worlds
 {
     /// <summary>
     /// Abstract base class for all bullet based physic scenes

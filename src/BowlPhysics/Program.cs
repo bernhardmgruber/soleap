@@ -1,7 +1,7 @@
-﻿using BowlPhysics.Worlds;
-using Ninject;
+﻿using Ninject;
 using SoLeap.Device;
 using SoLeap.LeapProvider;
+using SoLeap.Worlds;
 using System;
 using System.Windows;
 

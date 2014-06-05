@@ -1,7 +1,7 @@
 ﻿using BulletSharp;
 using System;
 
-namespace BowlPhysics.Worlds
+namespace SoLeap.Worlds
 {
     public class RubicsWorld : AbstractPhysicsWorld
     {

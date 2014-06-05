@@ -107,17 +107,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Worlds\abstract\IPhysicsWorld.cs" />
-    <Compile Include="Worlds\CubesWorld.cs" />
-    <Compile Include="Worlds\SimpleWallWorld.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="the hand\GraphicsHand.cs" />
-    <Compile Include="the hand\PhysicsHand.cs" />
-    <Compile Include="Worlds\abstract\AbstractPhysicsWorld.cs" />
-    <Compile Include="Worlds\RubicsWorld.cs" />
     <Compile Include="OpenGLDebugDraw.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -126,7 +119,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Worlds\BowlWorld.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -155,9 +147,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SoLeap.Hand\SoLeap.Hand.csproj">
+      <Project>{54ee30bd-a633-4b1b-87c3-eed5bdd62122}</Project>
+      <Name>SoLeap.Hand</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SoLeap.LeapProvider\SoLeap.LeapProvider.csproj">
       <Project>{1a5d24a0-c7c6-4acb-8ea4-bc02d0982919}</Project>
       <Name>SoLeap.LeapProvider</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SoLeap.Worlds\SoLeap.Worlds.csproj">
+      <Project>{7c85e90f-802a-4cd2-81c8-43719e705ec3}</Project>
+      <Name>SoLeap.Worlds</Name>
     </ProjectReference>
     <ProjectReference Include="..\SoLeap\SoLeap.csproj">
       <Project>{3728bab2-86ba-4e16-8976-44ec40a2112f}</Project>

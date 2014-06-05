@@ -1,13 +1,14 @@
 ﻿using BulletSharp;
 using SoLeap;
 using SoLeap.Domain;
+using SoLeap.Worlds;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Media.Media3D;
 
-namespace BowlPhysics
+namespace SoLeap.Hand
 {
     public class PhysicsHand
     {
@@ -67,7 +68,7 @@ namespace BowlPhysics
 
         private readonly IPhysicsWorld world;
 
-        public PhysicsHand(IPhysicsWorld world, Hand hand)
+        public PhysicsHand(IPhysicsWorld world, Domain.Hand hand)
         {
             this.world = world;
 
@@ -85,7 +86,7 @@ namespace BowlPhysics
         /// <summary>
         /// Creates all rigid bodies for the physics world according to the measures of the provided hand.
         /// </summary>
-        private void Calibrate(Hand hand)
+        private void Calibrate(Domain.Hand hand)
         {
             CollisionShape shape;
             RigidBody body;
@@ -195,7 +196,7 @@ namespace BowlPhysics
             palmBody = world.CreateAndAddRigidBody(1.0f, ConvertMatrix(hand.PalmTransformation), palmShape, "palm", useKinematicBodies);
         }
 
-        public void Update(Hand hand)
+        public void Update(Domain.Hand hand)
         {
             // update fingers
             ForAllBones((fingerType, boneType) =>

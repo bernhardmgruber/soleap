@@ -1,6 +1,6 @@
 ﻿using BulletSharp;
 
-namespace BowlPhysics.Worlds
+namespace SoLeap.Worlds
 {
     public class BowlWorld : AbstractPhysicsWorld
     {

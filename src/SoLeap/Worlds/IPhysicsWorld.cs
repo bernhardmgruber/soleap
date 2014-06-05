@@ -1,6 +1,6 @@
 ﻿using BulletSharp;
 
-namespace BowlPhysics
+namespace SoLeap.Worlds
 {
     public interface IPhysicsWorld : System.IDisposable
     {
