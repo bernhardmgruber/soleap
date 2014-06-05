@@ -22,7 +22,7 @@ namespace SoLeap.Hand
         //    }
         //}
 
-        public IDictionary<FingerType, IDictionary<BoneType, RigidBody>> fingerBodies;
+        private IDictionary<FingerType, IDictionary<BoneType, RigidBody>> fingerBodies;
         //public IDictionary<FingerType, IDictionary<BoneType, RigidBody>> FingerBodies
         //{
         //    get
@@ -52,7 +52,26 @@ namespace SoLeap.Hand
         //    }
         //}
 
-        public IEnumerable<Tuple<CollisionShape, Matrix>> AllShapesWithTransformations
+        /// <summary>
+        /// A list of all bounding volume shapes generated to represent the hand
+        /// Thist list is guaranteed to be in the same order as in AllShapesWithTransformations
+        /// </summary>
+        public IList<CollisionShape> AllShapes
+        {
+            get
+            {
+                var list = new List<CollisionShape>();
+                ForAllBones((fingerType, boneType) => list.Add(fingerShapes[fingerType][boneType]));
+                list.Add(palmShape);
+
+                return list;
+            }
+        }
+
+        /// <summary>
+        /// A list of all bounding volume shapes generated to represent the hand with their current transformations
+        /// </summary>
+        public IList<Tuple<CollisionShape, Matrix>> AllShapesWithTransformations
         {
             get
             {
