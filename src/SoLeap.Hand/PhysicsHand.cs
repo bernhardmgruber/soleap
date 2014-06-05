@@ -53,6 +53,22 @@ namespace SoLeap.Hand
         //}
 
         /// <summary>
+        /// A list of all bounding volume transformations of the hand
+        /// Thist list is guaranteed to be in the same order as in AllShapesWithTransformations
+        /// </summary>
+        public IList<Matrix> AllTransformations
+        {
+            get
+            {
+                var list = new List<Matrix>();
+                ForAllBones((fingerType, boneType) => list.Add(fingerBodies[fingerType][boneType].MotionState.WorldTransform));
+                list.Add(palmBody.MotionState.WorldTransform);
+
+                return list;
+            }
+        }
+
+        /// <summary>
         /// A list of all bounding volume shapes generated to represent the hand
         /// Thist list is guaranteed to be in the same order as in AllShapesWithTransformations
         /// </summary>

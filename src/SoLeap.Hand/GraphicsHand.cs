@@ -7,6 +7,10 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using SharpDX.Direct3D11;
 using System;
+using SoLeap.Worlds;
+using System.Diagnostics;
+using SharpDX.DXGI;
+using SharpDX.Direct3D;
 
 namespace SoLeap.Hand
 {
@@ -18,6 +22,9 @@ namespace SoLeap.Hand
 
         private IList<Tuple<int, int>> shapeRanges;
         private SharpDX.Direct3D11.Buffer vertexBuffer;
+        private SharpDX.Direct3D11.Buffer matrixBuffer;
+        private InputLayout inputLayout;
+        private IList<SharpDX.Matrix> transformations;
 
         private struct Vertex
         {
@@ -31,12 +38,18 @@ namespace SoLeap.Hand
             SharpDX.Vector3 position;
         }
 
-        public GraphicsHand(SharpDX.Direct3D11.Device device, PhysicsHand physicsHand)
+        public GraphicsHand(SharpDX.Direct3D11.Device device, byte[] inputSignature, IPhysicsWorld world, Domain.Hand hand)
         {
             this.device = device;
-            this.physicsHand = physicsHand;
+            this.physicsHand = new PhysicsHand(world, hand);
+
+            inputLayout = new InputLayout(device, inputSignature, new[] {
+                    new InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0),
+                    new InputElement("NORMAL", 0, Format.R32G32B32_Float, 12, 0)
+                });
 
             SetupRessources();
+            Update(hand);
         }
 
         private void EmitBoxVertices(IList<Vertex> vertices, float xExtentHalf, float yExtentHalf, float zExtentHalf)
@@ -123,7 +136,7 @@ namespace SoLeap.Hand
                     var s = shape as BoxShape;
 
                     var ex = s.HalfExtentsWithoutMargin;
-                    
+
                     EmitBoxVertices(vertices, ex.X, ex.Y, ex.Z);
                 }
                 else if (shape is ConvexTriangleMeshShape)
@@ -183,6 +196,17 @@ namespace SoLeap.Hand
                     Usage = ResourceUsage.Default
                 });
             }
+
+            // create constant buffer for the current transformation matrix
+            matrixBuffer = new SharpDX.Direct3D11.Buffer(device, new BufferDescription
+            {
+                BindFlags = BindFlags.ConstantBuffer,
+                SizeInBytes = Marshal.SizeOf(typeof(SharpDX.Matrix)),
+                CpuAccessFlags = CpuAccessFlags.Write,
+                OptionFlags = ResourceOptionFlags.None,
+                StructureByteStride = 0,
+                Usage = ResourceUsage.Dynamic
+            });
         }
 
         private void CleanupRessources()
@@ -195,16 +219,30 @@ namespace SoLeap.Hand
             physicsHand.Update(hand);
 
             // transformations have changed
-
-            // TODO
+            transformations = physicsHand.AllTransformations.Select(m => new SharpDX.Matrix(m.ToArray())).ToList();
         }
 
-        public void Render() // TODO
+        public void Render()
         {
-            // TODO
+            var context = device.ImmediateContext;
+            context.InputAssembler.InputLayout = inputLayout;
+            context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertexBuffer, 24, 0));
+            context.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
 
+            Debug.Assert(shapeRanges.Count == transformations.Count);
+            for (int i = 0; i < shapeRanges.Count; i++)
+            {
+                SharpDX.Matrix trans = transformations[i];
+                int vertexOffset = shapeRanges[i].Item1;
+                int vertexCount = shapeRanges[i].Item2 - vertexOffset;
 
-            device.ImmediateContext.Draw(shapeRanges.Last().Item2, 0);
+                SharpDX.DataStream stream;
+                context.MapSubresource(matrixBuffer, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out stream);
+                stream.Write(trans);
+                context.UnmapSubresource(matrixBuffer, 0);
+
+                context.Draw(vertexCount, vertexOffset);
+            }
         }
 
         public void Dispose()
