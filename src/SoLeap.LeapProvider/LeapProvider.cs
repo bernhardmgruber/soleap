@@ -7,12 +7,18 @@ namespace SoLeap.LeapProvider
     public class LeapProvider
         : IDisposable, IHandsFrameProvider
     {
-        private readonly Controller controller;
-
-        private readonly IFrameConverter frameConverter;
-
         public event EventHandler<HandsFrame> FrameReady;
 
+        public HandsFrame LastFrame
+        {
+            get
+            {
+                return frameConverter.Convert(controller.Frame(0));
+            }
+        }
+
+        private readonly Controller controller;
+        private readonly IFrameConverter frameConverter;
         private LeapListener listener;
 
         public LeapProvider(IFrameConverter frameConverter)

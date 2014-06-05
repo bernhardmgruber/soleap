@@ -9,10 +9,9 @@ namespace SoLeap.Visualizer.ViewModels
 {
     public sealed class MainWindowViewModel : IDisposable
     {
+        private IHandsFrameProvider handsProvider;
         private IDictionary<long, GraphicsHand> hands = new Dictionary<long, GraphicsHand>();
         private IPhysicsWorld currentWorld;
-
-        private HandsFrame lastFrame = new HandsFrame();
 
         #region member for properties and commands
 
@@ -76,11 +75,18 @@ namespace SoLeap.Visualizer.ViewModels
 
         #endregion commands
 
-        public MainWindowViewModel(IEnumerable<Lazy<string>> scenes)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public MainWindowViewModel(IEnumerable<Lazy<string>> scenes, IHandsFrameProvider handsProvider)
         {
             SceneNames = scenes;
+            this.handsProvider = handsProvider;
         }
 
+        /// <summary>
+        /// Shuts down the currently shown physics scenario and loads another one.
+        /// </summary>
         private void SwitchScene(string scene)
         {
             // unload scene
@@ -99,32 +105,31 @@ namespace SoLeap.Visualizer.ViewModels
             {
                 currentWorld.Update();
 
-                lock (lastFrame)
+                var lastFrame = handsProvider.LastFrame;
+
+                IDictionary<long, GraphicsHand> newHands = new Dictionary<long, GraphicsHand>();
+                foreach (var hand in lastFrame.Hands)
                 {
-                    IDictionary<long, GraphicsHand> newHands = new Dictionary<long, GraphicsHand>();
-                    foreach (var hand in lastFrame.Hands)
+                    GraphicsHand gh;
+                    if (hands.TryGetValue(hand.Id, out gh))
                     {
-                        GraphicsHand gh;
-                        if (hands.TryGetValue(hand.Id, out gh))
-                        {
-                            // this hand existed in the last frame, update it
-                            gh.Update(hand);
-                            hands.Remove(hand.Id);
-                        }
-                        else
-                        {
-                            // this hand is new, create it
-                            gh = new GraphicsHand(null, new byte[0], currentWorld, hand); // TODO
-                        }
-                        newHands[hand.Id] = gh;
+                        // this hand existed in the last frame, update it
+                        gh.Update(hand);
+                        hands.Remove(hand.Id);
                     }
-
-                    // remove missing hands
-                    foreach (var missingHands in hands.Values)
-                        missingHands.Dispose();
-
-                    hands = newHands;
+                    else
+                    {
+                        // this hand is new, create it
+                        gh = new GraphicsHand(null, new byte[0], currentWorld, hand); // TODO
+                    }
+                    newHands[hand.Id] = gh;
                 }
+
+                // remove missing hands
+                foreach (var missingHands in hands.Values)
+                    missingHands.Dispose();
+
+                hands = newHands;
             }
         }
 
