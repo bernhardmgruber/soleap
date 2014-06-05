@@ -55,8 +55,6 @@ namespace BowlPhysics
         {
             get
             {
-                AssertCalibrated();
-
                 var list = new List<Tuple<CollisionShape, Matrix>>();
                 ForAllBones((fingerType, boneType) => list.Add(new Tuple<CollisionShape, Matrix>(fingerShapes[fingerType][boneType], fingerBodies[fingerType][boneType].MotionState.WorldTransform)));
                 list.Add(new Tuple<CollisionShape, Matrix>(palmShape, palmBody.MotionState.WorldTransform));
@@ -69,9 +67,7 @@ namespace BowlPhysics
 
         private readonly IPhysicsWorld world;
 
-        public bool Calibrated { get; private set; }
-
-        public PhysicsHand(IPhysicsWorld world)
+        public PhysicsHand(IPhysicsWorld world, Hand hand)
         {
             this.world = world;
 
@@ -82,12 +78,14 @@ namespace BowlPhysics
             fingerBodies = new Dictionary<FingerType, IDictionary<BoneType, RigidBody>>();
             foreach (var fingerType in EnumUtils.GetValues<FingerType>())
                 fingerBodies[fingerType] = new Dictionary<BoneType, RigidBody>();
+
+            Calibrate(hand);
         }
 
         /// <summary>
         /// Creates all rigid bodies for the physics world according to the measures of the provided hand.
         /// </summary>
-        public void Calibrate(Hand hand)
+        private void Calibrate(Hand hand)
         {
             CollisionShape shape;
             RigidBody body;
@@ -195,14 +193,10 @@ namespace BowlPhysics
 
             // create rigid body
             palmBody = world.CreateAndAddRigidBody(1.0f, ConvertMatrix(hand.PalmTransformation), palmShape, "palm", useKinematicBodies);
-
-            Calibrated = true;
         }
 
         public void Update(Hand hand)
         {
-            AssertCalibrated();
-
             // update fingers
             ForAllBones((fingerType, boneType) =>
             {
@@ -278,12 +272,6 @@ namespace BowlPhysics
         private Vector3 ConvertDirection(Vector3D p)
         {
             return new Vector3((float)p.X, (float)p.Y, (float)p.Z);
-        }
-
-        private void AssertCalibrated()
-        {
-            if (!Calibrated)
-                throw new InvalidOperationException("Hand is not initialized");
         }
     }
 }

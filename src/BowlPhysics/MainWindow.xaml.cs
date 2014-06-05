@@ -3,6 +3,8 @@ using SharpGL.Enumerations;
 using SharpGL.SceneGraph;
 using SoLeap.Device;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -24,7 +26,8 @@ namespace BowlPhysics
         private float yrot = 0.0f;
         private float zoom = -500.0f;
 
-        private PhysicsHand physicsHand;
+        private IDictionary<long, GraphicsHand> hands = new Dictionary<long, GraphicsHand>();
+
         private GraphicsHand graphicsHand;
 
         private HandsFrame lastFrame = new HandsFrame();
@@ -34,9 +37,6 @@ namespace BowlPhysics
             InitializeComponent();
             this.world = world;
             this.handsProvider = handsProvider;
-
-            physicsHand = new PhysicsHand(world);
-            graphicsHand = new GraphicsHand(physicsHand);
 
             handsProvider.FrameReady += handsProvider_FrameReady;
         }
@@ -84,14 +84,29 @@ namespace BowlPhysics
 
             lock (lastFrame)
             {
-                var h = lastFrame.Hands.FirstOrDefault();
-                if (h != null)
+                IDictionary<long, GraphicsHand> newHands = new Dictionary<long, GraphicsHand>();
+                foreach (var hand in lastFrame.Hands)
                 {
-                    if (physicsHand.Calibrated)
-                        physicsHand.Update(h);
+                    GraphicsHand gh;
+                    if (hands.TryGetValue(hand.Id, out gh))
+                    {
+                        // this hand existed in the last frame, update it
+                        gh.Update(hand);
+                        hands.Remove(hand.Id);
+                    }
                     else
-                        physicsHand.Calibrate(h);
+                    {
+                        // this hand is new, create it
+                        gh = new GraphicsHand(new PhysicsHand(world, hand));
+                    }
+                    newHands[hand.Id] = gh;
                 }
+
+                // remove missing hands
+                foreach (var missingHands in hands.Values)
+                    missingHands.Dispose();
+
+                hands = newHands;
             }
         }
 
@@ -112,8 +127,9 @@ namespace BowlPhysics
 
             gl.PolygonMode(FaceMode.FrontAndBack, PolygonMode.Lines); // wireframe
             gl.Color(1.0f, 0.7f, 0.0f);
-            if (physicsHand.Calibrated)
-                graphicsHand.Render(gl);
+
+            foreach(var hand in hands.Values)
+                hand.Render(gl);
 
             //gl.Disable(OpenGL.GL_LIGHTING);
 

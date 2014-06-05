@@ -1,17 +1,38 @@
 ﻿using BulletSharp;
 using SharpGL;
 using SharpGL.Enumerations;
+using SoLeap.Domain;
 using System;
 
 namespace BowlPhysics
 {
-    public class GraphicsHand
+    public sealed class GraphicsHand : System.IDisposable
     {
         private readonly PhysicsHand physicsHand;
 
         public GraphicsHand(PhysicsHand physicsHand)
         {
             this.physicsHand = physicsHand;
+
+            SetupRessources();
+        }
+
+        private void SetupRessources()
+        {
+
+        }
+
+        private void CleanupRessources()
+        {
+
+        }
+
+        public void Update(Hand hand)
+        {
+            physicsHand.Update(hand);
+
+            // transformations have changed
+
         }
 
         public void Render(OpenGL gl)
@@ -104,6 +125,12 @@ namespace BowlPhysics
 
                 gl.PopMatrix();
             }
+        }
+
+        public void Dispose()
+        {
+            CleanupRessources();
+            GC.SuppressFinalize(this);
         }
     }
 }
