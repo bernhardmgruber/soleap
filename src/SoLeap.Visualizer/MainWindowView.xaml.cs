@@ -2,10 +2,10 @@
 
 namespace SoLeap.Visualizer
 {
-    public partial class MainWindow
+    public partial class MainWindowView
         : Window
     {
-        public MainWindow()
+        public MainWindowView()
         {
             InitializeComponent();
         }

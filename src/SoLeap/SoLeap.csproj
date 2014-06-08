@@ -140,6 +140,7 @@
     <Compile Include="Helper\DoubleExtensions.cs" />
     <Compile Include="Helper\EnumUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scene\IScene.cs" />
     <Compile Include="Worlds\IPhysicsWorld.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

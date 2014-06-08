@@ -7,7 +7,7 @@ using SharpDX.WPF;
 
 namespace SoLeap.Visualizer
 {
-    public class TestRenderer
+    public class SceneRenderer
         : D3D11
     {
         #region Shader Code
@@ -28,19 +28,33 @@ float4 PShader(float4 position : SV_POSITION) : SV_TARGET
 
         #endregion Shader Code
 
-        private readonly VertexShader vertexShader;
-        private readonly PixelShader pixelShader;
-        private readonly InputLayout inputLayout;
+        private VertexShader vertexShader;
+        private PixelShader pixelShader;
+        private InputLayout inputLayout;
 
-        private readonly Buffer vertexBuffer;
+        private Buffer vertexBuffer;
 
+        public MainWindowViewModel Model
+        {
+            get { return model; }
+            set
+            {
+                if (model != null)
+                    UnloadScene();
+                model = value;
+                if (model != null)
+                    LoadScene();
+            }
+        }
         private MainWindowViewModel model;
 
-        public TestRenderer(MainWindowViewModel model)
+        public SceneRenderer()
         {
+            LoadScene();
+        }
 
-            this.model = model;
-
+        private void LoadScene()
+        {
             using (var vsBytecode = ShaderBytecode.Compile(VertexShaderCode, "VShader", "vs_4_0", ShaderFlags.EnableStrictness | ShaderFlags.Debug))
             using (var psBytecode = ShaderBytecode.Compile(PixelShaderCode, "PShader", "ps_4_0", ShaderFlags.EnableStrictness | ShaderFlags.Debug))
             using (var inputSignature = ShaderSignature.GetInputSignature(vsBytecode)) {
@@ -59,9 +73,20 @@ float4 PShader(float4 position : SV_POSITION) : SV_TARGET
             }
         }
 
+        private void UnloadScene()
+        {
+            vertexBuffer.Dispose();
+            inputLayout.Dispose();
+            pixelShader.Dispose();
+            vertexShader.Dispose();
+        }
+
         public override void RenderScene(DrawEventArgs args)
         {
-            model.Update();
+            //if (Model == null)
+            //    return;
+
+            //model.Update();
 
             var context = Device.ImmediateContext;
 
@@ -82,10 +107,10 @@ float4 PShader(float4 position : SV_POSITION) : SV_TARGET
         {
             base.Dispose(disposing);
 
-            vertexBuffer.Dispose();
-            inputLayout.Dispose();
-            pixelShader.Dispose();
-            vertexShader.Dispose();
+            if (disposing) {
+                if (Model != null)
+                    UnloadScene();
+            }
         }
     }
 }

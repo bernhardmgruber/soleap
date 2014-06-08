@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using System.Windows;
+using Caliburn.Micro;
 using Ninject;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,14 @@ namespace SoLeap.Visualizer
         public NinjectBootstrapper()
         {
             kernel = new StandardKernel();
+
+            kernel.Bind<IWindowManager>().To<WindowManager>();
+
+            kernel.Bind<MainWindowViewModel>().ToSelf();
+
+            //kernel.Load(new Module());
+
+            Initialize();
         }
 
         protected override void Configure()
@@ -25,6 +34,8 @@ namespace SoLeap.Visualizer
                 .Distinct()
                 .ToList();
             AssemblySource.Instance.AddRange(assemblies);
+
+            base.Configure();
         }
 
         protected override object GetInstance(Type service, string key)
@@ -40,6 +51,11 @@ namespace SoLeap.Visualizer
         protected override void BuildUp(object instance)
         {
             kernel.Inject(instance);
+        }
+
+        protected override void OnStartup(object sender, StartupEventArgs e)
+        {
+            DisplayRootViewFor<MainWindowViewModel>();
         }
 
         protected override void OnExit(object sender, EventArgs e)

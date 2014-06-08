@@ -3,8 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:wpf="clr-namespace:SharpDX.WPF;assembly=SharpDX.WPF"
         xmlns:visualizer="clr-namespace:SoLeap.Visualizer"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="SoLeap.Visualizer.MainWindow"
-        Title="SoLeap - Hand Reconstruction" Height="600" Width="1000">
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="SoLeap.Visualizer.MainWindowView"
+        Title="SoLeap - Hand Reconstruction" Height="600" Width="1000"
+        d:DataContext="{d:DesignInstance Type=visualizer:MainWindowViewModel}">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -13,14 +17,16 @@
 
         <wpf:DXElement Grid.Column="0">
             <wpf:DXElement.Renderer>
-                <visualizer:TestRenderer />
-                <!--<visualizer:T5_Transformation />-->
+                <!--<visualizer:TestRenderer />-->
+                <visualizer:SceneRenderer/>
             </wpf:DXElement.Renderer>
         </wpf:DXElement>
         <StackPanel Grid.Column="1" Orientation="Vertical">
             <GroupBox Header="Scene">
                 <StackPanel>
-                    <ComboBox Name="sceneBox" ItemsSource="{Binding SceneNames}" SelectedItem="{Binding SelectedSceneName}" />
+                    <ComboBox Name="SceneBox"
+                              ItemsSource="{Binding Path=Scenes}" DisplayMemberPath="Name"
+                              SelectedValue="{Binding CurrentScene}" />
                     <Button Content="Reload scenee" Command="{Binding ReloadSceneCommand}" />
                 </StackPanel>
             </GroupBox>

@@ -1,15 +1,35 @@
-﻿using SoLeap.Devices;
-using SoLeap.Hand;
-using SoLeap.Worlds;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows.Input;
+using Caliburn.Micro;
+using SoLeap.Devices;
+using SoLeap.Hand;
+using SoLeap.Scene;
+using SoLeap.Worlds;
 
-namespace SoLeap.Visualizer.ViewModels
+namespace SoLeap.Visualizer
 {
-    public sealed class MainWindowViewModel : IDisposable
+    public sealed class MainWindowViewModel
+        : PropertyChangedBase, IDisposable
     {
-        private IHandsFrameProvider handsProvider;
+        private readonly IHandsFrameProvider handsProvider;
+
+        public BindableCollection<IScene> Scenes
+        {
+            get { return scenes; }
+            set { scenes = value; NotifyOfPropertyChange(() => Scenes); }
+        }
+        private BindableCollection<IScene> scenes;
+
+        public IScene CurrentScene
+        {
+            get { return currentScene; }
+            set { currentScene = value; NotifyOfPropertyChange(() => CurrentScene); }
+        }
+        private IScene currentScene;
+
         private IDictionary<long, GraphicsHand> hands = new Dictionary<long, GraphicsHand>();
         private IPhysicsWorld currentWorld;
 
@@ -50,8 +70,7 @@ namespace SoLeap.Visualizer.ViewModels
             get
             {
                 if (reloadSceneCommand == null)
-                    reloadSceneCommand = new RelayCommand(o =>
-                    {
+                    reloadSceneCommand = new RelayCommand(o => {
                         SwitchScene(selectedSceneName);
                     });
 
@@ -64,8 +83,7 @@ namespace SoLeap.Visualizer.ViewModels
             get
             {
                 if (recalibrateCommand == null)
-                    recalibrateCommand = new RelayCommand(o =>
-                    {
+                    recalibrateCommand = new RelayCommand(o => {
                         hands.Clear();
                     });
 
@@ -75,13 +93,20 @@ namespace SoLeap.Visualizer.ViewModels
 
         #endregion commands
 
+        public MainWindowViewModel()
+        {
+
+        }
+
         /// <summary>
         /// Constructor
         /// </summary>
-        public MainWindowViewModel(IEnumerable<Lazy<string>> scenes, IHandsFrameProvider handsProvider)
+        public MainWindowViewModel(IHandsFrameProvider handsProvider, IEnumerable<IScene> scenes)
         {
-            SceneNames = scenes;
             this.handsProvider = handsProvider;
+            Scenes = new BindableCollection<IScene>(scenes);
+            //SceneNames = scenes;
+
         }
 
         /// <summary>
@@ -93,8 +118,7 @@ namespace SoLeap.Visualizer.ViewModels
             if (currentWorld != null)
                 currentWorld.Dispose();
 
-            if (scene != null)
-            {
+            if (scene != null) {
                 // create new scene
             }
         }
@@ -104,24 +128,19 @@ namespace SoLeap.Visualizer.ViewModels
         /// </summary>
         internal void Update()
         {
-            if (currentWorld != null)
-            {
+            if (currentWorld != null) {
                 currentWorld.Update();
 
                 var lastFrame = handsProvider.LastFrame;
 
                 IDictionary<long, GraphicsHand> newHands = new Dictionary<long, GraphicsHand>();
-                foreach (var hand in lastFrame.Hands)
-                {
+                foreach (var hand in lastFrame.Hands) {
                     GraphicsHand gh;
-                    if (hands.TryGetValue(hand.Id, out gh))
-                    {
+                    if (hands.TryGetValue(hand.Id, out gh)) {
                         // this hand existed in the last frame, update it
                         gh.Update(hand);
                         hands.Remove(hand.Id);
-                    }
-                    else
-                    {
+                    } else {
                         // this hand is new, create it
                         gh = new GraphicsHand(null, new byte[0], currentWorld, hand); // TODO
                     }
