@@ -1,17 +1,14 @@
 ﻿using Ninject.Modules;
-using SoLeap.Devices;
 using SoLeap.World;
 using SoLeap.Worlds;
 
-namespace SoLeap.Visualizer
+namespace SoLeap.Visualizer.Modules
 {
-    internal class Module
+    public class WorldModule
         : NinjectModule
     {
         public override void Load()
         {
-            Bind<IHandsFrameProvider>().To<LeapProvider.LeapProvider>();
-
             Bind<IWorld>().To<CubesWorld>();
         }
     }

@@ -16,22 +16,15 @@ namespace SoLeap.Visualizer
         {
             kernel = new StandardKernel();
 
-            kernel.Bind<IWindowManager>().To<WindowManager>();
-            kernel.Bind<MainWindowViewModel>().ToSelf();
+            kernel.Bind<IWindowManager>().To<WindowManager>().InSingletonScope();
+            kernel.Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
 
             Initialize();
         }
 
         protected override void Configure()
         {
-            kernel.Load("*.dll");
-
-            var assemblies = kernel.GetModules()
-                .Select(m => m.GetType().Assembly)
-                .Distinct()
-                .ToList();
-            AssemblySource.Instance.AddRange(assemblies);
-
+            kernel.Load(AppDomain.CurrentDomain.GetAssemblies());
 
             base.Configure();
         }
