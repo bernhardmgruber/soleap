@@ -179,6 +179,7 @@
     <Compile Include="DebugDraw\BufferedDebugDraw.cs" />
     <Compile Include="DebugDraw\PositionColored.cs" />
     <Compile Include="DebugDraw\SharpDX11DebugDraw.cs" />
+    <Compile Include="Helper\PropertyChangedBaseHelper.cs" />
     <Compile Include="Modules\LeapModule.cs" />
     <Compile Include="Modules\VisualizerModule.cs" />
     <Compile Include="Modules\WorldModule.cs" />

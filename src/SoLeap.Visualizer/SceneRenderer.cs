@@ -1,9 +1,14 @@
-﻿using SharpDX;
+﻿using System;
+using System.ComponentModel;
+using System.Windows;
+using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.WPF;
+using SoLeap.World;
+using Buffer = SharpDX.Direct3D11.Buffer;
 
 namespace SoLeap.Visualizer
 {
@@ -34,23 +39,27 @@ float4 PShader(float4 position : SV_POSITION) : SV_TARGET
 
         private Buffer vertexBuffer;
 
-        public MainWindowViewModel Model
+
+
+        public IWorld Scene
         {
-            get { return model; }
+            get { return (IWorld)GetValue(SceneProperty); }
             set
             {
-                if (model != null)
+                if (Scene != null)
                     UnloadScene();
-                model = value;
-                if (model != null)
+                SetValue(SceneProperty, value);
+                if (Scene != null)
                     LoadScene();
             }
         }
-        private MainWindowViewModel model;
+
+        public static readonly DependencyProperty SceneProperty = DependencyProperty.Register(
+            "Scene", typeof(IWorld), typeof(SceneRenderer), new PropertyMetadata(null));
+
 
         public SceneRenderer()
         {
-            LoadScene();
         }
 
         private void LoadScene()
@@ -83,10 +92,10 @@ float4 PShader(float4 position : SV_POSITION) : SV_TARGET
 
         public override void RenderScene(DrawEventArgs args)
         {
-            //if (Model == null)
-            //    return;
+            if (Scene == null)
+                return;
 
-            //model.Update();
+            Scene.Update();
 
             var context = Device.ImmediateContext;
 
@@ -108,7 +117,7 @@ float4 PShader(float4 position : SV_POSITION) : SV_TARGET
             base.Dispose(disposing);
 
             if (disposing) {
-                if (Model != null)
+                if (Scene != null)
                     UnloadScene();
             }
         }

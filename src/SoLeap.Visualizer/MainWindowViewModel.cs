@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
 using Caliburn.Micro;
 using SoLeap.Devices;
@@ -25,14 +27,14 @@ namespace SoLeap.Visualizer
         public BindableCollection<IWorld> Scenes
         {
             get { return scenes; }
-            set { scenes = value; NotifyOfPropertyChange(() => Scenes); }
+            set { if (scenes != value) { scenes = value; NotifyOfPropertyChange(); } }
         }
         private BindableCollection<IWorld> scenes;
 
         public IWorld CurrentScene
         {
             get { return currentScene; }
-            set { currentScene = value; NotifyOfPropertyChange(() => CurrentScene); }
+            set { if (currentScene != value) { currentScene = value; NotifyOfPropertyChange(); } }
         }
         private IWorld currentScene;
 
@@ -41,35 +43,19 @@ namespace SoLeap.Visualizer
 
         #region Commands
 
-        private ICommand reloadSceneCommand;
-        private ICommand recalibrateCommand;
-
         public ICommand ReloadSceneCommand
         {
-            get
-            {
-                return reloadSceneCommand ?? (reloadSceneCommand = new RelayCommand(o => {
-                    SwitchScene(CurrentScene);
-                }));
-            }
+            get { return reloadSceneCommand ?? (reloadSceneCommand = new RelayCommand(o => ReloadScene())); }
         }
+        private ICommand reloadSceneCommand;
 
         public ICommand RecalibrateCommand
         {
-            get
-            {
-                return recalibrateCommand ?? (recalibrateCommand = new RelayCommand(o => {
-                    hands.Clear();
-                }));
-            }
+            get { return recalibrateCommand ?? (recalibrateCommand = new RelayCommand(o => hands.Clear())); }
         }
+        private ICommand recalibrateCommand;
 
         #endregion
-
-        public MainWindowViewModel()
-        {
-
-        }
 
         /// <summary>
         /// Constructor
@@ -78,10 +64,24 @@ namespace SoLeap.Visualizer
         {
             this.handsProvider = handsProvider;
             Scenes = new BindableCollection<IWorld>(scenes);
-            //SceneNames = scenes;
 
+            PropertyChanged += OnPropertyChanged;
         }
 
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            if (propertyChangedEventArgs.PropertyName == this.GetPropertyName(() => CurrentScene)) {
+                if (CurrentScene != null && !CurrentScene.IsLoaded)
+                    CurrentScene.SetupScene();
+            }
+        }
+
+        private void ReloadScene()
+        {
+            // TODO
+        }
+
+        /*
         /// <summary>
         /// Shuts down the currently shown physics scenario and loads another one.
         /// </summary>
@@ -94,7 +94,7 @@ namespace SoLeap.Visualizer
             if (scene != null) {
                 // create new scene
             }
-        }
+        }*/
 
         /// <summary>
         /// Called by the renderer to update the models data using leap input and bullet
@@ -130,7 +130,12 @@ namespace SoLeap.Visualizer
 
         public void Dispose()
         {
-            SwitchScene(null);
+            //SwitchScene(null);
+            foreach (var scene in Scenes.Where(s => s.IsLoaded)) {
+                //scene.Unload();
+                scene.Dispose();
+            }
+            Scenes.Clear();
         }
     }
 }
