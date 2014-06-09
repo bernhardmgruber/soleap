@@ -1,24 +1,25 @@
-﻿using BulletSharp;
+﻿using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using BulletSharp;
 using System.Diagnostics;
+using SoLeap.World;
 
 namespace SoLeap.Worlds
 {
     /// <summary>
     /// Abstract base class for all bullet based physic scenes
     /// </summary>
-    public abstract class AbstractPhysicsWorld : IPhysicsWorld
+    public abstract class AbstractWorld
+        : IWorld
     {
-        public Vector3 Gravity
-        {
-            get { return world.Gravity; }
-            set { world.Gravity = value; }
-        }
+        // the last time a physics update of the secene was done
+        private long lastUpdate;
 
-        public IDebugDraw DebugDrawer
-        {
-            get { return world.DebugDrawer; }
-            set { world.DebugDrawer = value; }
-        }
+        public string Name { get; private set; }
+
+        public bool IsLoaded { get; protected set; }
+
+        #region PhysicsWorld
 
         // configuration
         private CollisionConfiguration collisionConfig;
@@ -32,13 +33,36 @@ namespace SoLeap.Worlds
         // all shapes that are used in collision
         private AlignedCollisionShapeArray collisionShapes;
 
-        // the last time a physics update of the secene was done
-        private long lastUpdate;
-
-        protected AbstractPhysicsWorld(Vector3 gravity)
+        public Vector3 Gravity
         {
+            get { return world.Gravity; }
+            set { world.Gravity = value; }
+        }
+
+        public IDebugDraw DebugDrawer
+        {
+            get { return world.DebugDrawer; }
+            set { world.DebugDrawer = value; }
+        }
+
+        #endregion
+
+        #region RenderableWorld
+
+        public IList<WorldObject> Renderables { get; private set; }
+
+        #endregion
+
+        protected AbstractWorld(string name, Vector3 gravity)
+        {
+            Contract.Requires(!string.IsNullOrEmpty(name));
+
             lastUpdate = Stopwatch.GetTimestamp();
+            Name = name;
+
             SetupPhysics(gravity);
+
+            Renderables = new List<WorldObject>();
         }
 
         private void SetupPhysics(Vector3 gravity)
@@ -51,17 +75,18 @@ namespace SoLeap.Worlds
             broadphase = new DbvtBroadphase();
 
             // create world and set gravity
-            world = new DiscreteDynamicsWorld(dispatcher, broadphase, null, collisionConfig);
-            world.Gravity = gravity;
-
-            SetupScene();
+            world = new DiscreteDynamicsWorld(dispatcher, broadphase, null, collisionConfig) {
+                Gravity = gravity
+            };
         }
 
         /// <summary>
-        /// Called during construction after the physics world has been initialized.
         /// Derived classes should setup their rigit bodies and other stuff here.
         /// </summary>
-        protected abstract void SetupScene();
+        public virtual void SetupScene()
+        {
+            IsLoaded = true;
+        }
 
         public void Update()
         {
@@ -84,16 +109,14 @@ namespace SoLeap.Worlds
         public void Dispose()
         {
             //remove/dispose constraints
-            for (int i = world.NumConstraints - 1; i >= 0; i--)
-            {
+            for (int i = world.NumConstraints - 1; i >= 0; i--) {
                 TypedConstraint constraint = world.GetConstraint(i);
                 world.RemoveConstraint(constraint);
                 constraint.Dispose();
             }
 
             //remove the rigidbodies from the dynamics world and delete them
-            for (int i = world.NumCollisionObjects - 1; i >= 0; i--)
-            {
+            for (int i = world.NumCollisionObjects - 1; i >= 0; i--) {
                 CollisionObject obj = world.CollisionObjectArray[i];
                 RigidBody body = obj as RigidBody;
                 if (body != null && body.MotionState != null)
@@ -138,8 +161,7 @@ namespace SoLeap.Worlds
             rbInfo.Dispose();
 
             // kinematic settings
-            if (isKinematic)
-            {
+            if (isKinematic) {
                 body.CollisionFlags = body.CollisionFlags | CollisionFlags.KinematicObject;
                 body.ActivationState = ActivationState.DisableDeactivation;
             }

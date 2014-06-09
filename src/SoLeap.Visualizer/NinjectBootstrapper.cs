@@ -17,10 +17,7 @@ namespace SoLeap.Visualizer
             kernel = new StandardKernel();
 
             kernel.Bind<IWindowManager>().To<WindowManager>();
-
             kernel.Bind<MainWindowViewModel>().ToSelf();
-
-            //kernel.Load(new Module());
 
             Initialize();
         }
@@ -34,6 +31,7 @@ namespace SoLeap.Visualizer
                 .Distinct()
                 .ToList();
             AssemblySource.Instance.AddRange(assemblies);
+
 
             base.Configure();
         }

@@ -1,80 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows.Input;
 using Caliburn.Micro;
 using SoLeap.Devices;
 using SoLeap.Hand;
-using SoLeap.Scene;
-using SoLeap.Worlds;
+using SoLeap.World;
 
 namespace SoLeap.Visualizer
 {
     public sealed class MainWindowViewModel
         : PropertyChangedBase, IDisposable
     {
+        #region Hands
+
         private readonly IHandsFrameProvider handsProvider;
 
-        public BindableCollection<IScene> Scenes
+        private IDictionary<long, GraphicsHand> hands = new Dictionary<long, GraphicsHand>();
+
+        #endregion
+
+
+        #region Scenes
+
+        public BindableCollection<IWorld> Scenes
         {
             get { return scenes; }
             set { scenes = value; NotifyOfPropertyChange(() => Scenes); }
         }
-        private BindableCollection<IScene> scenes;
+        private BindableCollection<IWorld> scenes;
 
-        public IScene CurrentScene
+        public IWorld CurrentScene
         {
             get { return currentScene; }
             set { currentScene = value; NotifyOfPropertyChange(() => CurrentScene); }
         }
-        private IScene currentScene;
+        private IWorld currentScene;
 
-        private IDictionary<long, GraphicsHand> hands = new Dictionary<long, GraphicsHand>();
-        private IPhysicsWorld currentWorld;
+        #endregion
 
-        #region member for properties and commands
 
-        private string selectedSceneName;
-        private IEnumerable<Lazy<string>> sceneNames;
+        #region Commands
 
         private ICommand reloadSceneCommand;
         private ICommand recalibrateCommand;
-
-        #endregion member for properties and commands
-
-        #region properties
-
-        public String SelectedScene
-        {
-            get { return selectedSceneName; }
-            set
-            {
-                selectedSceneName = value;
-                SwitchScene(value);
-            }
-        }
-
-        public IEnumerable<Lazy<string>> SceneNames
-        {
-            get { return sceneNames; }
-            set { sceneNames = value; }
-        }
-
-        #endregion properties
-
-        #region commands
 
         public ICommand ReloadSceneCommand
         {
             get
             {
-                if (reloadSceneCommand == null)
-                    reloadSceneCommand = new RelayCommand(o => {
-                        SwitchScene(selectedSceneName);
-                    });
-
-                return reloadSceneCommand;
+                return reloadSceneCommand ?? (reloadSceneCommand = new RelayCommand(o => {
+                    SwitchScene(CurrentScene);
+                }));
             }
         }
 
@@ -82,16 +58,13 @@ namespace SoLeap.Visualizer
         {
             get
             {
-                if (recalibrateCommand == null)
-                    recalibrateCommand = new RelayCommand(o => {
-                        hands.Clear();
-                    });
-
-                return recalibrateCommand;
+                return recalibrateCommand ?? (recalibrateCommand = new RelayCommand(o => {
+                    hands.Clear();
+                }));
             }
         }
 
-        #endregion commands
+        #endregion
 
         public MainWindowViewModel()
         {
@@ -101,10 +74,10 @@ namespace SoLeap.Visualizer
         /// <summary>
         /// Constructor
         /// </summary>
-        public MainWindowViewModel(IHandsFrameProvider handsProvider, IEnumerable<IScene> scenes)
+        public MainWindowViewModel(IHandsFrameProvider handsProvider, IEnumerable<IWorld> scenes)
         {
             this.handsProvider = handsProvider;
-            Scenes = new BindableCollection<IScene>(scenes);
+            Scenes = new BindableCollection<IWorld>(scenes);
             //SceneNames = scenes;
 
         }
@@ -112,11 +85,11 @@ namespace SoLeap.Visualizer
         /// <summary>
         /// Shuts down the currently shown physics scenario and loads another one.
         /// </summary>
-        private void SwitchScene(string scene)
+        private void SwitchScene(IWorld scene)
         {
             // unload scene
-            if (currentWorld != null)
-                currentWorld.Dispose();
+            if (CurrentScene != null)
+                CurrentScene.Dispose();
 
             if (scene != null) {
                 // create new scene
@@ -128,8 +101,8 @@ namespace SoLeap.Visualizer
         /// </summary>
         internal void Update()
         {
-            if (currentWorld != null) {
-                currentWorld.Update();
+            if (CurrentScene != null) {
+                CurrentScene.Update();
 
                 var lastFrame = handsProvider.LastFrame;
 
@@ -142,7 +115,7 @@ namespace SoLeap.Visualizer
                         hands.Remove(hand.Id);
                     } else {
                         // this hand is new, create it
-                        gh = new GraphicsHand(null, new byte[0], currentWorld, hand); // TODO
+                        gh = new GraphicsHand(null, new byte[0], CurrentScene, hand); // TODO
                     }
                     newHands[hand.Id] = gh;
                 }

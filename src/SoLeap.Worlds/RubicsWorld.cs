@@ -3,10 +3,11 @@ using System;
 
 namespace SoLeap.Worlds
 {
-    public class RubicsWorld : AbstractPhysicsWorld
+    public class RubicsWorld : AbstractWorld
     {
         public RubicsWorld()
-            : base(new Vector3(0, -10, 0)) { }
+            : base("Rubics", new Vector3(0, -10, 0))
+        { }
 
         private const float subCubeSize = 1.5f;
         private const float subCubeMass = 1.0f;
@@ -19,7 +20,7 @@ namespace SoLeap.Worlds
             return new BoxShape(subCubeSize / 2.0f);
         }
 
-        protected override void SetupScene()
+        public override void SetupScene()
         {
             // create static ground
             BoxShape groundShape = new BoxShape(20, 0.5f, 20);

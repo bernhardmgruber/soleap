@@ -1,12 +1,13 @@
 ﻿using BulletSharp;
 
-namespace SoLeap.Worlds
+namespace SoLeap.World
 {
-    public interface IPhysicsWorld : System.IDisposable
+    public interface IPhysicsWorld
+        : System.IDisposable
     {
         Vector3 Gravity { get; set; }
 
-        IDebugDraw DebugDrawer { set; }
+        IDebugDraw DebugDrawer { get; set; }
 
         void Add(CollisionShape shape);
 

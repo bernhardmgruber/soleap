@@ -1,6 +1,7 @@
-﻿
-using Ninject.Modules;
+﻿using Ninject.Modules;
 using SoLeap.Devices;
+using SoLeap.World;
+using SoLeap.Worlds;
 
 namespace SoLeap.Visualizer
 {
@@ -10,6 +11,8 @@ namespace SoLeap.Visualizer
         public override void Load()
         {
             Bind<IHandsFrameProvider>().To<LeapProvider.LeapProvider>();
+
+            Bind<IWorld>().To<CubesWorld>();
         }
     }
 }
