@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using SharpDX;
 using SharpDX.D3DCompiler;
@@ -40,26 +41,30 @@ float4 PShader(float4 position : SV_POSITION) : SV_TARGET
         private Buffer vertexBuffer;
 
 
-
         public IWorld Scene
         {
             get { return (IWorld)GetValue(SceneProperty); }
-            set
-            {
-                if (Scene != null)
-                    UnloadScene();
-                SetValue(SceneProperty, value);
-                if (Scene != null)
-                    LoadScene();
-            }
+            set { SetValue(SceneProperty, value); }
         }
 
         public static readonly DependencyProperty SceneProperty = DependencyProperty.Register(
-            "Scene", typeof(IWorld), typeof(SceneRenderer), new PropertyMetadata(null));
+            "Scene", typeof(IWorld), typeof(SceneRenderer), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, ScenePropertyChanged));
 
+        private static void ScenePropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+        {
+            Debug.WriteLine("SCENE PROPERTY CHANGED");
+            var renderer = (SceneRenderer)dependencyObject;
+            renderer.ResetScene();
+        }
 
         public SceneRenderer()
         {
+        }
+
+        private void ResetScene()
+        {
+            UnloadScene();
+            LoadScene();
         }
 
         private void LoadScene()
@@ -84,10 +89,10 @@ float4 PShader(float4 position : SV_POSITION) : SV_TARGET
 
         private void UnloadScene()
         {
-            vertexBuffer.Dispose();
-            inputLayout.Dispose();
-            pixelShader.Dispose();
-            vertexShader.Dispose();
+            Set(ref vertexBuffer, null);
+            Set(ref inputLayout, null);
+            Set(ref pixelShader, null);
+            Set(ref vertexShader, null);
         }
 
         public override void RenderScene(DrawEventArgs args)

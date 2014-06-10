@@ -17,16 +17,16 @@
 
         <wpf:DXElement Grid.Column="0">
             <wpf:DXElement.Renderer>
-                <visualizer:SceneRenderer Scene="{Binding Path=CurrentScene, Mode=TwoWay}"/>
+                <visualizer:SceneRenderer Scene="{Binding CurrentScene, Mode=TwoWay}" />
             </wpf:DXElement.Renderer>
         </wpf:DXElement>
         <StackPanel Grid.Column="1" Orientation="Vertical">
             <GroupBox Header="Scene">
                 <StackPanel>
-                    <ComboBox Name="SceneBox"
+                    <ComboBox x:Name="SceneBox"
                               ItemsSource="{Binding Path=Scenes}" DisplayMemberPath="Name"
-                              SelectedValue="{Binding Path=CurrentScene, Mode=TwoWay}" />
-                    <Button Content="Reload scenee" Command="{Binding ReloadSceneCommand}" />
+                              SelectedItem="{Binding CurrentScene, Mode=TwoWay}" />
+                    <Button Content="Reload Scene" Command="{Binding ReloadSceneCommand}" />
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="Leap Motion">

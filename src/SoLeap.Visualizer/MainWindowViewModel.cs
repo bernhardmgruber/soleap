@@ -78,7 +78,7 @@ namespace SoLeap.Visualizer
 
         private void ReloadScene()
         {
-            // TODO
+            CurrentScene = Scenes[0];
         }
 
         /*
