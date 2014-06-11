@@ -11,12 +11,14 @@
             <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
 
-        <wpf:DXElement Grid.Column="0">
+        <!--<wpf:DXElement Grid.Column="0" >
             <wpf:DXElement.Renderer>
                 <visualizer:TestRenderer />
-                <!--<visualizer:T5_Transformation />-->
+                --><!--<visualizer:T5_Transformation />--><!--
             </wpf:DXElement.Renderer>
-        </wpf:DXElement>
+        </wpf:DXElement>-->
+
+        <wpf:DXElement Grid.Column="0" Renderer="{Binding Renderer}"/>
         <StackPanel Grid.Column="1" Orientation="Vertical">
             <GroupBox Header="Scene">
                 <StackPanel>

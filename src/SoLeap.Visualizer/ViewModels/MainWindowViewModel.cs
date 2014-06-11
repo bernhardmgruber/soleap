@@ -1,4 +1,6 @@
-﻿using SoLeap.Devices;
+﻿using Caliburn.Micro;
+using SharpDX.WPF;
+using SoLeap.Devices;
 using SoLeap.Hand;
 using SoLeap.Worlds;
 using System;
@@ -7,7 +9,7 @@ using System.Windows.Input;
 
 namespace SoLeap.Visualizer.ViewModels
 {
-    public sealed class MainWindowViewModel : IDisposable
+    public sealed class MainWindowViewModel : PropertyChangedBase, IDisposable
     {
         private IHandsFrameProvider handsProvider;
         private IDictionary<long, GraphicsHand> hands = new Dictionary<long, GraphicsHand>();
@@ -17,6 +19,7 @@ namespace SoLeap.Visualizer.ViewModels
 
         private string selectedSceneName;
         private IEnumerable<Lazy<string>> sceneNames;
+        private D3D11 renderer;
 
         private ICommand reloadSceneCommand;
         private ICommand recalibrateCommand;
@@ -32,15 +35,29 @@ namespace SoLeap.Visualizer.ViewModels
             {
                 selectedSceneName = value;
                 SwitchScene(value);
+                NotifyOfPropertyChange(() => SelectedScene);
             }
         }
 
         public IEnumerable<Lazy<string>> SceneNames
         {
             get { return sceneNames; }
-            set { sceneNames = value; }
+            set
+            {
+                sceneNames = value;
+                NotifyOfPropertyChange(() => SceneNames);
+            }
         }
 
+        public D3D11 Renderer
+        {
+            get { return renderer; }
+            set
+            {
+                Renderer = value;
+                NotifyOfPropertyChange(() => Renderer);
+            }
+        }
         #endregion properties
 
         #region commands
@@ -78,10 +95,13 @@ namespace SoLeap.Visualizer.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-        public MainWindowViewModel(IEnumerable<Lazy<string>> scenes, IHandsFrameProvider handsProvider)
+        public MainWindowViewModel(IEnumerable<Lazy<string>> scenes, IHandsFrameProvider handsProvider, D3D11 renderer)
         {
-            SceneNames = scenes;
+            this.sceneNames = scenes;
             this.handsProvider = handsProvider;
+            this.renderer = renderer;
+
+            currentWorld = new BowlWorld(); // TODO remove
         }
 
         /// <summary>
