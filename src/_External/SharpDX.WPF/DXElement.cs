@@ -26,8 +26,7 @@ namespace SharpDX.WPF
 
             m_renderTimer = new Stopwatch();
             m_surface = new DXImageSource();
-            m_surface.IsFrontBufferAvailableChanged += delegate
-            {
+            m_surface.IsFrontBufferAvailableChanged += delegate {
                 UpdateReallyLoopRendering();
                 if (!m_isReallyLoopRendering && m_surface.IsFrontBufferAvailable)
                     Render();
@@ -54,9 +53,9 @@ namespace SharpDX.WPF
         public static readonly DependencyProperty RendererProperty =
             DependencyProperty.Register(
                 "Renderer",
-                typeof(IDirect3D),
+                typeof(D3D11),
                 typeof(DXElement),
-                new PropertyMetadata((d, e) => ((DXElement)d).OnRendererChanged((IDirect3D)e.OldValue, (IDirect3D)e.NewValue)));
+                new FrameworkPropertyMetadata((d, e) => ((DXElement)d).OnRendererChanged((IDirect3D)e.OldValue, (IDirect3D)e.NewValue)));
 
         /// <summary>
         /// 
@@ -77,7 +76,7 @@ namespace SharpDX.WPF
         /// <summary>
         /// The image source where the DirectX scene (from the <see cref="Renderer"/>) will be rendered.
         /// </summary>
-        public DXImageSource Surface { get { return m_surface; } } 
+        public DXImageSource Surface { get { return m_surface; } }
 
         /// <summary>
         /// Wether or not the DirectX scene will be redrawn continuously
@@ -158,7 +157,7 @@ namespace SharpDX.WPF
         /// 
         /// </summary>
         protected override int VisualChildrenCount { get { return 0; } }
-        
+
         #endregion
 
         #region Private: ..LoopRendering.., UpdateSize
@@ -177,16 +176,12 @@ namespace SharpDX.WPF
                 && IsVisible
                 ;
 
-            if (newValue != m_isReallyLoopRendering)
-            {
+            if (newValue != m_isReallyLoopRendering) {
                 m_isReallyLoopRendering = newValue;
-                if (m_isReallyLoopRendering)
-                {
+                if (m_isReallyLoopRendering) {
                     m_renderTimer.Start();
                     CompositionTarget.Rendering += OnLoopRendering;
-                }
-                else
-                {
+                } else {
                     CompositionTarget.Rendering -= OnLoopRendering;
                     m_renderTimer.Stop();
                 }
@@ -196,11 +191,11 @@ namespace SharpDX.WPF
         /// <summary>
         /// 
         /// </summary>
-        private void OnLoopRendering(object sender, EventArgs e) 
+        private void OnLoopRendering(object sender, EventArgs e)
         {
             if (!m_isReallyLoopRendering)
                 return;
-            Render(); 
+            Render();
         }
 
         /// <summary>
@@ -214,7 +209,7 @@ namespace SharpDX.WPF
         }
 
         #endregion
-        
+
         #region Render
 
         /// <summary>
@@ -235,8 +230,7 @@ namespace SharpDX.WPF
         /// <returns></returns>
         public DrawEventArgs GetDrawEventArgs()
         {
-            var eargs = new DrawEventArgs
-            {
+            var eargs = new DrawEventArgs {
                 TotalTime = m_renderTimer.Elapsed,
                 DeltaTime = m_lastDrawEventArgs != null ? m_renderTimer.Elapsed - m_lastDrawEventArgs.TotalTime : TimeSpan.Zero,
                 RenderSize = DesiredSize,

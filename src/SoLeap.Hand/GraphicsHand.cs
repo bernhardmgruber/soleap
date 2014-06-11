@@ -1,4 +1,5 @@
-﻿using BulletSharp;
+﻿using System.Diagnostics.Contracts;
+using BulletSharp;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -37,6 +38,11 @@ namespace SoLeap.Hand
 
         public GraphicsHand(SharpDX.Direct3D11.Device device, byte[] inputSignature, IPhysicsWorld world, Domain.Hand hand)
         {
+            Contract.Requires(device != null);
+            Contract.Requires(inputSignature != null);
+            Contract.Requires(world != null);
+            Contract.Requires(hand != null);
+
             this.device = device;
             this.physicsHand = new PhysicsHand(world, hand);
 
@@ -206,6 +212,8 @@ namespace SoLeap.Hand
 
         public void Update(Domain.Hand hand)
         {
+            Contract.Requires(hand != null);
+
             physicsHand.Update(hand);
 
             // transformations have changed

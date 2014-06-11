@@ -115,7 +115,7 @@ namespace SoLeap.Visualizer
                         hands.Remove(hand.Id);
                     } else {
                         // this hand is new, create it
-                        gh = new GraphicsHand(null, new byte[0], CurrentScene, hand); // TODO
+                        //gh = new GraphicsHand(null, new byte[0], CurrentScene, hand); // TODO
                     }
                     newHands[hand.Id] = gh;
                 }
