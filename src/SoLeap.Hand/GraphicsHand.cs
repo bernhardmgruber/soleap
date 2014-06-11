@@ -2,12 +2,12 @@
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
-using SoLeap.Worlds;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using SoLeap.World;
 
 namespace SoLeap.Hand
 {
@@ -124,20 +124,16 @@ namespace SoLeap.Hand
             shapeRanges = new List<Tuple<int, int>>();
 
             // place all shapes adjacently into the vertex buffer
-            foreach (var shape in physicsHand.AllShapes)
-            {
+            foreach (var shape in physicsHand.AllShapes) {
                 var start = vertices.Count;
 
-                if (shape is BoxShape)
-                {
+                if (shape is BoxShape) {
                     var s = shape as BoxShape;
 
                     var ex = s.HalfExtentsWithoutMargin;
 
                     EmitBoxVertices(vertices, ex.X, ex.Y, ex.Z);
-                }
-                else if (shape is ConvexTriangleMeshShape)
-                {
+                } else if (shape is ConvexTriangleMeshShape) {
                     var s = shape as ConvexTriangleMeshShape;
 
                     BulletSharp.DataStream stream;
@@ -150,12 +146,10 @@ namespace SoLeap.Hand
                     PhyScalarType indicesType;
                     s.MeshInterface.GetLockedReadOnlyVertexIndexData(out stream, out numVertes, out type, out vertexStride, out indexStream, out indexStride, out numFaces, out indicesType);
 
-                    for (int i = 0; i < numFaces; i++)
-                    {
+                    for (int i = 0; i < numFaces; i++) {
                         var positions = new SharpDX.Vector3[3];
 
-                        for (int j = 0; j < 3; j++)
-                        {
+                        for (int j = 0; j < 3; j++) {
                             long offset = stream.Position;
                             float v1 = stream.Read<float>();
                             float v2 = stream.Read<float>();
@@ -180,11 +174,9 @@ namespace SoLeap.Hand
             }
 
             // now create the buffer
-            using (var stream = new SharpDX.DataStream(vertices.Count * Marshal.SizeOf(typeof(Vertex)), true, true))
-            {
+            using (var stream = new SharpDX.DataStream(vertices.Count * Marshal.SizeOf(typeof(Vertex)), true, true)) {
                 stream.WriteRange(vertices.ToArray()); // FIXME, prevent copy
-                vertexBuffer = new SharpDX.Direct3D11.Buffer(device, stream, new BufferDescription
-                {
+                vertexBuffer = new SharpDX.Direct3D11.Buffer(device, stream, new BufferDescription {
                     BindFlags = BindFlags.VertexBuffer,
                     SizeInBytes = (int)stream.Length,
                     CpuAccessFlags = CpuAccessFlags.None,
@@ -195,8 +187,7 @@ namespace SoLeap.Hand
             }
 
             // create constant buffer for the current transformation matrix
-            matrixBuffer = new SharpDX.Direct3D11.Buffer(device, new BufferDescription
-            {
+            matrixBuffer = new SharpDX.Direct3D11.Buffer(device, new BufferDescription {
                 BindFlags = BindFlags.ConstantBuffer,
                 SizeInBytes = Marshal.SizeOf(typeof(SharpDX.Matrix)),
                 CpuAccessFlags = CpuAccessFlags.Write,
@@ -229,8 +220,7 @@ namespace SoLeap.Hand
             context.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
 
             Debug.Assert(shapeRanges.Count == transformations.Count);
-            for (int i = 0; i < shapeRanges.Count; i++)
-            {
+            for (int i = 0; i < shapeRanges.Count; i++) {
                 SharpDX.Matrix trans = transformations[i];
                 int vertexOffset = shapeRanges[i].Item1;
                 int vertexCount = shapeRanges[i].Item2 - vertexOffset;

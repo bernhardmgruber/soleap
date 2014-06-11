@@ -1,11 +1,12 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace SoLeap.Visualizer
 {
-    public partial class MainWindow
+    public partial class MainWindowView
         : Window
     {
-        public MainWindow()
+        public MainWindowView()
         {
             InitializeComponent();
         }

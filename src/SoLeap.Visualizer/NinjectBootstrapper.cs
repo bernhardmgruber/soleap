@@ -1,7 +1,6 @@
-﻿using Caliburn.Micro;
+﻿using System.Windows;
+using Caliburn.Micro;
 using Ninject;
-using SharpDX.WPF;
-using SoLeap.Visualizer.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,26 +15,18 @@ namespace SoLeap.Visualizer
         public NinjectBootstrapper()
         {
             kernel = new StandardKernel();
-            StartRuntime();
+
+            kernel.Bind<IWindowManager>().To<WindowManager>().InSingletonScope();
+            kernel.Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
+
+            Initialize();
         }
 
         protected override void Configure()
         {
-            kernel.Load("*.dll");
+            kernel.Load(AppDomain.CurrentDomain.GetAssemblies());
 
-            //kernel.Bind<D3D11>().To<TestRenderer>();
-      
-
-            var assemblies = kernel.GetModules()
-                .Select(m => m.GetType().Assembly)
-                .Distinct()
-                .ToList();
-            AssemblySource.Instance.AddRange(assemblies);
-        }
-
-        protected override void OnStartup(object sender, System.Windows.StartupEventArgs e)
-        {
-            DisplayRootViewFor<MainWindowViewModel>();
+            base.Configure();
         }
 
         protected override object GetInstance(Type service, string key)
@@ -51,6 +42,11 @@ namespace SoLeap.Visualizer
         protected override void BuildUp(object instance)
         {
             kernel.Inject(instance);
+        }
+
+        protected override void OnStartup(object sender, StartupEventArgs e)
+        {
+            DisplayRootViewFor<MainWindowViewModel>();
         }
 
         protected override void OnExit(object sender, EventArgs e)

@@ -62,7 +62,7 @@
     <CodeContractsFailBuildOnWarnings>False</CodeContractsFailBuildOnWarnings>
     <CodeContractsBeingOptimisticOnExternal>True</CodeContractsBeingOptimisticOnExternal>
     <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
     <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
@@ -108,7 +108,7 @@
     <CodeContractsFailBuildOnWarnings>False</CodeContractsFailBuildOnWarnings>
     <CodeContractsBeingOptimisticOnExternal>True</CodeContractsBeingOptimisticOnExternal>
     <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
+    <CodeContractsReferenceAssembly>Build</CodeContractsReferenceAssembly>
     <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
@@ -159,7 +159,8 @@
     <Reference Include="SharpDX.Direct3D11">
       <HintPath>..\packages\SharpDX.Direct3D11.2.3.1\lib\net40\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.DXGI">
+    <Reference Include="SharpDX.DXGI, Version=2.3.1.0, Culture=neutral, PublicKeyToken=627a3d6d1956f55a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\SharpDX.DXGI.2.3.1\lib\net40\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -182,10 +183,15 @@
     <Compile Include="DebugDraw\BufferedDebugDraw.cs" />
     <Compile Include="DebugDraw\PositionColored.cs" />
     <Compile Include="DebugDraw\SharpDX11DebugDraw.cs" />
+    <Compile Include="Helper\PropertyChangedBaseHelper.cs" />
+    <Compile Include="Modules\LeapModule.cs" />
+    <Compile Include="Modules\VisualizerModule.cs" />
+    <Compile Include="Modules\WorldModule.cs" />
     <Compile Include="RelayCommand.cs" />
+    <Compile Include="SceneRenderer.cs" />
     <Compile Include="TestRenderer.cs" />
-    <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Page Include="MainWindow.xaml">
+    <Compile Include="MainWindowViewModel.cs" />
+    <Page Include="MainWindowView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -193,8 +199,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="MainWindowView.xaml.cs">
+      <DependentUpon>MainWindowView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -237,7 +243,7 @@
       <Name>SoLeap.LeapProvider</Name>
     </ProjectReference>
     <ProjectReference Include="..\SoLeap.Worlds\SoLeap.Worlds.csproj">
-      <Project>{7c85e90f-802a-4cd2-81c8-43719e705ec3}</Project>
+      <Project>{7C85E90F-802A-4CD2-81C8-43719E705EC3}</Project>
       <Name>SoLeap.Worlds</Name>
     </ProjectReference>
     <ProjectReference Include="..\SoLeap\SoLeap.csproj">
@@ -245,7 +251,7 @@
       <Name>SoLeap</Name>
     </ProjectReference>
     <ProjectReference Include="..\_External\SharpDX.WPF\SharpDX.WPF.csproj">
-      <Project>{587d723b-36b2-49e2-9018-e3abd4b8bba6}</Project>
+      <Project>{587D723B-36B2-49E2-9018-E3ABD4B8BBA6}</Project>
       <Name>SharpDX.WPF</Name>
     </ProjectReference>
   </ItemGroup>

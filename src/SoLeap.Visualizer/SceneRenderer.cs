@@ -1,13 +1,19 @@
-﻿using SharpDX;
+﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows;
+using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.WPF;
+using SoLeap.World;
+using Buffer = SharpDX.Direct3D11.Buffer;
 
 namespace SoLeap.Visualizer
 {
-    public class TestRenderer
+    public class SceneRenderer
         : D3D11
     {
         #region Shader Code
@@ -28,19 +34,41 @@ float4 PShader(float4 position : SV_POSITION) : SV_TARGET
 
         #endregion Shader Code
 
-        private readonly VertexShader vertexShader;
-        private readonly PixelShader pixelShader;
-        private readonly InputLayout inputLayout;
+        private VertexShader vertexShader;
+        private PixelShader pixelShader;
+        private InputLayout inputLayout;
 
-        private readonly Buffer vertexBuffer;
+        private Buffer vertexBuffer;
 
-        private MainWindowViewModel model;
 
-        public TestRenderer(MainWindowViewModel model)
+        public IWorld Scene
         {
+            get { return (IWorld)GetValue(SceneProperty); }
+            set { SetValue(SceneProperty, value); }
+        }
 
-            this.model = model;
+        public static readonly DependencyProperty SceneProperty = DependencyProperty.Register(
+            "Scene", typeof(IWorld), typeof(SceneRenderer), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, ScenePropertyChanged));
 
+        private static void ScenePropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+        {
+            Debug.WriteLine("SCENE PROPERTY CHANGED");
+            var renderer = (SceneRenderer)dependencyObject;
+            renderer.ResetScene();
+        }
+
+        public SceneRenderer()
+        {
+        }
+
+        private void ResetScene()
+        {
+            UnloadScene();
+            LoadScene();
+        }
+
+        private void LoadScene()
+        {
             using (var vsBytecode = ShaderBytecode.Compile(VertexShaderCode, "VShader", "vs_4_0", ShaderFlags.EnableStrictness | ShaderFlags.Debug))
             using (var psBytecode = ShaderBytecode.Compile(PixelShaderCode, "PShader", "ps_4_0", ShaderFlags.EnableStrictness | ShaderFlags.Debug))
             using (var inputSignature = ShaderSignature.GetInputSignature(vsBytecode)) {
@@ -59,9 +87,20 @@ float4 PShader(float4 position : SV_POSITION) : SV_TARGET
             }
         }
 
+        private void UnloadScene()
+        {
+            Set(ref vertexBuffer, null);
+            Set(ref inputLayout, null);
+            Set(ref pixelShader, null);
+            Set(ref vertexShader, null);
+        }
+
         public override void RenderScene(DrawEventArgs args)
         {
-            model.Update();
+            if (Scene == null)
+                return;
+
+            Scene.Update();
 
             var context = Device.ImmediateContext;
 
@@ -82,10 +121,10 @@ float4 PShader(float4 position : SV_POSITION) : SV_TARGET
         {
             base.Dispose(disposing);
 
-            vertexBuffer.Dispose();
-            inputLayout.Dispose();
-            pixelShader.Dispose();
-            vertexShader.Dispose();
+            if (disposing) {
+                if (Scene != null)
+                    UnloadScene();
+            }
         }
     }
 }

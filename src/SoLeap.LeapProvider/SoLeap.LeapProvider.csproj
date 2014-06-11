@@ -122,10 +122,12 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LeapCSharp.NET4.0, Version=0.0.0.0, Culture=neutral, PublicKeyToken=6e1b1368e71eba9b, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\leap\LeapCSharp.NET4.0.dll</HintPath>
-    </Reference>
+      <Reference Include="LeapCSharp.NET4.0" Condition=" '$(Platform)' == 'x86' ">
+          <HintPath>..\lib\leap_86\LeapCSharp.NET4.0.dll</HintPath>
+      </Reference>
+      <Reference Include="LeapCSharp.NET4.0" Condition=" '$(Platform)' == 'x64' ">
+          <HintPath>..\lib\leap_64\LeapCSharp.NET4.0.dll</HintPath>
+      </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -138,13 +140,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\lib\leap\Leap.dll">
+    <Content Include="..\lib\leap_86\Leap.dll" Condition=" '$(Platform)' == 'x86' ">
       <Link>Leap.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\lib\leap\LeapCSharp.dll">
+    <Content Include="..\lib\leap_86\LeapCSharp.dll" Condition=" '$(Platform)' == 'x86' ">
       <Link>LeapCSharp.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\lib\leap_64\Leap.dll" Condition=" '$(Platform)' == 'x64' ">
+        <Link>Leap.dll</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\lib\leap_64\LeapCSharp.dll" Condition=" '$(Platform)' == 'x64' ">
+        <Link>LeapCSharp.dll</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

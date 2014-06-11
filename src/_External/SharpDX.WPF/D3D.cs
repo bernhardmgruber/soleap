@@ -1,4 +1,5 @@
-﻿using SharpDX;
+﻿using System.Windows.Controls;
+using SharpDX;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,7 +12,7 @@ namespace SharpDX.WPF
     /// <summary>
     /// A vanilla implementation of <see cref="IDirect3D"/> with some common wiring already done.
     /// </summary>
-    public abstract class D3D : IDirect3D, IDisposable, INotifyPropertyChanged, IInteractiveDirect3D
+    public abstract class D3D : FrameworkElement, IDirect3D, IDisposable, INotifyPropertyChanged, IInteractiveDirect3D
     {
         #region Init, Reset and Dispose Methods
 
@@ -99,10 +100,10 @@ namespace SharpDX.WPF
             if (field != null)
                 field.Dispose();
             field = newValue;
-        } 
+        }
 
         #endregion
-        
+
         #region Rendering Methods
 
         /// <summary>
@@ -162,8 +163,8 @@ namespace SharpDX.WPF
         /// <summary>
         /// 
         /// </summary>
-        public event EventHandler<DrawEventArgs> Rendering; 
-        
+        public event EventHandler<DrawEventArgs> Rendering;
+
         #endregion
 
         #region Interaction Methods
@@ -180,8 +181,7 @@ namespace SharpDX.WPF
         /// </summary>
         public virtual void OnMouseDown(UIElement ui, MouseButtonEventArgs e)
         {
-            if (Camera != null)
-            {
+            if (Camera != null) {
                 ui.CaptureMouse();
                 ui.Focus();
                 Camera.HandleMouseDown(ui, e);
@@ -193,8 +193,7 @@ namespace SharpDX.WPF
         /// </summary>
         public virtual void OnMouseMove(UIElement ui, MouseEventArgs e)
         {
-            if (Camera != null && ui.IsMouseCaptured)
-            {
+            if (Camera != null && ui.IsMouseCaptured) {
                 Camera.HandleMouseMove(ui, e);
             }
         }
@@ -204,8 +203,7 @@ namespace SharpDX.WPF
         /// </summary>
         public virtual void OnMouseUp(UIElement ui, MouseButtonEventArgs e)
         {
-            if (Camera != null && ui.IsMouseCaptured)
-            {
+            if (Camera != null && ui.IsMouseCaptured) {
                 Camera.HandleMouseUp(ui, e);
             }
             ui.ReleaseMouseCapture();
@@ -216,8 +214,7 @@ namespace SharpDX.WPF
         /// </summary>
         public virtual void OnMouseWheel(UIElement ui, MouseWheelEventArgs e)
         {
-            if (Camera != null)
-            {
+            if (Camera != null) {
                 Camera.HandleMouseWheel(ui, e);
             }
         }
@@ -227,8 +224,7 @@ namespace SharpDX.WPF
         /// </summary>
         public virtual void OnKeyDown(UIElement ui, KeyEventArgs e)
         {
-            if (Camera != null)
-            {
+            if (Camera != null) {
                 Camera.HandleKeyDown(ui, e);
             }
         }
@@ -238,8 +234,7 @@ namespace SharpDX.WPF
         /// </summary>
         public virtual void OnKeyUp(UIElement ui, KeyEventArgs e)
         {
-            if (Camera != null)
-            {
+            if (Camera != null) {
                 Camera.HandleKeyUp(ui, e);
             }
         }
@@ -252,7 +247,7 @@ namespace SharpDX.WPF
         /// 
         /// </summary>
         public BaseCamera Camera
-        {            
+        {
             get { return m_camera; }
             set { if (value == m_camera) return; m_camera = value; OnPropertyChanged("Camera"); }
         }

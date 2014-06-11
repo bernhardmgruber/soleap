@@ -139,6 +139,8 @@ namespace SoLeap.LeapProvider
         private Matrix3D ConvertMatrix(Matrix leapMatrix)
         {
             float[] fs = leapMatrix.ToArray4x4();
+            if (fs.Length != 16)
+                throw new InvalidOperationException("Matrix.ToArray4x4() does not return a 16 element array");
             return new Matrix3D(fs[0], fs[1], fs[2], fs[3], fs[4], fs[5], fs[6], fs[7], fs[8], fs[9], fs[10], fs[11], fs[12], fs[13], fs[14], fs[15]);
         }
 

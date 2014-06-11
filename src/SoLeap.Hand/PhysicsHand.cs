@@ -1,11 +1,11 @@
 ﻿using BulletSharp;
 using SoLeap.Domain;
-using SoLeap.Worlds;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Media.Media3D;
+using SoLeap.World;
 
 namespace SoLeap.Hand
 {
@@ -126,8 +126,7 @@ namespace SoLeap.Hand
             RigidBody body;
 
             // create fingers
-            ForAllBones((fingerType, boneType) =>
-            {
+            ForAllBones((fingerType, boneType) => {
                 // get the bone
                 Bone bone = hand.GetFinger(fingerType).GetBone(boneType);
 
@@ -191,13 +190,11 @@ namespace SoLeap.Hand
             // now triangulate ;)
             var mesh = new TriangleMesh();
 
-            Action<IList<Vector3>, TriangleMesh> triangulatePolygon = (ps, m) =>
-            {
+            Action<IList<Vector3>, TriangleMesh> triangulatePolygon = (ps, m) => {
                 // triangle fan
                 var first = ps.First();
                 var last = ps[1];
-                for (int i = 2; i < ps.Count; i++)
-                {
+                for (int i = 2; i < ps.Count; i++) {
                     var cur = ps[i];
                     m.AddTriangle(first, last, cur, false);
                     last = cur;
@@ -210,8 +207,7 @@ namespace SoLeap.Hand
 
             // generate side
             Debug.Assert(lowerPoints.Count == upperPoints.Count);
-            for (int i = 0; i < lowerPoints.Count; i++)
-            {
+            for (int i = 0; i < lowerPoints.Count; i++) {
                 var curLower = lowerPoints[i];
                 var curUpper = upperPoints[i];
                 var nextLower = lowerPoints[(i + 1) % lowerPoints.Count];
@@ -233,8 +229,7 @@ namespace SoLeap.Hand
         public void Update(Domain.Hand hand)
         {
             // update fingers
-            ForAllBones((fingerType, boneType) =>
-            {
+            ForAllBones((fingerType, boneType) => {
                 // grab body
                 RigidBody body = fingerBodies[fingerType][boneType];
 
@@ -264,10 +259,8 @@ namespace SoLeap.Hand
 
         private void ForAllBones(Action<FingerType, BoneType> func)
         {
-            foreach (var fingerType in EnumUtils.GetValues<FingerType>())
-            {
-                foreach (var boneType in EnumUtils.GetValues<BoneType>())
-                {
+            foreach (var fingerType in EnumUtils.GetValues<FingerType>()) {
+                foreach (var boneType in EnumUtils.GetValues<BoneType>()) {
                     if (boneType == BoneType.Metacarpal)
                         continue; // skip the bones inside the hand
 
@@ -278,8 +271,7 @@ namespace SoLeap.Hand
 
         private Matrix ConvertMatrix(Matrix3D m)
         {
-            return new Matrix()
-            {
+            return new Matrix() {
                 M11 = (float)m.M11,
                 M12 = (float)m.M12,
                 M13 = (float)m.M13,
