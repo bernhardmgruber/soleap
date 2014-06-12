@@ -48,7 +48,7 @@ namespace SharpDX.WPF
         /// <summary>
         /// Size set with call to <see cref="Reset(DrawEventArgs)"/>
         /// </summary>
-        public Vector2 RenderSize { get; protected set; }
+        public new Vector2 RenderSize { get; protected set; }
 
         /// <summary>
         /// 
