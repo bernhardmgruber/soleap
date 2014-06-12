@@ -20,7 +20,7 @@ namespace SoLeap.Worlds
             return new BoxShape(subCubeSize / 2.0f);
         }
 
-        public override void SetupScene()
+        protected override void SetupScene()
         {
             // create static ground
             BoxShape groundShape = new BoxShape(20, 0.5f, 20);

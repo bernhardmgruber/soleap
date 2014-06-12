@@ -52,22 +52,21 @@ float4 PShader(float4 position : SV_POSITION) : SV_TARGET
 
         private static void ScenePropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
-            Debug.WriteLine("SCENE PROPERTY CHANGED");
             var renderer = (SceneRenderer)dependencyObject;
-            renderer.ResetScene();
+            renderer.SwitchScene((IWorld)args.OldValue, (IWorld)args.NewValue);
         }
 
         public SceneRenderer()
         {
         }
 
-        private void ResetScene()
+        private void SwitchScene(IWorld oldScene, IWorld newScene)
         {
-            UnloadScene();
-            LoadScene();
+            UnloadScene(oldScene);
+            LoadScene(newScene);
         }
 
-        private void LoadScene()
+        private void LoadScene(IWorld newScene)
         {
             using (var vsBytecode = ShaderBytecode.Compile(VertexShaderCode, "VShader", "vs_4_0", ShaderFlags.EnableStrictness | ShaderFlags.Debug))
             using (var psBytecode = ShaderBytecode.Compile(PixelShaderCode, "PShader", "ps_4_0", ShaderFlags.EnableStrictness | ShaderFlags.Debug))
@@ -87,7 +86,7 @@ float4 PShader(float4 position : SV_POSITION) : SV_TARGET
             }
         }
 
-        private void UnloadScene()
+        private void UnloadScene(IWorld oldScene)
         {
             Set(ref vertexBuffer, null);
             Set(ref inputLayout, null);
@@ -123,7 +122,7 @@ float4 PShader(float4 position : SV_POSITION) : SV_TARGET
 
             if (disposing) {
                 if (Scene != null)
-                    UnloadScene();
+                    UnloadScene(Scene);
             }
         }
     }

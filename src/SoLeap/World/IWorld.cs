@@ -7,6 +7,6 @@
 
         bool IsLoaded { get; }
 
-        void SetupScene();
+        void Load();
     }
 }

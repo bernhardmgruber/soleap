@@ -18,7 +18,7 @@ namespace SoLeap.Worlds
             : base("Dumbbell", new Vector3(0, -500, 0))
         { }
 
-        public override void SetupScene()
+        protected override void SetupScene()
         {
             // ground
             var groundShape = new StaticPlaneShape(Vector3.UnitY, FloorHeight);

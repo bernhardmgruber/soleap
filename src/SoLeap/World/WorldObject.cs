@@ -4,25 +4,29 @@ using BulletSharp;
 
 namespace SoLeap.World
 {
-    public class WorldObject
+    public class RigidBodyRenderable
         : IRenderable
     {
+        private MotionState motionState;
+
         public bool Visible { get; set; }
 
         public Color Color { get; set; }
 
-        public CollisionObject CollisionObject { get; private set; }
+        public CollisionShape CollisionShape { get; private set; }
 
         public Matrix WorldTransform
         {
-            get { return CollisionObject.WorldTransform; }
+            get { return motionState.WorldTransform; }
         }
 
-        public WorldObject(CollisionObject collisionObject, Color color)
+        public RigidBodyRenderable(MotionState motionState, CollisionShape collisionShape, Color color)
         {
-            Contract.Requires(collisionObject != null);
+            Contract.Requires(motionState != null);
+            Contract.Requires(collisionShape != null);
 
-            CollisionObject = collisionObject;
+            this.motionState = motionState;
+            this.CollisionShape = collisionShape;
             Visible = true;
             Color = color;
         }

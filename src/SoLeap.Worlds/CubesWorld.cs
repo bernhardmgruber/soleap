@@ -16,7 +16,7 @@ namespace SoLeap.Worlds
             : base("Cubes", new Vector3(0, -500, 0))
         { }
 
-        public override void SetupScene()
+        protected override void SetupScene()
         {
             // ground
             var groundShape = new StaticPlaneShape(Vector3.UnitY, FloorHeight);
@@ -33,11 +33,8 @@ namespace SoLeap.Worlds
             for (int i = 0; i < NumberOfCubes; i++) {
                 var body = CreateAndAddRigidBody(1f, Matrix.Translation(new Vector3(nextCoord(), 2 * FloorHeight, nextCoord())), cubeShape, "cube " + i);
 
-                var renderable = new WorldObject(body, Colors.Red);
-                Renderables.Add(renderable);
+                Renderables.Add(new RigidBodyRenderable(body.MotionState, body.CollisionShape, Colors.Red));
             }
-
-            base.SetupScene();
         }
     }
 }

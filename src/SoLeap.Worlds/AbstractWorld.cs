@@ -15,6 +15,8 @@ namespace SoLeap.Worlds
         // the last time a physics update of the secene was done
         private long lastUpdate;
 
+        private Vector3 gravity;
+
         public string Name { get; private set; }
 
         public bool IsLoaded { get; protected set; }
@@ -49,7 +51,7 @@ namespace SoLeap.Worlds
 
         #region RenderableWorld
 
-        public IList<WorldObject> Renderables { get; private set; }
+        public IList<RigidBodyRenderable> Renderables { get; private set; }
 
         #endregion
 
@@ -57,12 +59,11 @@ namespace SoLeap.Worlds
         {
             Contract.Requires(!string.IsNullOrEmpty(name));
 
+            this.gravity = gravity;
+            this.Name = name;
+
             lastUpdate = Stopwatch.GetTimestamp();
-            Name = name;
-
-            SetupPhysics(gravity);
-
-            Renderables = new List<WorldObject>();
+            Renderables = new List<RigidBodyRenderable>();
         }
 
         private void SetupPhysics(Vector3 gravity)
@@ -83,10 +84,14 @@ namespace SoLeap.Worlds
         /// <summary>
         /// Derived classes should setup their rigit bodies and other stuff here.
         /// </summary>
-        public virtual void SetupScene()
+        public void Load()
         {
+            SetupPhysics(gravity);
+            SetupScene();
             IsLoaded = true;
         }
+
+        protected abstract void SetupScene();
 
         public void Update()
         {

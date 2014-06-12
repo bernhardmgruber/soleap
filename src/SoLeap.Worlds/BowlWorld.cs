@@ -15,7 +15,7 @@ namespace SoLeap.Worlds
         public BowlWorld()
             : base("Bowl", new Vector3(0f, -500, 0f)) { }
 
-        public override void SetupScene()
+        protected override void SetupScene()
         {
             // create static ground
             BoxShape groundShape = new BoxShape(1000f, 10f, 1000f);

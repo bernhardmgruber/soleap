@@ -13,14 +13,7 @@ namespace SoLeap.Visualizer
     public sealed class MainWindowViewModel
         : PropertyChangedBase, IDisposable
     {
-        #region Hands
-
-        private readonly IHandsFrameProvider handsProvider;
-
-        private IDictionary<long, GraphicsHand> hands = new Dictionary<long, GraphicsHand>();
-
-        #endregion
-
+        private IHandsFrameProvider handsProvider;
 
         #region Scenes
 
@@ -37,6 +30,13 @@ namespace SoLeap.Visualizer
             set { if (currentScene != value) { currentScene = value; NotifyOfPropertyChange(); } }
         }
         private IWorld currentScene;
+
+        public InteractingHands Hands
+        {
+            get { return hands; }
+            set { if (hands != value) { hands = value; NotifyOfPropertyChange(); } }
+        }
+        private InteractingHands hands;
 
         #endregion
 
@@ -70,9 +70,13 @@ namespace SoLeap.Visualizer
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            if (propertyChangedEventArgs.PropertyName == this.GetPropertyName(() => CurrentScene)) {
+            if (propertyChangedEventArgs.PropertyName == this.GetPropertyName(() => CurrentScene))
+            {
                 if (CurrentScene != null && !CurrentScene.IsLoaded)
-                    CurrentScene.SetupScene();
+                {
+                    CurrentScene.Load();
+                    Hands = new InteractingHands(handsProvider, CurrentScene);
+                }
             }
         }
 
@@ -81,57 +85,11 @@ namespace SoLeap.Visualizer
             CurrentScene = Scenes[0];
         }
 
-        /*
-        /// <summary>
-        /// Shuts down the currently shown physics scenario and loads another one.
-        /// </summary>
-        private void SwitchScene(IWorld scene)
-        {
-            // unload scene
-            if (CurrentScene != null)
-                CurrentScene.Dispose();
-
-            if (scene != null) {
-                // create new scene
-            }
-        }*/
-
-        /// <summary>
-        /// Called by the renderer to update the models data using leap input and bullet
-        /// </summary>
-        internal void Update()
-        {
-            if (CurrentScene != null) {
-                CurrentScene.Update();
-
-                var lastFrame = handsProvider.LastFrame;
-
-                IDictionary<long, GraphicsHand> newHands = new Dictionary<long, GraphicsHand>();
-                foreach (var hand in lastFrame.Hands) {
-                    GraphicsHand gh;
-                    if (hands.TryGetValue(hand.Id, out gh)) {
-                        // this hand existed in the last frame, update it
-                        gh.Update(hand);
-                        hands.Remove(hand.Id);
-                    } else {
-                        // this hand is new, create it
-                        gh = new GraphicsHand(null, new byte[0], CurrentScene, hand); // TODO
-                    }
-                    newHands[hand.Id] = gh;
-                }
-
-                // remove missing hands
-                foreach (var missingHands in hands.Values)
-                    missingHands.Dispose();
-
-                hands = newHands;
-            }
-        }
-
         public void Dispose()
         {
             //SwitchScene(null);
-            foreach (var scene in Scenes.Where(s => s.IsLoaded)) {
+            foreach (var scene in Scenes.Where(s => s.IsLoaded))
+            {
                 //scene.Unload();
                 scene.Dispose();
             }
