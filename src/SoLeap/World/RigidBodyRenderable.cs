@@ -7,7 +7,7 @@ namespace SoLeap.World
     public class RigidBodyRenderable
         : IRenderable
     {
-        private MotionState motionState;
+        private readonly MotionState motionState;
 
         public bool Visible { get; set; }
 

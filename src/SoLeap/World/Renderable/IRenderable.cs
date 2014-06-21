@@ -3,7 +3,7 @@ using BulletSharp;
 
 namespace SoLeap.World
 {
-    interface IRenderable
+    public interface IRenderable
     {
         bool Visible { get; set; }
 

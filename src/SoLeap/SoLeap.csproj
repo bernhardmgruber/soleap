@@ -215,7 +215,7 @@
     <Compile Include="Helper\EnumUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="World\Renderable\IRenderable.cs" />
-    <Compile Include="World\WorldObject.cs" />
+    <Compile Include="World\RigidBodyRenderable.cs" />
     <Compile Include="World\Renderable\IRenderableWorld.cs" />
     <Compile Include="World\Physics\IPhysicsWorld.cs" />
     <Compile Include="World\IWorld.cs" />

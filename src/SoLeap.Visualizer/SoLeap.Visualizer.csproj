@@ -254,13 +254,17 @@
     <Compile Include="DebugDraw\BufferedDebugDraw.cs" />
     <Compile Include="DebugDraw\PositionColored.cs" />
     <Compile Include="DebugDraw\SharpDX11DebugDraw.cs" />
+    <Compile Include="Helper\ColorHelper.cs" />
     <Compile Include="Helper\PropertyChangedBaseHelper.cs" />
     <Compile Include="InteractingHands.cs" />
     <Compile Include="Modules\LeapModule.cs" />
     <Compile Include="Modules\VisualizerModule.cs" />
     <Compile Include="Modules\WorldModule.cs" />
     <Compile Include="RelayCommand.cs" />
-    <Compile Include="SceneRenderer.cs" />
+    <Compile Include="SceneRenderer\CollisionShapeConverter.cs" />
+    <Compile Include="SceneRenderer\ConstantBuffer.cs" />
+    <Compile Include="SceneRenderer\Constants.cs" />
+    <Compile Include="SceneRenderer\SceneRenderer.cs" />
     <Compile Include="MainWindowViewModel.cs" />
     <Page Include="MainWindowView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -325,6 +329,9 @@
       <Project>{587D723B-36B2-49E2-9018-E3ABD4B8BBA6}</Project>
       <Name>SharpDX.WPF</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SceneShader.fx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
