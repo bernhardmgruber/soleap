@@ -14,5 +14,11 @@ namespace SoLeap.Visualizer
             Position = position;
             Normal = normal;
         }
+
+        public VertexPositionNormal(BulletSharp.Vector3 position, BulletSharp.Vector3 normal)
+        {
+            Position = new Vector3(position.X, position.Y, position.Z);
+            Normal = new Vector3(normal.X, normal.Y, normal.Z);
+        }
     }
 }

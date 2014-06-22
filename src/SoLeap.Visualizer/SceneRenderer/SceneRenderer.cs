@@ -63,12 +63,16 @@ namespace SoLeap.Visualizer
 
             frameConstantsBuffer = new ConstantBuffer<FrameConstants>(Device);
             objectConstantsBuffer = new ConstantBuffer<ObjectConstants>(Device);
+
+            Camera = new FirstPersonCamera();
         }
 
         private void SwitchScene(IWorld oldScene, IWorld newScene)
         {
-            UnloadScene(oldScene);
-            LoadScene(newScene);
+            if (oldScene != null)
+                UnloadScene(oldScene);
+            if (newScene != null)
+                LoadScene(newScene);
         }
 
         private void LoadScene(IWorld newScene)
@@ -85,6 +89,11 @@ namespace SoLeap.Visualizer
             }
 
             vertexBuffer = Device.CreateBuffer(verticesList.ToArray());
+
+            Camera.Position = new Vector3(0.0f, 200.0f, -500.0f);
+            Camera.LookAt = Vector3.Zero;
+            Camera.NearPlane = 1.0f;
+            Camera.FarPlane = 1000.0f;
         }
 
         private void UnloadScene(IWorld oldScene)
@@ -107,7 +116,7 @@ namespace SoLeap.Visualizer
 
             var context = Device.ImmediateContext;
 
-            context.ClearRenderTargetView(RenderTargetView, Color.Aquamarine);
+            context.ClearRenderTargetView(RenderTargetView, Color.Azure);
             context.ClearDepthStencilView(DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
 
             context.InputAssembler.InputLayout = inputLayout;

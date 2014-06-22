@@ -21,7 +21,8 @@ namespace SoLeap.Worlds
             // ground
             var groundShape = new StaticPlaneShape(Vector3.UnitY, FloorHeight);
             Add(groundShape);
-            CreateAndAddRigidBody(0.0f, Matrix.Identity, groundShape, "ground");
+            var body = CreateAndAddRigidBody(0.0f, Matrix.Identity, groundShape, "ground");
+            Renderables.Add(new RigidBodyRenderable(body.MotionState, body.CollisionShape, Colors.SlateGray));
 
             // create cubes
             var cubeShape = new BoxShape(CubeSize / 2f);
@@ -31,7 +32,7 @@ namespace SoLeap.Worlds
             Func<float> nextCoord = () => (float)(random.NextDouble() - 0.5) * 300f;
 
             for (int i = 0; i < NumberOfCubes; i++) {
-                var body = CreateAndAddRigidBody(1f, Matrix.Translation(new Vector3(nextCoord(), 2 * FloorHeight, nextCoord())), cubeShape, "cube " + i);
+                body = CreateAndAddRigidBody(1f, Matrix.Translation(new Vector3(nextCoord(), 2 * FloorHeight, nextCoord())), cubeShape, "cube " + i);
 
                 Renderables.Add(new RigidBodyRenderable(body.MotionState, body.CollisionShape, Colors.Red));
             }

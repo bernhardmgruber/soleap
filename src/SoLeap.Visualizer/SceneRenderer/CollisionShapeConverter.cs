@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms.VisualStyles;
 using BulletSharp;
 using Vector3 = SharpDX.Vector3;
+using BtVector3 = BulletSharp.Vector3;
 
 namespace SoLeap.Visualizer
 {
@@ -114,8 +116,71 @@ namespace SoLeap.Visualizer
 
         private IList<VertexPositionNormal> GetVertices(StaticPlaneShape plane)
         {
-            throw new NotImplementedException();
+            // http://bulletphysics.com/Bullet/BulletFull/btStaticPlaneShape_8cpp_source.html#l00058
+
+            var normal = plane.PlaneNormal;
+            var constant = plane.PlaneConstant;
+
+            BtVector3 aabbMin, aabbMax;
+            plane.GetAabb(Matrix.Identity, out aabbMin, out aabbMax);
+
+            var halfExtents = (aabbMax - aabbMin) * 0.5f;
+            float radius = halfExtents.Length();
+            var center = (aabbMax + aabbMin) * 0.5f;
+
+            // this is where the triangles are generated, given AABB and plane equation (normal/constant)
+
+            BtVector3 tangentDir0, tangentDir1;
+            //tangentDir0/tangentDir1 can be precalculated
+            PlaneSpace(plane.PlaneNormal, out tangentDir0, out tangentDir1);
+
+            var projectedCenter = center - (BtVector3.Dot(normal, center) - constant) * normal;
+
+            var vertices = new List<VertexPositionNormal>(6);
+            // triangle 1
+            vertices.Add(new VertexPositionNormal(projectedCenter + tangentDir0 * radius + tangentDir1 * radius, normal));
+            vertices.Add(new VertexPositionNormal(projectedCenter + tangentDir0 * radius - tangentDir1 * radius, normal));
+            vertices.Add(new VertexPositionNormal(projectedCenter - tangentDir0 * radius - tangentDir1 * radius, normal));
+            // triangle 2
+            vertices.Add(new VertexPositionNormal(projectedCenter - tangentDir0 * radius - tangentDir1 * radius, normal));
+            vertices.Add(new VertexPositionNormal(projectedCenter - tangentDir0 * radius + tangentDir1 * radius, normal));
+            vertices.Add(new VertexPositionNormal(projectedCenter + tangentDir0 * radius + tangentDir1 * radius, normal));
+
+            return vertices;
         }
+
+        private static void PlaneSpace(BtVector3 n, out BtVector3 p, out BtVector3 q)
+        {
+            // http://bulletphysics.com/Bullet/BulletFull/btVector3_8h_source.html#l01261
+            const float SIMDSQRT12 = 0.7071067811865475244008443621048490f;
+            p = new BtVector3();
+            q = new BtVector3();
+
+            if (Math.Abs(n[2]) > SIMDSQRT12) {
+                // choose p in y-z plane
+                float a = n[1] * n[1] + n[2] * n[2];
+                float k = 1.0f / (a * a);
+                p[0] = 0;
+                p[1] = -n[2] * k;
+                p[2] = n[1] * k;
+                // set q = n x p
+                q[0] = a * k;
+                q[1] = -n[0] * p[2];
+                q[2] = n[0] * p[1];
+            } else {
+                // choose p in x-y plane
+                float a = n[0] * n[0] + n[1] * n[1];
+                float k = 1.0f / (a * a);
+                p[0] = -n[1] * k;
+                p[1] = n[0] * k;
+                p[2] = 0;
+                // set q = n x p
+                q[0] = -n[2] * p[1];
+                q[1] = n[2] * p[0];
+                q[2] = a * k;
+            }
+        }
+
         private IList<VertexPositionNormal> GetVertices(CylinderShapeX cylinder)
         {
             throw new NotImplementedException();
