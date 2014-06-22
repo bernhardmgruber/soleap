@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using SharpDX;
 
 namespace SoLeap.Visualizer
 {
@@ -32,7 +33,7 @@ namespace SoLeap.Visualizer
         private BulletSharp.Matrix world;
 
         [FieldOffset(64)]
-        public int Color;
+        public Vector3 Color;
 
         public BulletSharp.Matrix World
         {

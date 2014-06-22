@@ -70,7 +70,10 @@ namespace SoLeap.Visualizer
             frameConstantsBuffer = new ConstantBuffer<FrameConstants>(Device);
             objectConstantsBuffer = new ConstantBuffer<ObjectConstants>(Device);
 
-            Camera = new FirstPersonCamera();
+            Camera = new FirstPersonCamera {
+                MoveScaler = 100.0f,
+                //EnableYAxisMovement = false
+            };
         }
 
         private void SwitchScene(IWorld oldScene, IWorld newScene)
@@ -99,7 +102,7 @@ namespace SoLeap.Visualizer
             Camera.Position = new Vector3(0.0f, 400, -500.0f);
             Camera.LookAt = new Vector3(0.0f, 200.0f, 0.0f);
             Camera.NearPlane = 1.0f;
-            Camera.FarPlane = 1000.0f;
+            Camera.FarPlane = 10000.0f;
         }
 
         private void UnloadScene(IWorld oldScene)
@@ -140,8 +143,8 @@ namespace SoLeap.Visualizer
             foreach (var renderable in Scene.Renderables) {
                 var ident = renderableIdentifiers[renderable];
                 objectConstantsBuffer.Update(new ObjectConstants {
-                    Color = renderable.Color.ToInt(),
-                    World = renderable.WorldTransform
+                    World = renderable.WorldTransform,
+                    Color = renderable.Color.ToVector3()
                 });
 
                 context.Draw(ident.VertexCount, ident.Offset);

@@ -8,7 +8,7 @@ namespace SoLeap.Worlds
     public class CubesWorld : AbstractWorld
     {
         private const float CubeSize = 40f;
-        private const int NumberOfCubes = 5;
+        private const int NumberOfCubes = 20;
 
         private const float FloorHeight = 100f;
 
@@ -30,9 +30,13 @@ namespace SoLeap.Worlds
             var random = new Random();
 
             Func<float> nextCoord = () => (float)(random.NextDouble() - 0.5) * 300f;
+            Func<float> nextHeight = () => (float)(random.NextDouble() * 50.0 + 4 * FloorHeight);
+            Func<float> nextAngle = () => (float)(random.NextDouble() * Math.PI);
 
             for (int i = 0; i < NumberOfCubes; i++) {
-                body = CreateAndAddRigidBody(1f, Matrix.Translation(new Vector3(nextCoord(), 2 * FloorHeight, nextCoord())), cubeShape, "cube " + i);
+                body = CreateAndAddRigidBody(1f,
+                    Matrix.RotationYawPitchRoll(nextAngle(), nextAngle(), nextAngle()) *
+                    Matrix.Translation(new Vector3(nextCoord(), nextHeight(), nextCoord())), cubeShape, "cube " + i);
 
                 Renderables.Add(new RigidBodyRenderable(body.MotionState, body.CollisionShape, Colors.Red));
             }

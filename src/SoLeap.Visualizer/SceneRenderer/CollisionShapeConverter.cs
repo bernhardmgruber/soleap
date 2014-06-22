@@ -125,7 +125,7 @@ namespace SoLeap.Visualizer
             plane.GetAabb(Matrix.Identity, out aabbMin, out aabbMax);
 
             var halfExtents = (aabbMax - aabbMin) * 0.5f;
-            float radius = halfExtents.Length();
+            float radius = halfExtents.Length() / 1000000000000000.0f;
             var center = (aabbMax + aabbMin) * 0.5f;
 
             // this is where the triangles are generated, given AABB and plane equation (normal/constant)
