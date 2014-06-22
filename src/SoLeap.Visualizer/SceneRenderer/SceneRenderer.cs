@@ -64,7 +64,7 @@ namespace SoLeap.Visualizer
             }
 
             var desc = RasterizerStateDescription.Default();
-            desc.CullMode = CullMode.None;
+            desc.CullMode = CullMode.Back;
             desc.IsAntialiasedLineEnabled = true;
             desc.IsMultisampleEnabled = true;
             rasterizerState = new RasterizerState(Device, desc);
@@ -159,10 +159,10 @@ namespace SoLeap.Visualizer
                 objectConstantsBuffer.Update(new ObjectConstants {
                     World = renderable.WorldTransform,
                     WorldInverseTranspose = BulletSharp.Matrix.Transpose(BulletSharp.Matrix.Invert(renderable.WorldTransform)),
-                    Ambient = renderable.Color.ToColor3(), // new Color3(renderable.Color.ToVector3() / 5.0f),
+                    Ambient = new Color3(renderable.Color.ToVector3() / 5.0f),
                     Diffuse = renderable.Color.ToColor3(),
                     Specular = renderable.Color.ToColor3(),
-                    SpecularPower = 10.0f
+                    SpecularPower = 30.0f
                 });
 
                 context.Draw(ident.VertexCount, ident.Offset);

@@ -139,12 +139,12 @@ namespace SoLeap.Visualizer
             var vertices = new List<VertexPositionNormal>(6);
             // triangle 1
             vertices.Add(new VertexPositionNormal(projectedCenter + tangentDir0 * radius + tangentDir1 * radius, normal));
-            vertices.Add(new VertexPositionNormal(projectedCenter + tangentDir0 * radius - tangentDir1 * radius, normal));
             vertices.Add(new VertexPositionNormal(projectedCenter - tangentDir0 * radius - tangentDir1 * radius, normal));
+            vertices.Add(new VertexPositionNormal(projectedCenter + tangentDir0 * radius - tangentDir1 * radius, normal));
             // triangle 2
             vertices.Add(new VertexPositionNormal(projectedCenter - tangentDir0 * radius - tangentDir1 * radius, normal));
-            vertices.Add(new VertexPositionNormal(projectedCenter - tangentDir0 * radius + tangentDir1 * radius, normal));
             vertices.Add(new VertexPositionNormal(projectedCenter + tangentDir0 * radius + tangentDir1 * radius, normal));
+            vertices.Add(new VertexPositionNormal(projectedCenter - tangentDir0 * radius + tangentDir1 * radius, normal));
 
             return vertices;
         }
