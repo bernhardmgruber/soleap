@@ -21,6 +21,8 @@ namespace SoLeap.Visualizer
         private readonly PixelShader pixelShader;
         private readonly InputLayout inputLayout;
 
+        private readonly RasterizerState rasterizerState;
+
         private readonly ConstantBuffer<FrameConstants> frameConstantsBuffer;
         private readonly ConstantBuffer<ObjectConstants> objectConstantsBuffer;
 
@@ -61,6 +63,10 @@ namespace SoLeap.Visualizer
                 });
             }
 
+            var desc = RasterizerStateDescription.Default();
+            desc.CullMode = CullMode.None;
+            rasterizerState = new RasterizerState(Device, desc);
+
             frameConstantsBuffer = new ConstantBuffer<FrameConstants>(Device);
             objectConstantsBuffer = new ConstantBuffer<ObjectConstants>(Device);
 
@@ -82,7 +88,7 @@ namespace SoLeap.Visualizer
             var verticesList = new List<VertexPositionNormal>();
             foreach (var rigidBodyRenderable in newScene.Renderables) {
                 var vertices = converter.GetVertices(rigidBodyRenderable.CollisionShape);
-                var ident = new RenderableIdentifier(offset: verticesList.Count / 3, vertexCount: vertices.Count / 3);
+                var ident = new RenderableIdentifier(offset: verticesList.Count, vertexCount: vertices.Count);
 
                 verticesList.AddRange(vertices);
                 renderableIdentifiers.Add(rigidBodyRenderable, ident);
@@ -90,8 +96,8 @@ namespace SoLeap.Visualizer
 
             vertexBuffer = Device.CreateBuffer(verticesList.ToArray());
 
-            Camera.Position = new Vector3(0.0f, 200.0f, -500.0f);
-            Camera.LookAt = Vector3.Zero;
+            Camera.Position = new Vector3(0.0f, 400, -500.0f);
+            Camera.LookAt = new Vector3(0.0f, 200.0f, 0.0f);
             Camera.NearPlane = 1.0f;
             Camera.FarPlane = 1000.0f;
         }
@@ -119,12 +125,17 @@ namespace SoLeap.Visualizer
             context.ClearRenderTargetView(RenderTargetView, Color.Azure);
             context.ClearDepthStencilView(DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
 
+            context.Rasterizer.State = rasterizerState;
             context.InputAssembler.InputLayout = inputLayout;
             context.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
             context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertexBuffer, VertexPositionNormal.SizeInBytes, 0));
 
             context.VertexShader.Set(vertexShader);
             context.PixelShader.Set(pixelShader);
+
+            context.VertexShader.SetConstantBuffer(0, frameConstantsBuffer.Buffer);
+            context.VertexShader.SetConstantBuffer(1, objectConstantsBuffer.Buffer);
+            context.PixelShader.SetConstantBuffer(0, frameConstantsBuffer.Buffer);
 
             foreach (var renderable in Scene.Renderables) {
                 var ident = renderableIdentifiers[renderable];
@@ -145,6 +156,7 @@ namespace SoLeap.Visualizer
                 inputLayout.Dispose();
                 pixelShader.Dispose();
                 vertexShader.Dispose();
+                rasterizerState.Dispose();
 
                 frameConstantsBuffer.Dispose();
                 objectConstantsBuffer.Dispose();
