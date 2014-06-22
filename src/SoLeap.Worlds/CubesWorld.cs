@@ -22,7 +22,7 @@ namespace SoLeap.Worlds
             var groundShape = new StaticPlaneShape(Vector3.UnitY, FloorHeight);
             Add(groundShape);
             var body = CreateAndAddRigidBody(0.0f, Matrix.Identity, groundShape, "ground");
-            Renderables.Add(new RigidBodyRenderable(body.MotionState, body.CollisionShape, Colors.SlateGray));
+            Renderables.Add(new RigidBodyRenderable(body.MotionState, body.CollisionShape, Colors.LightSlateGray));
 
             // create cubes
             var cubeShape = new BoxShape(CubeSize / 2f);

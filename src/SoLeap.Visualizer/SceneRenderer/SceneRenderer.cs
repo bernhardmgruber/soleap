@@ -65,6 +65,8 @@ namespace SoLeap.Visualizer
 
             var desc = RasterizerStateDescription.Default();
             desc.CullMode = CullMode.None;
+            desc.IsAntialiasedLineEnabled = true;
+            desc.IsMultisampleEnabled = true;
             rasterizerState = new RasterizerState(Device, desc);
 
             frameConstantsBuffer = new ConstantBuffer<FrameConstants>(Device);
@@ -100,7 +102,7 @@ namespace SoLeap.Visualizer
             vertexBuffer = Device.CreateBuffer(verticesList.ToArray());
 
             Camera.Position = new Vector3(0.0f, 400, -500.0f);
-            Camera.LookAt = new Vector3(0.0f, 200.0f, 0.0f);
+            Camera.LookAt = new Vector3(0.0f, 100.0f, 0.0f);
             Camera.NearPlane = 1.0f;
             Camera.FarPlane = 10000.0f;
         }
@@ -118,14 +120,25 @@ namespace SoLeap.Visualizer
 
             Scene.Update();
 
+
+            var lightsArray = new DirectionalLight[DirectionalLight.MaxLights] {
+                new DirectionalLight { Direction = new Vector3(-0.5f, -1.0f, +0.5f), Color = Color.White.ToColor3(), Enabled = true },
+                new DirectionalLight { Direction = new Vector3(+0.5f, -0.2f, -0.5f), Color = Color.White.ToColor3(), Enabled = true },
+                new DirectionalLight { Direction = new Vector3(+0.0f, -1.0f, +0.0f), Color = Color.White.ToColor3(), Enabled = true },
+                new DirectionalLight { Enabled = false }
+            };
+
             frameConstantsBuffer.Update(new FrameConstants {
                 View = Camera.View,
-                Projection = Camera.Projection
+                Projection = Camera.Projection,
+                EyePosition = Camera.Position,
+                AmbientLightColor = Color.Gray.ToColor3(),
+                Lights = lightsArray
             });
 
             var context = Device.ImmediateContext;
 
-            context.ClearRenderTargetView(RenderTargetView, Color.Azure);
+            context.ClearRenderTargetView(RenderTargetView, Color.White);
             context.ClearDepthStencilView(DepthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
 
             context.Rasterizer.State = rasterizerState;
@@ -139,12 +152,17 @@ namespace SoLeap.Visualizer
             context.VertexShader.SetConstantBuffer(0, frameConstantsBuffer.Buffer);
             context.VertexShader.SetConstantBuffer(1, objectConstantsBuffer.Buffer);
             context.PixelShader.SetConstantBuffer(0, frameConstantsBuffer.Buffer);
+            context.PixelShader.SetConstantBuffer(1, objectConstantsBuffer.Buffer);
 
             foreach (var renderable in Scene.Renderables) {
                 var ident = renderableIdentifiers[renderable];
                 objectConstantsBuffer.Update(new ObjectConstants {
                     World = renderable.WorldTransform,
-                    Color = renderable.Color.ToVector3()
+                    WorldInverseTranspose = BulletSharp.Matrix.Transpose(BulletSharp.Matrix.Invert(renderable.WorldTransform)),
+                    Ambient = renderable.Color.ToColor3(), // new Color3(renderable.Color.ToVector3() / 5.0f),
+                    Diffuse = renderable.Color.ToColor3(),
+                    Specular = renderable.Color.ToColor3(),
+                    SpecularPower = 10.0f
                 });
 
                 context.Draw(ident.VertexCount, ident.Offset);

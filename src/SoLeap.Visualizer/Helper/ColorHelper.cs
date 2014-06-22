@@ -14,5 +14,10 @@ namespace SoLeap.Visualizer
         {
             return new Vector3(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f);
         }
+
+        public static Color3 ToColor3(this Color c)
+        {
+            return new Color3(c.ToVector3());
+        }
     }
 }
