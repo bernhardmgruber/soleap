@@ -25,7 +25,7 @@ namespace SoLeap.Visualizer
     }
 
 
-    [StructLayout(LayoutKind.Explicit, Size = 64 + 4)]
+    [StructLayout(LayoutKind.Explicit, Size = 64 + 16)]
     public struct ObjectConstants
     {
         [FieldOffset(0)]

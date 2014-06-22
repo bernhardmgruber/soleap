@@ -266,6 +266,7 @@
     <Compile Include="SceneRenderer\Constants.cs" />
     <Compile Include="SceneRenderer\SceneRenderer.cs" />
     <Compile Include="MainWindowViewModel.cs" />
+    <Compile Include="SceneRenderer\Vertex.cs" />
     <Page Include="MainWindowView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -331,7 +332,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SceneShader.fx" />
+    <Content Include="SceneShader.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
