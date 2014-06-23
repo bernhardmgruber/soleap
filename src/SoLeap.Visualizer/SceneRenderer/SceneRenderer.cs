@@ -71,7 +71,7 @@ namespace SoLeap.Visualizer
             }
 
             var desc = RasterizerStateDescription.Default();
-            desc.CullMode = CullMode.Back;
+            desc.CullMode = CullMode.None;
             desc.IsAntialiasedLineEnabled = true;
             desc.IsMultisampleEnabled = true;
             rasterizerState = new RasterizerState(Device, desc);
@@ -92,11 +92,9 @@ namespace SoLeap.Visualizer
 
         private void LoadScene(IWorld newScene)
         {
-            var converter = new CollisionShapeConverter();
-
             var verticesList = new List<VertexPositionNormal>();
             foreach (var rigidBodyRenderable in newScene.Renderables) {
-                var vertices = converter.GetVertices(rigidBodyRenderable.CollisionShape);
+                var vertices = CollisionShapeConverter.GetVertices(rigidBodyRenderable.CollisionShape);
                 var ident = new RenderableIdentifier(offset: verticesList.Count, vertexCount: vertices.Count);
 
                 verticesList.AddRange(vertices);

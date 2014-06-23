@@ -7,8 +7,8 @@ namespace SoLeap.Worlds
 {
     public class CubesWorld : AbstractWorld
     {
-        private const float CubeSize = 40f;
-        private const int NumberOfCubes = 20;
+        private const float CubeSize = 20.0f;
+        private const int NumberOfCubes = 50;
 
         private const float FloorHeight = 100f;
 

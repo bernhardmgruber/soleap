@@ -195,10 +195,12 @@ namespace SoLeap.Visualizer
             int numVertes, vertexStride, indexStride, numFaces;
 
             PhyScalarType type, indicesType;
-            meshShape.MeshInterface.GetLockedReadOnlyVertexIndexData(out stream, out numVertes, out type, out vertexStride, out indexStream, out indexStride, out numFaces, out indicesType);
+            meshShape.MeshInterface.GetLockedReadOnlyVertexIndexData(
+                out stream, out numVertes, out type, out vertexStride,
+                out indexStream, out indexStride, out numFaces, out indicesType);
 
             for (int i = 0; i < numFaces; i++) {
-                var positions = new SharpDX.Vector3[3];
+                var positions = new Vector3[3];
 
                 for (int j = 0; j < 3; j++) {
                     long offset = stream.Position;
@@ -206,13 +208,13 @@ namespace SoLeap.Visualizer
                     float v2 = stream.Read<float>();
                     float v3 = stream.Read<float>();
                     stream.Position = offset + vertexStride;
-                    positions[j] = new SharpDX.Vector3(v1, v2, v3);
+                    positions[j] = new Vector3(v1, v2, v3);
                 }
 
                 var a = positions[0] - positions[1];
                 var b = positions[2] - positions[1];
 
-                var normal = SharpDX.Vector3.Cross(a, b);
+                var normal = Vector3.Cross(a, b);
 
                 for (int j = 0; j < 3; j++)
                     vertices.Add(new VertexPositionNormal(positions[j], normal));

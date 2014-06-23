@@ -11,8 +11,6 @@ namespace SoLeap.Visualizer
     public sealed class MainWindowViewModel
         : PropertyChangedBase, IDisposable
     {
-        private readonly HandsManager handsManager;
-
         public BindableCollection<IWorld> Scenes
         {
             get { return scenes; }
@@ -27,7 +25,7 @@ namespace SoLeap.Visualizer
         }
         private IWorld currentScene;
 
-        public HandsManager Hands
+        public HandsManager HandsManager
         {
             get { return hands; }
             set { if (hands != value) { hands = value; NotifyOfPropertyChange(); } }
@@ -52,7 +50,7 @@ namespace SoLeap.Visualizer
 
         public MainWindowViewModel(HandsManager handsManager, IEnumerable<IWorld> scenes)
         {
-            this.handsManager = handsManager;
+            HandsManager = handsManager;
             Scenes = new BindableCollection<IWorld>(scenes);
 
             PropertyChanged += OnPropertyChanged;
@@ -61,7 +59,7 @@ namespace SoLeap.Visualizer
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
             if (propertyChangedEventArgs.PropertyName == this.GetPropertyName(() => CurrentScene)) {
-                handsManager.Clear();
+                HandsManager.Clear();
 
                 if (CurrentScene != null && !CurrentScene.IsLoaded) {
                     CurrentScene.Updating += CurrentSceneOnUpdating;
@@ -72,7 +70,7 @@ namespace SoLeap.Visualizer
 
         private void CurrentSceneOnUpdating(object sender, EventArgs eventArgs)
         {
-            handsManager.Update(CurrentScene);
+            HandsManager.Update(CurrentScene);
         }
 
         private void ReloadScene()

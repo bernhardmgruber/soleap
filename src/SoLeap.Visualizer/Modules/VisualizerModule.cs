@@ -8,6 +8,7 @@ namespace SoLeap.Visualizer.Modules
         public override void Load()
         {
             Bind<MainWindowViewModel>().ToSelf().InSingletonScope();
+            Bind<HandsManager>().ToSelf().InSingletonScope();
         }
     }
 }

@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Runtime.InteropServices;
-using BulletSharp;
-using SharpDX.Direct3D;
+using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.WPF;
 using SoLeap.Hand;
 using Buffer = SharpDX.Direct3D11.Buffer;
+using Matrix = BulletSharp.Matrix;
 
 namespace SoLeap.Visualizer
 {
@@ -23,7 +22,8 @@ namespace SoLeap.Visualizer
         private Buffer vertexBuffer;
 
         private IList<Tuple<int, int>> shapeRanges;
-        private IList<SharpDX.Matrix> transformations;
+
+        private ConstantBuffer<ObjectConstants> objectConstantsBuffer;
 
         public GraphicsHand(PhysicsHand physicsHand, Device device)
         {
@@ -34,7 +34,8 @@ namespace SoLeap.Visualizer
             this.physicsHand = physicsHand;
 
             CreateVertexBuffer();
-            Update(hand);
+
+            objectConstantsBuffer = new ConstantBuffer<ObjectConstants>(device);
         }
 
         private void CreateVertexBuffer()
@@ -62,26 +63,33 @@ namespace SoLeap.Visualizer
             physicsHand.Update(hand);
 
             // transformations have changed
-            transformations = physicsHand.AllTransformations.Select(m => new SharpDX.Matrix(m.ToArray())).ToList();
         }
 
-        public void Render()
+        public void Render(Color3 color)
         {
-            var context = device.ImmediateContext;
-            context.InputAssembler.InputLayout = inputLayout;
-            context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertexBuffer, 24, 0));
-            context.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
+            // Assume RenderStats and Shaders are set by the SceneRenderer
 
+            var context = device.ImmediateContext;
+            context.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertexBuffer, VertexPositionNormal.SizeInBytes, 0));
+
+            context.VertexShader.SetConstantBuffer(1, objectConstantsBuffer.Buffer);
+            context.PixelShader.SetConstantBuffer(1, objectConstantsBuffer.Buffer);
+
+            var transformations = physicsHand.AllTransformations;
             Debug.Assert(shapeRanges.Count == transformations.Count);
             for (int i = 0; i < shapeRanges.Count; i++) {
-                SharpDX.Matrix trans = transformations[i];
+                var world = transformations[i];
                 int vertexOffset = shapeRanges[i].Item1;
                 int vertexCount = shapeRanges[i].Item2 - vertexOffset;
 
-                SharpDX.DataStream stream;
-                context.MapSubresource(matrixBuffer, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out stream);
-                stream.Write(trans);
-                context.UnmapSubresource(matrixBuffer, 0);
+                objectConstantsBuffer.Update(new ObjectConstants {
+                    World = world,
+                    WorldInverseTranspose = Matrix.Transpose(Matrix.Invert(world)),
+                    Ambient = new Color3(color.ToVector3() / 5.0f),
+                    Diffuse = color,
+                    Specular = color,
+                    SpecularPower = 30.0f
+                });
 
                 context.Draw(vertexCount, vertexOffset);
             }
@@ -90,6 +98,7 @@ namespace SoLeap.Visualizer
         public void Dispose()
         {
             vertexBuffer.Dispose();
+            objectConstantsBuffer.Dispose();
             GC.SuppressFinalize(this);
         }
     }

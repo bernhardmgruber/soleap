@@ -20,7 +20,7 @@
 
         <visualizer:SceneRenderer x:Name="Renderer" 
                                   Scene="{Binding CurrentScene, Mode=OneWay}" 
-                                  HandsManager="{Binding Hands, Mode=OneWay}"/>
+                                  HandsManager="{Binding HandsManager, Mode=OneWay}"/>
         <wpf:DXElement Grid.Column="0" Renderer="{Binding ElementName=Renderer}"/>
         
         <StackPanel Grid.Column="1" Orientation="Vertical">
