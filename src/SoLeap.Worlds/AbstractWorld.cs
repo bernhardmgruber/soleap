@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using BulletSharp;
 using System.Diagnostics;
@@ -55,6 +56,8 @@ namespace SoLeap.Worlds
 
         #endregion
 
+        public event EventHandler Updating;
+
         protected AbstractWorld(string name, Vector3 gravity)
         {
             Contract.Requires(!string.IsNullOrEmpty(name));
@@ -95,6 +98,8 @@ namespace SoLeap.Worlds
 
         public void Update()
         {
+            OnUpdating(EventArgs.Empty);
+
             long time = Stopwatch.GetTimestamp();
             Update((time - lastUpdate) / (float)Stopwatch.Frequency);
         }
@@ -188,6 +193,13 @@ namespace SoLeap.Worlds
         public void Add(TypedConstraint constraint)
         {
             world.AddConstraint(constraint);
+        }
+
+        protected virtual void OnUpdating(EventArgs e)
+        {
+            if (Updating != null) {
+                Updating(this, e);
+            }
         }
     }
 }

@@ -18,8 +18,10 @@
             <ColumnDefinition Width="200" />
         </Grid.ColumnDefinitions>
 
-        <visualizer:SceneRenderer x:Name="r" Scene="{Binding CurrentScene, Mode=OneWay}" />
-        <wpf:DXElement Grid.Column="0" Renderer="{Binding ElementName=r}"/>
+        <visualizer:SceneRenderer x:Name="Renderer" 
+                                  Scene="{Binding CurrentScene, Mode=OneWay}" 
+                                  HandsManager="{Binding Hands, Mode=OneWay}"/>
+        <wpf:DXElement Grid.Column="0" Renderer="{Binding ElementName=Renderer}"/>
         
         <StackPanel Grid.Column="1" Orientation="Vertical">
             <GroupBox Header="Scene">

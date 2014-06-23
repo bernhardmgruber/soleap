@@ -4,8 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
 using Caliburn.Micro;
-using SoLeap.Devices;
-using SoLeap.Hand;
 using SoLeap.World;
 
 namespace SoLeap.Visualizer
@@ -13,9 +11,7 @@ namespace SoLeap.Visualizer
     public sealed class MainWindowViewModel
         : PropertyChangedBase, IDisposable
     {
-        private IHandsFrameProvider handsProvider;
-
-        #region Scenes
+        private readonly HandsManager handsManager;
 
         public BindableCollection<IWorld> Scenes
         {
@@ -31,15 +27,12 @@ namespace SoLeap.Visualizer
         }
         private IWorld currentScene;
 
-        public InteractingHands Hands
+        public HandsManager Hands
         {
             get { return hands; }
             set { if (hands != value) { hands = value; NotifyOfPropertyChange(); } }
         }
-        private InteractingHands hands;
-
-        #endregion
-
+        private HandsManager hands;
 
         #region Commands
 
@@ -57,12 +50,9 @@ namespace SoLeap.Visualizer
 
         #endregion
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public MainWindowViewModel(IHandsFrameProvider handsProvider, IEnumerable<IWorld> scenes)
+        public MainWindowViewModel(HandsManager handsManager, IEnumerable<IWorld> scenes)
         {
-            this.handsProvider = handsProvider;
+            this.handsManager = handsManager;
             Scenes = new BindableCollection<IWorld>(scenes);
 
             PropertyChanged += OnPropertyChanged;
@@ -70,26 +60,30 @@ namespace SoLeap.Visualizer
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            if (propertyChangedEventArgs.PropertyName == this.GetPropertyName(() => CurrentScene))
-            {
-                if (CurrentScene != null && !CurrentScene.IsLoaded)
-                {
+            if (propertyChangedEventArgs.PropertyName == this.GetPropertyName(() => CurrentScene)) {
+                handsManager.Clear();
+
+                if (CurrentScene != null && !CurrentScene.IsLoaded) {
+                    CurrentScene.Updating += CurrentSceneOnUpdating;
                     CurrentScene.Load();
-                    Hands = new InteractingHands(handsProvider, CurrentScene);
                 }
             }
         }
 
+        private void CurrentSceneOnUpdating(object sender, EventArgs eventArgs)
+        {
+            handsManager.Update(CurrentScene);
+        }
+
         private void ReloadScene()
         {
-            CurrentScene = Scenes[0];
+            throw new NotImplementedException();
         }
 
         public void Dispose()
         {
             //SwitchScene(null);
-            foreach (var scene in Scenes.Where(s => s.IsLoaded))
-            {
+            foreach (var scene in Scenes.Where(s => s.IsLoaded)) {
                 //scene.Unload();
                 scene.Dispose();
             }

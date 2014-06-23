@@ -1,4 +1,6 @@
-﻿namespace SoLeap.World
+﻿using System;
+
+namespace SoLeap.World
 {
     public interface IWorld
         : IPhysicsWorld, IRenderableWorld
@@ -8,5 +10,7 @@
         bool IsLoaded { get; }
 
         void Load();
+
+        event EventHandler Updating;
     }
 }

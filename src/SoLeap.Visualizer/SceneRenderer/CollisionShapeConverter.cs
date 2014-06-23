@@ -6,9 +6,9 @@ using BtVector3 = BulletSharp.Vector3;
 
 namespace SoLeap.Visualizer
 {
-    public class CollisionShapeConverter
+    public static class CollisionShapeConverter
     {
-        public IList<VertexPositionNormal> GetVertices(CollisionShape shape)
+        public static IList<VertexPositionNormal> GetVertices(CollisionShape shape)
         {
             if (shape is SphereShape)
                 return GetVertices((SphereShape)shape);
@@ -20,15 +20,17 @@ namespace SoLeap.Visualizer
                 return GetVertices((StaticPlaneShape)shape);
             if (shape is CylinderShapeX)
                 return GetVertices((CylinderShapeX)shape);
+            if (shape is ConvexTriangleMeshShape)
+                return GetVertices((ConvexTriangleMeshShape)shape);
             throw new NotImplementedException("GetVertices");
         }
 
-        private IList<VertexPositionNormal> GetVertices(SphereShape sphere)
+        private static IList<VertexPositionNormal> GetVertices(SphereShape sphere)
         {
             throw new NotImplementedException();
         }
 
-        private IList<VertexPositionNormal> GetVertices(BoxShape box)
+        private static IList<VertexPositionNormal> GetVertices(BoxShape box)
         {
             var vertices = new List<VertexPositionNormal>(6 * 6);
 
@@ -102,7 +104,7 @@ namespace SoLeap.Visualizer
             return vertices;
         }
 
-        private IList<VertexPositionNormal> GetVertices(CompoundShape compound)
+        private static IList<VertexPositionNormal> GetVertices(CompoundShape compound)
         {
 
             foreach (CompoundShapeChild child in compound.ChildList) {
@@ -113,7 +115,7 @@ namespace SoLeap.Visualizer
             throw new NotImplementedException();
         }
 
-        private IList<VertexPositionNormal> GetVertices(StaticPlaneShape plane)
+        private static IList<VertexPositionNormal> GetVertices(StaticPlaneShape plane)
         {
             // http://bulletphysics.com/Bullet/BulletFull/btStaticPlaneShape_8cpp_source.html#l00058
 
@@ -180,9 +182,45 @@ namespace SoLeap.Visualizer
             }
         }
 
-        private IList<VertexPositionNormal> GetVertices(CylinderShapeX cylinder)
+        private static IList<VertexPositionNormal> GetVertices(CylinderShapeX cylinder)
         {
             throw new NotImplementedException();
+        }
+
+        private static IList<VertexPositionNormal> GetVertices(ConvexTriangleMeshShape meshShape)
+        {
+            var vertices = new List<VertexPositionNormal>();
+
+            DataStream stream, indexStream;
+            int numVertes, vertexStride, indexStride, numFaces;
+
+            PhyScalarType type, indicesType;
+            meshShape.MeshInterface.GetLockedReadOnlyVertexIndexData(out stream, out numVertes, out type, out vertexStride, out indexStream, out indexStride, out numFaces, out indicesType);
+
+            for (int i = 0; i < numFaces; i++) {
+                var positions = new SharpDX.Vector3[3];
+
+                for (int j = 0; j < 3; j++) {
+                    long offset = stream.Position;
+                    float v1 = stream.Read<float>();
+                    float v2 = stream.Read<float>();
+                    float v3 = stream.Read<float>();
+                    stream.Position = offset + vertexStride;
+                    positions[j] = new SharpDX.Vector3(v1, v2, v3);
+                }
+
+                var a = positions[0] - positions[1];
+                var b = positions[2] - positions[1];
+
+                var normal = SharpDX.Vector3.Cross(a, b);
+
+                for (int j = 0; j < 3; j++)
+                    vertices.Add(new VertexPositionNormal(positions[j], normal));
+            }
+
+            meshShape.MeshInterface.UnlockReadOnlyVertexData(0);
+
+            return vertices;
         }
     }
 }

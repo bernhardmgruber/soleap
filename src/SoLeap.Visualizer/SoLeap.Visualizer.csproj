@@ -257,7 +257,7 @@
     <Compile Include="DebugDraw\SharpDX11DebugDraw.cs" />
     <Compile Include="Helper\ColorHelper.cs" />
     <Compile Include="Helper\PropertyChangedBaseHelper.cs" />
-    <Compile Include="InteractingHands.cs" />
+    <Compile Include="HandsManager.cs" />
     <Compile Include="Modules\LeapModule.cs" />
     <Compile Include="Modules\VisualizerModule.cs" />
     <Compile Include="Modules\WorldModule.cs" />
@@ -265,6 +265,8 @@
     <Compile Include="SceneRenderer\CollisionShapeConverter.cs" />
     <Compile Include="SceneRenderer\ConstantBuffer.cs" />
     <Compile Include="SceneRenderer\Constants.cs" />
+    <Compile Include="SceneRenderer\GraphicsHand.cs" />
+    <Compile Include="SceneRenderer\HandsRenderer.cs" />
     <Compile Include="SceneRenderer\SceneRenderer.cs" />
     <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="SceneRenderer\VertexPositionNormal.cs" />

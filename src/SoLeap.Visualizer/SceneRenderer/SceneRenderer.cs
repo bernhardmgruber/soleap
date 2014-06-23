@@ -4,7 +4,6 @@ using SharpDX;
 using SharpDX.D3DCompiler;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
-using SharpDX.DXGI;
 using SharpDX.WPF;
 using SoLeap.World;
 using Buffer = SharpDX.Direct3D11.Buffer;
@@ -29,6 +28,8 @@ namespace SoLeap.Visualizer
         private Buffer vertexBuffer;
         private readonly IDictionary<IRenderable, RenderableIdentifier> renderableIdentifiers;
 
+        private readonly HandsRenderer handsRenderer;
+
         #region Scene DependencyProperty
         public IWorld Scene
         {
@@ -39,12 +40,22 @@ namespace SoLeap.Visualizer
         public static readonly DependencyProperty SceneProperty = DependencyProperty.Register(
             "Scene", typeof(IWorld), typeof(SceneRenderer), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, ScenePropertyChanged));
 
-
         private static void ScenePropertyChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
         {
             var renderer = (SceneRenderer)dependencyObject;
             renderer.SwitchScene((IWorld)args.OldValue, (IWorld)args.NewValue);
         }
+        #endregion
+
+        #region HandsManager DependencyProperty
+        public HandsManager HandsManager
+        {
+            get { return (HandsManager)GetValue(HandsManagerProperty); }
+            set { SetValue(HandsManagerProperty, value); }
+        }
+
+        public static readonly DependencyProperty HandsManagerProperty = DependencyProperty.Register(
+            "HandsManager", typeof(HandsManager), typeof(SceneRenderer), new FrameworkPropertyMetadata(null));
         #endregion
 
         public SceneRenderer()
@@ -67,6 +78,8 @@ namespace SoLeap.Visualizer
 
             frameConstantsBuffer = new ConstantBuffer<FrameConstants>(Device);
             objectConstantsBuffer = new ConstantBuffer<ObjectConstants>(Device);
+
+            handsRenderer = new HandsRenderer(Device);
         }
 
         private void SwitchScene(IWorld oldScene, IWorld newScene)
@@ -162,6 +175,8 @@ namespace SoLeap.Visualizer
 
                 context.Draw(ident.VertexCount, ident.Offset);
             }
+
+            handsRenderer.DrawHands(HandsManager.Hands);
         }
 
         protected override void Dispose(bool disposing)
