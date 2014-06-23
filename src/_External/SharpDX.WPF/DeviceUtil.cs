@@ -36,8 +36,7 @@ namespace SharpDX.WPF
         {
             // NOTE: SharpDX 1.3 requires explicit Dispose() of everything
             // hence the DisposeGroup, to enforce it
-            using (var f = new Factory())
-            {
+            using (var f = new Factory()) {
                 int n = AdapterCount;
                 for (int i = 0; i < n; i++)
                     yield return dg.Add(f.GetAdapter(i));
@@ -53,11 +52,9 @@ namespace SharpDX.WPF
         {
             Direct3D.FeatureLevel high = Direct3D.FeatureLevel.Level_9_1;
             Adapter ada = null;
-            foreach (var item in GetAdapters(dg))
-            {
+            foreach (var item in GetAdapters(dg)) {
                 var level = Direct3D11.Device.GetSupportedFeatureLevel(item);
-                if (ada == null || level > high)
-                {
+                if (ada == null || level > high) {
                     ada = item;
                     high = level;
                 }
@@ -75,8 +72,7 @@ namespace SharpDX.WPF
             Direct3D10.DeviceCreationFlags cFlags = Direct3D10.DeviceCreationFlags.None,
             Direct3D10.FeatureLevel minLevel = Direct3D10.FeatureLevel.Level_9_1)
         {
-            using (var dg = new DisposeGroup())
-            {
+            using (var dg = new DisposeGroup()) {
                 var ada = GetBestAdapter(dg);
                 if (ada == null)
                     return null;
@@ -100,8 +96,7 @@ namespace SharpDX.WPF
             Direct3D11.DeviceCreationFlags cFlags = Direct3D11.DeviceCreationFlags.None,
             Direct3D.FeatureLevel minLevel = Direct3D.FeatureLevel.Level_9_1)
         {
-            using (var dg = new DisposeGroup())
-            {
+            using (var dg = new DisposeGroup()) {
                 var ada = GetBestAdapter(dg);
                 if (ada == null)
                     return null;
@@ -111,5 +106,42 @@ namespace SharpDX.WPF
                 return new Direct3D11.Device(ada, cFlags, level);
             }
         }
+
+        /*
+        public static SharpDX.Direct3D11.Device Create11(
+            out SwapChain swapChain,
+            Direct3D11.DeviceCreationFlags cFlags = Direct3D11.DeviceCreationFlags.None,
+            Direct3D.FeatureLevel minLevel = Direct3D.FeatureLevel.Level_9_1)
+        {
+            using (var dg = new DisposeGroup()) {
+                swapChain = null;
+                var ada = GetBestAdapter(dg);
+                if (ada == null)
+                    return null;
+                var level = Direct3D11.Device.GetSupportedFeatureLevel(ada);
+                if (level < minLevel)
+                    return null;
+
+#if DEBUG
+                cFlags |= DeviceCreationFlags.Debug;
+#endif
+
+                var desc = new SwapChainDescription {
+                    BufferCount = 1,
+                    Flags = SwapChainFlags.None,
+                    IsWindowed = true,
+                    ModeDescription = new ModeDescription(width, height, new Rational(60, 1), Format.R8G8_B8G8_UNorm),
+                    OutputHandle = new IntPtr(0),
+                    SampleDescription = new SampleDescription(1, 0),
+                    SwapEffect = SwapEffect.Discard,
+                    Usage = Usage.RenderTargetOutput
+                };
+                Direct3D11.Device device;
+                Direct3D11.Device.CreateWithSwapChain(ada, cFlags, new[] { level }, desc, out device, out swapChain);
+                //return new Direct3D11.Device(ada, cFlags, level);
+                return device;
+            }
+        } 
+        */
     }
 }

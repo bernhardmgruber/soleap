@@ -267,7 +267,7 @@
     <Compile Include="SceneRenderer\Constants.cs" />
     <Compile Include="SceneRenderer\SceneRenderer.cs" />
     <Compile Include="MainWindowViewModel.cs" />
-    <Compile Include="SceneRenderer\Vertex.cs" />
+    <Compile Include="SceneRenderer\VertexPositionNormal.cs" />
     <Page Include="MainWindowView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

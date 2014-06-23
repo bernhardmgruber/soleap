@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Forms.VisualStyles;
 using BulletSharp;
 using Vector3 = SharpDX.Vector3;
 using BtVector3 = BulletSharp.Vector3;
