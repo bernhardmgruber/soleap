@@ -24,7 +24,7 @@ namespace SoLeap.Worlds
             // ground
             var groundShape = new StaticPlaneShape(Vector3.UnitY, FloorHeight);
             Add(groundShape);
-            CreateAndAddRigidBodyAndRenderable(0.0f, Matrix.Identity, groundShape, Colors.LightSlateGray, "ground");
+            var body = CreateAndAddRigidBodyAndRenderable(0.0f, Matrix.Identity, groundShape, Colors.LightSlateGray, "ground");
 
             // dumbbell
             float barLength2 = barLength / 2.0f;
@@ -41,7 +41,8 @@ namespace SoLeap.Worlds
             Add(barShape);
             Add(dumbbellshape);
 
-            CreateAndAddRigidBodyAndRenderable(10f, Matrix.Translation(0, FloorHeight + weightCylinderDiameter2 * 2, 0), dumbbellshape, Colors.Gray, "Dumbbell");
+            body = CreateAndAddRigidBodyAndRenderable(1f, Matrix.Translation(0, FloorHeight + weightCylinderDiameter2 * 2, 0), dumbbellshape, Colors.Gray, "Dumbbell");
+            body.SetDamping(0.2f, 0.2f);
         }
     }
 }
