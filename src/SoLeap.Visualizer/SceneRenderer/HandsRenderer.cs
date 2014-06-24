@@ -4,6 +4,7 @@ using System.Linq;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SoLeap.Hand;
+using System;
 
 namespace SoLeap.Visualizer
 {
@@ -48,10 +49,10 @@ namespace SoLeap.Visualizer
             }
         }
 
-
         private Color3 GetColorForId(long id)
         {
-            return Color.Blue.ToColor3();
+            var r = new Random((int)id);
+            return new Color3(r.Next(1 << 24));
             //return new Color3((int)id);
         }
     }
