@@ -11,6 +11,8 @@ namespace SoLeap.Hand
 {
     public class PhysicsHand
     {
+        public const float FingerThicknessScale = 0.7558991f;
+
         private IDictionary<FingerType, IDictionary<BoneType, CollisionShape>> fingerShapes;
         //public IDictionary<FingerType, IDictionary<BoneType, CollisionShape>> FingerShapes
         //{
@@ -134,8 +136,8 @@ namespace SoLeap.Hand
 
                 // build collision shape
                 float length = (float)(bone.PrevJoint - bone.NextJoint).Length;
-                float width = (float)bone.Width;
-                float height = (float)bone.Width;
+                float width = (float)bone.Width * FingerThicknessScale;
+                float height = (float)bone.Width * FingerThicknessScale;
 
                 shape = new BoxShape(width / 2.0f, height / 2.0f, length / 2.0f);
                 shape.UserObject = userObjectString;
