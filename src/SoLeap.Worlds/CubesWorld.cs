@@ -33,7 +33,7 @@ namespace SoLeap.Worlds
             Func<float> nextAngle = () => (float)(random.NextDouble() * Math.PI);
 
             for (int i = 0; i < NumberOfCubes; i++) {
-                body = CreateAndAddRigidBodyAndRenderable(1f,
+                CreateAndAddRigidBodyAndRenderable(1f,
                     Matrix.RotationYawPitchRoll(nextAngle(), nextAngle(), nextAngle()) *
                     Matrix.Translation(new Vector3(nextCoord(), nextHeight(), nextCoord())), cubeShape, Colors.Red, "cube " + i);
             }

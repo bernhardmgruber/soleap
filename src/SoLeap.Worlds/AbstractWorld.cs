@@ -172,8 +172,7 @@ namespace SoLeap.Worlds
             rbInfo.Dispose();
 
             // kinematic settings
-            if (isKinematic)
-            {
+            if (isKinematic) {
                 body.CollisionFlags = body.CollisionFlags | CollisionFlags.KinematicObject;
                 body.ActivationState = ActivationState.DisableDeactivation;
             }

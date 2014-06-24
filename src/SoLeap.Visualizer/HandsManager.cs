@@ -1,8 +1,6 @@
-﻿using SoLeap.Devices;
-using SoLeap.Hand;
+﻿using System.Collections.Generic;
+using SoLeap.Devices;
 using SoLeap.World;
-using System;
-using System.Collections.Generic;
 
 namespace SoLeap.Visualizer
 {

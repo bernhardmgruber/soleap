@@ -1,6 +1,6 @@
-﻿using SoLeap.Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using SoLeap.Domain;
 
 namespace SoLeap.Devices
 {

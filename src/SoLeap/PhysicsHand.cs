@@ -1,13 +1,13 @@
-﻿using BulletSharp;
-using SoLeap.Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Media.Media3D;
+using BulletSharp;
+using SoLeap.Domain;
 using SoLeap.World;
 
-namespace SoLeap.Hand
+namespace SoLeap
 {
     public class PhysicsHand
     {

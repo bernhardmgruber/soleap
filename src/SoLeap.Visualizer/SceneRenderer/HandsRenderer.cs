@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using SharpDX;
 using SharpDX.Direct3D11;
-using SoLeap.Hand;
-using System;
 
 namespace SoLeap.Visualizer
 {

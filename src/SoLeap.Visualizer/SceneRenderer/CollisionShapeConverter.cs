@@ -227,8 +227,7 @@ namespace SoLeap.Visualizer
             p = new BtVector3();
             q = new BtVector3();
 
-            if (Math.Abs(n[2]) > SIMDSQRT12)
-            {
+            if (Math.Abs(n[2]) > SIMDSQRT12) {
                 // choose p in y-z plane
                 float a = n[1] * n[1] + n[2] * n[2];
                 float k = 1.0f / (a * a);
@@ -239,9 +238,7 @@ namespace SoLeap.Visualizer
                 q[0] = a * k;
                 q[1] = -n[0] * p[2];
                 q[2] = n[0] * p[1];
-            }
-            else
-            {
+            } else {
                 // choose p in x-y plane
                 float a = n[0] * n[0] + n[1] * n[1];
                 float k = 1.0f / (a * a);
@@ -263,8 +260,7 @@ namespace SoLeap.Visualizer
             var x = cylinder.HalfExtentsWithMargin.X;
 
             IList<Vector3> circle = new List<Vector3>(segments);
-            for (int i = 0; i < segments; i++)
-            {
+            for (int i = 0; i < segments; i++) {
                 var angle = i * (float)Math.PI * 2.0f / segments;
 
                 var y = (float)Math.Cos(angle) * r;
@@ -277,8 +273,7 @@ namespace SoLeap.Visualizer
             var upperX = new Vector3(+x, 0, 0);
 
             IList<Vector3[]> triangles = new List<Vector3[]>();
-            for (int i = 0; i < circle.Count; i++)
-            {
+            for (int i = 0; i < circle.Count; i++) {
                 var curLower = circle[i];
                 curLower.X -= x;
                 var curUpper = circle[i];
@@ -318,12 +313,10 @@ namespace SoLeap.Visualizer
                 out stream, out numVertes, out type, out vertexStride,
                 out indexStream, out indexStride, out numFaces, out indicesType);
 
-            for (int i = 0; i < numFaces; i++)
-            {
+            for (int i = 0; i < numFaces; i++) {
                 var positions = new Vector3[3];
 
-                for (int j = 0; j < 3; j++)
-                {
+                for (int j = 0; j < 3; j++) {
                     long offset = stream.Position;
                     float v1 = stream.Read<float>();
                     float v2 = stream.Read<float>();

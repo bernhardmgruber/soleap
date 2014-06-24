@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
-using System.Linq;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.WPF;
-using SoLeap.Hand;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Matrix = BulletSharp.Matrix;
 
 namespace SoLeap.Visualizer
 {
     public sealed class GraphicsHand
-        : System.IDisposable
+        : IDisposable
     {
         private readonly Device device;
 
