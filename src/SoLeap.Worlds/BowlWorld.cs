@@ -1,4 +1,5 @@
 ﻿using BulletSharp;
+using System.Windows.Media;
 
 namespace SoLeap.Worlds
 {
@@ -21,7 +22,7 @@ namespace SoLeap.Worlds
             BoxShape groundShape = new BoxShape(1000f, 10f, 1000f);
             Add(groundShape);
 
-            CreateAndAddRigidBody(0f, Matrix.Translation(0, SceneHeight, 0), groundShape, "Ground");
+            CreateAndAddRigidBodyAndRenderable(0f, Matrix.Translation(0, SceneHeight, 0), groundShape, Colors.LightSlateGray, "Ground");
 
             // create two bowls
             float innerDiameter2 = (BowlDiameter - BowlThickness) / 2.0f;
@@ -37,14 +38,14 @@ namespace SoLeap.Worlds
             bowlShape.AddChildShape(Matrix.Translation(0, -(BowlHeight + BowlThickness) / 2.0f, 0), new BoxShape(diameter2, thickness2, diameter2));
             Add(bowlShape);
 
-            CreateAndAddRigidBody(30.0f, Matrix.Translation(-BowlDiameter, BowlHeight + BowlThickness + SceneHeight, 0), bowlShape, "Left bowl");
-            CreateAndAddRigidBody(30.0f, Matrix.Translation(+BowlDiameter, BowlHeight + BowlThickness + SceneHeight, 0), bowlShape, "Right bowl");
+            CreateAndAddRigidBodyAndRenderable(30.0f, Matrix.Translation(-BowlDiameter, BowlHeight + BowlThickness + SceneHeight, 0), bowlShape, Colors.DarkRed, "Left bowl");
+            CreateAndAddRigidBodyAndRenderable(30.0f, Matrix.Translation(+BowlDiameter, BowlHeight + BowlThickness + SceneHeight, 0), bowlShape, Colors.DarkRed, "Right bowl");
 
             // create the ball
             SphereShape ballShape = new SphereShape(BallRadius);
             Add(ballShape);
 
-            CreateAndAddRigidBody(10.0f, Matrix.Translation(-BowlDiameter, BowlHeight * 2.0f + SceneHeight, 0), ballShape, "Ball");
+            CreateAndAddRigidBodyAndRenderable(10.0f, Matrix.Translation(-BowlDiameter, BowlHeight * 2.0f + SceneHeight, 0), ballShape, Colors.LightGreen, "Ball");
         }
     }
 }

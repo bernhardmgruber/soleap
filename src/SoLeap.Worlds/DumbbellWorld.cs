@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace SoLeap.Worlds
 {
@@ -23,7 +24,7 @@ namespace SoLeap.Worlds
             // ground
             var groundShape = new StaticPlaneShape(Vector3.UnitY, FloorHeight);
             Add(groundShape);
-            CreateAndAddRigidBody(0.0f, Matrix.Identity, groundShape, "ground");
+            CreateAndAddRigidBodyAndRenderable(0.0f, Matrix.Identity, groundShape, Colors.LightSlateGray, "ground");
 
             // dumbbell
             float barLength2 = barLength / 2.0f;
@@ -40,7 +41,7 @@ namespace SoLeap.Worlds
             Add(barShape);
             Add(dumbbellshape);
 
-            CreateAndAddRigidBody(10f, Matrix.Translation(0, 0, FloorHeight + weightCylinderDiameter2 * 2), dumbbellshape, "Dumbbell");
+            CreateAndAddRigidBodyAndRenderable(10f, Matrix.Translation(0, FloorHeight + weightCylinderDiameter2 * 2, 0), dumbbellshape, Colors.Gray, "Dumbbell");
         }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using BulletSharp;
+using System.Windows.Media;
 
 namespace SoLeap.Worlds
 {
-    internal class SimpleWallWorld : AbstractWorld
+    public class SimpleWallWorld : AbstractWorld
     {
         private const float SceneHeight = 100f;
 
@@ -18,14 +19,14 @@ namespace SoLeap.Worlds
             BoxShape groundShape = new BoxShape(1000f, 10f, 1000f);
             Add(groundShape);
 
-            CreateAndAddRigidBody(0f, Matrix.Translation(0, SceneHeight, 0), groundShape, "Ground");
+            CreateAndAddRigidBodyAndRenderable(0f, Matrix.Translation(0, SceneHeight, 0), groundShape, Colors.LightSlateGray, "Ground");
 
             // create walls
             BoxShape wallShape = new BoxShape(wallDimensions2);
             Add(wallShape);
 
-            CreateAndAddRigidBody(0f, Matrix.Translation(-200f, SceneHeight + wallDimensions2.Y, 0), wallShape, "static wall");
-            CreateAndAddRigidBody(10f, Matrix.Translation(+200f, SceneHeight + wallDimensions2.Y, 0), wallShape, "dynamic wall");
+            CreateAndAddRigidBodyAndRenderable(0f, Matrix.Translation(-200f, SceneHeight + wallDimensions2.Y, 0), wallShape, Colors.Orange, "static wall");
+            CreateAndAddRigidBodyAndRenderable(10f, Matrix.Translation(+200f, SceneHeight + wallDimensions2.Y, 0), wallShape, Colors.Green, "dynamic wall");
         }
     }
 }

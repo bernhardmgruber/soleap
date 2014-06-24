@@ -4,6 +4,7 @@ using System.Diagnostics.Contracts;
 using BulletSharp;
 using System.Diagnostics;
 using SoLeap.World;
+using System.Windows.Media;
 
 namespace SoLeap.Worlds
 {
@@ -171,7 +172,8 @@ namespace SoLeap.Worlds
             rbInfo.Dispose();
 
             // kinematic settings
-            if (isKinematic) {
+            if (isKinematic)
+            {
                 body.CollisionFlags = body.CollisionFlags | CollisionFlags.KinematicObject;
                 body.ActivationState = ActivationState.DisableDeactivation;
             }
@@ -183,6 +185,13 @@ namespace SoLeap.Worlds
             world.AddRigidBody(body);
 
             return body;
+        }
+
+        public RigidBody CreateAndAddRigidBodyAndRenderable(float mass, Matrix startTransform, CollisionShape shape, Color color = default(Color), object userObject = null, bool isKinematic = false)
+        {
+            var rb = CreateAndAddRigidBody(mass, startTransform, shape, userObject, isKinematic);
+            Renderables.Add(new RigidBodyRenderable(rb.MotionState, shape, color));
+            return rb;
         }
 
         public void Add(CollisionShape shape)

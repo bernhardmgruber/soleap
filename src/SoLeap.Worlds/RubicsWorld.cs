@@ -1,5 +1,6 @@
 ﻿using BulletSharp;
 using System;
+using System.Windows.Media;
 
 namespace SoLeap.Worlds
 {
@@ -26,7 +27,7 @@ namespace SoLeap.Worlds
             BoxShape groundShape = new BoxShape(20, 0.5f, 20);
             Add(groundShape);
 
-            CreateAndAddRigidBody(0, Matrix.Translation(0, -4, 0), groundShape, "Ground");
+            CreateAndAddRigidBodyAndRenderable(0, Matrix.Translation(0, -4, 0), groundShape, Colors.LightSlateGray, "Ground");
 
             // create basic shape for a small sub cube
             var shape = CreateSubCubeShape();
@@ -39,10 +40,11 @@ namespace SoLeap.Worlds
                     for (int x = 0; x < 3; x++)
                         //if ((x == 1 && y == 1) || (x == 1 && z == 1) || (y == 1 && z == 1))
                         //if(x == y && y == z)
-                        bodies[x, y, z] = CreateAndAddRigidBody(
+                        bodies[x, y, z] = CreateAndAddRigidBodyAndRenderable(
                             subCubeMass,
                             Matrix.Translation((x - 1) * (1.0f + subCubeGap), (y - 1) * (1.0f + subCubeGap), (z - 1) * (1.0f + subCubeGap)),
                             shape,
+                            Colors.Green,
                             String.Format("subcube {0} {1} {2}", x, y, z)
                             );
 
