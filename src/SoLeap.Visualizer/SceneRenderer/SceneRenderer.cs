@@ -104,7 +104,7 @@ namespace SoLeap.Visualizer
             vertexBuffer = Device.CreateBuffer(verticesList.ToArray());
 
             Camera = new FirstPersonCamera {
-                Position = new Vector3(0.0f, 400.0f, -500.0f),
+                Position = new Vector3(0.0f, 400.0f, 500.0f),
                 LookAt = new Vector3(0.0f, 100.0f, 0.0f),
                 NearPlane = 1.0f,
                 FarPlane = 10000.0f,
@@ -128,9 +128,9 @@ namespace SoLeap.Visualizer
 
 
             var lightsArray = new DirectionalLight[DirectionalLight.MaxLights] {
-                new DirectionalLight { Direction = new Vector3(-0.5f, -1.0f, +0.5f), Color = Color.White.ToColor3(), Enabled = true },
-                new DirectionalLight { Direction = new Vector3(+0.5f, -0.2f, -0.5f), Color = Color.White.ToColor3(), Enabled = true },
-                new DirectionalLight { Direction = new Vector3(+0.0f, -1.0f, +0.0f), Color = Color.White.ToColor3(), Enabled = false },
+                new DirectionalLight { Direction = new Vector3(-0.5f, -1.0f, -0.5f), Color = Color.White.ToColor3(), Enabled = true },
+                new DirectionalLight { Direction = new Vector3(+0.5f, -0.2f, +0.5f), Color = Color.White.ToColor3(), Enabled = true },
+                new DirectionalLight { Direction = new Vector3(+0.0f, -1.0f, -0.0f), Color = Color.White.ToColor3(), Enabled = false },
                 new DirectionalLight { Enabled = false }
             };
 

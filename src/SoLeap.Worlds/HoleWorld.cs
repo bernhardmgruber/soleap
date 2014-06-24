@@ -29,10 +29,10 @@ namespace SoLeap.Worlds
             var floorBoxShape = new BoxShape(FloorBoxDimensions / 2.0f);
             const float pi_2 = (float)(Math.PI / 2.0);
             var floorTransformations = new Matrix[4] {
-                Matrix.RotationY(0.0f) * Matrix.Translation(-100.0f, 0.0f, +150.0f), // 1
-                Matrix.RotationY(pi_2) * Matrix.Translation(+150.0f, 0.0f, +100.0f), // 2
-                Matrix.RotationY(0.0f) * Matrix.Translation(+100.0f, 0.0f, -150.0f), // 3
-                Matrix.RotationY(pi_2) * Matrix.Translation(-150.0f, 0.0f, -100.0f)  // 4
+                Matrix.RotationY(0.0f) * Matrix.Translation(-100.0f, 0.0f, -150.0f), // 1
+                Matrix.RotationY(pi_2) * Matrix.Translation(+150.0f, 0.0f, -100.0f), // 2
+                Matrix.RotationY(0.0f) * Matrix.Translation(+100.0f, 0.0f, +150.0f), // 3
+                Matrix.RotationY(pi_2) * Matrix.Translation(-150.0f, 0.0f, +100.0f)  // 4
             };
 
             foreach (var floorTransformation in floorTransformations) {
