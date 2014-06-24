@@ -14,44 +14,10 @@ namespace SoLeap.Hand
         public const float FingerThicknessScale = 0.7558991f;
 
         private IDictionary<FingerType, IDictionary<BoneType, CollisionShape>> fingerShapes;
-        //public IDictionary<FingerType, IDictionary<BoneType, CollisionShape>> FingerShapes
-        //{
-        //    get
-        //    {
-        //        assertCalibrated();
-        //        return fingerShapes;
-        //    }
-        //}
-
         private IDictionary<FingerType, IDictionary<BoneType, RigidBody>> fingerBodies;
-        //public IDictionary<FingerType, IDictionary<BoneType, RigidBody>> FingerBodies
-        //{
-        //    get
-        //    {
-        //        assertCalibrated();
-        //        return fingerBodies;
-        //    }
-        //}
 
         private CollisionShape palmShape;
-        //public CollisionShape PalmShape
-        //{
-        //    get
-        //    {
-        //        assertCalibrated();
-        //        return palmShape;
-        //    }
-        //}
-
         private RigidBody palmBody;
-        //public RigidBody PalmBody
-        //{
-        //    get
-        //    {
-        //        assertCalibrated();
-        //        return palmBody;
-        //    }
-        //}
 
         /// <summary>
         /// A list of all bounding volume transformations of the hand
@@ -145,6 +111,7 @@ namespace SoLeap.Hand
 
                 // create rigid body
                 body = world.CreateAndAddRigidBody(1.0f, ConvertMatrix(bone.Transformation), shape, userObjectString, useKinematicBodies);
+                body.Friction = 0.5f;
 
                 // store shape and body
                 fingerShapes[fingerType][boneType] = shape;
