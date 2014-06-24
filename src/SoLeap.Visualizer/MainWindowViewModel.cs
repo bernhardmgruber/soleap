@@ -58,10 +58,12 @@ namespace SoLeap.Visualizer
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            if (propertyChangedEventArgs.PropertyName == this.GetPropertyName(() => CurrentScene)) {
+            if (propertyChangedEventArgs.PropertyName == this.GetPropertyName(() => CurrentScene))
+            {
                 HandsManager.Clear();
 
-                if (CurrentScene != null && !CurrentScene.IsLoaded) {
+                if (CurrentScene != null && !CurrentScene.IsLoaded)
+                {
                     CurrentScene.Updating += CurrentSceneOnUpdating;
                     CurrentScene.Load();
                 }
@@ -75,16 +77,25 @@ namespace SoLeap.Visualizer
 
         private void ReloadScene()
         {
-            throw new NotImplementedException();
+            var previousScene = currentScene;
+            if (previousScene != null)
+            {
+                scenes.Remove(previousScene);
+
+                // HAAAAAAAAAAAAX
+                var newScene = (IWorld)Activator.CreateInstance(previousScene.GetType());
+                scenes.Add(newScene);
+
+                CurrentScene = newScene;
+                RecalibrateCommand.Execute(null);
+                previousScene.Dispose();
+            }
         }
 
         public void Dispose()
         {
-            //SwitchScene(null);
-            foreach (var scene in Scenes.Where(s => s.IsLoaded)) {
-                //scene.Unload();
+            foreach (var scene in Scenes.Where(s => s.IsLoaded))
                 scene.Dispose();
-            }
             Scenes.Clear();
         }
     }
