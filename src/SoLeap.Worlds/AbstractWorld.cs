@@ -32,7 +32,7 @@ namespace SoLeap.Worlds
         private BroadphaseInterface broadphase;
 
         // the physics world
-        private DiscreteDynamicsWorld world;
+        private DynamicsWorld world;
 
         // all shapes that are used in collision
         private AlignedCollisionShapeArray collisionShapes;
@@ -167,7 +167,7 @@ namespace SoLeap.Worlds
                 shape.CalculateLocalInertia(mass, out localInertia);
 
             // using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-            var rbInfo = new RigidBodyConstructionInfo(mass, new DefaultMotionState(startTransform), shape, localInertia);
+            var rbInfo = new RigidBodyConstructionInfo(mass, new DefaultMotionState(startTransform), shape, localInertia) { Friction = 0.5f, RollingFriction = 0.5f };
             var body = new RigidBody(rbInfo);
             rbInfo.Dispose();
 

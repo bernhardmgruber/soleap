@@ -110,8 +110,7 @@ namespace SoLeap
                 world.Add(shape);
 
                 // create rigid body
-                body = world.CreateAndAddRigidBody(1.0f, ConvertMatrix(bone.Transformation), shape, userObjectString, useKinematicBodies);
-                body.Friction = 0.5f;
+                body = world.CreateAndAddRigidBody(0.0f, ConvertMatrix(bone.Transformation), shape, userObjectString, useKinematicBodies);
 
                 // store shape and body
                 fingerShapes[fingerType][boneType] = shape;
@@ -199,7 +198,7 @@ namespace SoLeap
             world.Add(palmShape);
 
             // create rigid body
-            palmBody = world.CreateAndAddRigidBody(1.0f, ConvertMatrix(hand.PalmTransformation), palmShape, "palm", useKinematicBodies);
+            palmBody = world.CreateAndAddRigidBody(0.0f, ConvertMatrix(hand.PalmTransformation), palmShape, "palm", useKinematicBodies);
         }
 
         public void Update(Domain.Hand hand)
