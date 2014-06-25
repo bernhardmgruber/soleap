@@ -161,7 +161,7 @@ namespace SoLeap.Worlds
                 shape.CalculateLocalInertia(mass, out localInertia);
 
             // using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-            var rbInfo = new RigidBodyConstructionInfo(mass, new DefaultMotionState(startTransform), shape, localInertia) { Friction = 0.5f, RollingFriction = 0.5f };
+            var rbInfo = new RigidBodyConstructionInfo(mass, new DefaultMotionState(startTransform), shape, localInertia) { Friction = 1.0f, RollingFriction = 1.0f };
             var body = new RigidBody(rbInfo);
             rbInfo.Dispose();
 
