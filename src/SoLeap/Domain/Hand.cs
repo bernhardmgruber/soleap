@@ -19,10 +19,12 @@ namespace SoLeap.Domain
 
         public Vector3D Direction { get; private set; }
 
+        public bool IsRight { get; private set; }
+
         public IList<Finger> Fingers { get; private set; }
 
         public Hand(long id, Point3D palmPosition, Vector3D palmNormal, double palmWidth, double palmHeight, Matrix3D palmTransformation,
-            Vector3D direction, IList<Finger> fingers)
+            Vector3D direction, bool isRight, IList<Finger> fingers)
         {
             Id = id;
             PalmPosition = palmPosition;
@@ -31,6 +33,7 @@ namespace SoLeap.Domain
             PalmHeight = palmHeight;
             PalmTransformation = palmTransformation;
             Direction = direction;
+            IsRight = isRight;
             Fingers = fingers;
         }
 

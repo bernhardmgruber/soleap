@@ -43,9 +43,10 @@ namespace SoLeap.LeapProvider
             basis.OffsetY = palmPosition.Y;
             basis.OffsetZ = palmPosition.Z;
             Vector3D handDirection = ConvertDirection(leapHand.Direction);
+            bool isRight = leapHand.IsRight;
             IList<Finger> fingers = ConvertFingers(leapHand.Fingers);
 
-            return new Hand(leapHand.Id, palmPosition, palmNormal, palmWidth, palmHeight, basis, handDirection, fingers);
+            return new Hand(leapHand.Id, palmPosition, palmNormal, palmWidth, palmHeight, basis, handDirection, isRight, fingers);
         }
 
         private IList<Finger> ConvertFingers(FingerList leapFingers)

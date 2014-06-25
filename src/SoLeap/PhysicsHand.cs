@@ -131,6 +131,13 @@ namespace SoLeap
             left.Normalize();
             right.Normalize();
 
+            if (hand.IsRight)
+            {
+                var tmp = left;
+                left = right;
+                right = tmp;
+            }
+
             left *= (float)leftMetacarpalBone.Width / 2.0f;
             right *= (float)rightMetacarpalBone.Width / 2.0f;
 
