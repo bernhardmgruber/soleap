@@ -11,7 +11,7 @@ namespace SoLeap.Worlds
 
         private const float BallRadius = 25f;
 
-        private const float SceneHeight = 100f;
+        private const float FloorHeight = 100f;
 
         public BowlWorld()
             : base("Bowl", new Vector3(0f, -500, 0f)) { }
@@ -19,10 +19,10 @@ namespace SoLeap.Worlds
         protected override void SetupScene()
         {
             // create static ground
-            BoxShape groundShape = new BoxShape(1000f, 10f, 1000f);
+            var groundShape = new StaticPlaneShape(Vector3.UnitY, FloorHeight);
             Add(groundShape);
 
-            CreateAndAddRigidBodyAndRenderable(0f, Matrix.Translation(0, SceneHeight, 0), groundShape, Colors.LightSlateGray, "Ground");
+            CreateAndAddRigidBodyAndRenderable(0f, Matrix.Identity, groundShape, Colors.LightSlateGray, "Ground");
 
             // create two bowls
             float innerDiameter2 = (BowlDiameter - BowlThickness) / 2.0f;
@@ -38,14 +38,14 @@ namespace SoLeap.Worlds
             bowlShape.AddChildShape(Matrix.Translation(0, -(BowlHeight + BowlThickness) / 2.0f, 0), new BoxShape(diameter2, thickness2, diameter2));
             Add(bowlShape);
 
-            CreateAndAddRigidBodyAndRenderable(30.0f, Matrix.Translation(-BowlDiameter, BowlHeight + BowlThickness + SceneHeight, 0), bowlShape, Colors.DarkRed, "Left bowl");
-            CreateAndAddRigidBodyAndRenderable(30.0f, Matrix.Translation(+BowlDiameter, BowlHeight + BowlThickness + SceneHeight, 0), bowlShape, Colors.DarkRed, "Right bowl");
+            CreateAndAddRigidBodyAndRenderable(30.0f, Matrix.Translation(-BowlDiameter, BowlHeight + BowlThickness + FloorHeight, 0), bowlShape, Colors.DarkRed, "Left bowl");
+            CreateAndAddRigidBodyAndRenderable(30.0f, Matrix.Translation(+BowlDiameter, BowlHeight + BowlThickness + FloorHeight, 0), bowlShape, Colors.DarkRed, "Right bowl");
 
             // create the ball
             SphereShape ballShape = new SphereShape(BallRadius);
             Add(ballShape);
 
-            CreateAndAddRigidBodyAndRenderable(10.0f, Matrix.Translation(-BowlDiameter, BowlHeight * 2.0f + SceneHeight, 0), ballShape, Colors.LightGreen, "Ball");
+            CreateAndAddRigidBodyAndRenderable(10.0f, Matrix.Translation(-BowlDiameter, BowlHeight * 2.0f + FloorHeight, 0), ballShape, Colors.LightGreen, "Ball");
         }
     }
 }
