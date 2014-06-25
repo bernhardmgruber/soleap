@@ -7,12 +7,14 @@ namespace SoLeap.Worlds
     public class RubicsWorld : AbstractWorld
     {
         public RubicsWorld()
-            : base("Rubics", new Vector3(0, -10, 0))
+            : base("Rubics", new Vector3(0, -500, 0))
         { }
 
-        private const float subCubeSize = 1.5f;
+        private const float FloorHeight = 100f;
+
+        private const float subCubeSize = 20f;
         private const float subCubeMass = 1.0f;
-        private const float bevel = 0.2f;
+        private const float bevel = 2f;
 
         private const float subCubeGap = 0.1f;
 
@@ -24,7 +26,7 @@ namespace SoLeap.Worlds
         protected override void SetupScene()
         {
             // create static ground
-            BoxShape groundShape = new BoxShape(20, 0.5f, 20);
+            var groundShape = new StaticPlaneShape(Vector3.UnitY, FloorHeight);
             Add(groundShape);
 
             CreateAndAddRigidBodyAndRenderable(0, Matrix.Translation(0, -4, 0), groundShape, Colors.LightSlateGray, "Ground");
