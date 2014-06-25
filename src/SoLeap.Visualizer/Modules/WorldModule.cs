@@ -14,6 +14,7 @@ namespace SoLeap.Visualizer.Modules
             Bind<IWorld>().To<DumbbellWorld>();
             Bind<IWorld>().To<SimpleWallWorld>();
             Bind<IWorld>().To<HoleWorld>();
+            Bind<IWorld>().To<LeverWorld>();
             //Bind<IWorld>().To<RubicsWorld>();
         }
     }
