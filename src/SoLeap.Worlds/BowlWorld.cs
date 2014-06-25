@@ -8,6 +8,7 @@ namespace SoLeap.Worlds
         private const float BowlDiameter = 150f;
         private const float BowlHeight = 40f;
         private const float BowlThickness = 7f;
+        private const float BowlDistance = 100;
 
         private const float BallRadius = 25f;
 
@@ -29,6 +30,7 @@ namespace SoLeap.Worlds
             float diameter2 = BowlDiameter / 2.0f;
             float thickness2 = BowlThickness / 2.0f;
             float height2 = BowlHeight / 2.0f;
+            float dist2 = BowlDistance / 2.0f + diameter2;
 
             CompoundShape bowlShape = new CompoundShape();
             bowlShape.AddChildShape(Matrix.Translation(-innerDiameter2, 0, 0), new BoxShape(thickness2, height2, diameter2));
@@ -38,8 +40,8 @@ namespace SoLeap.Worlds
             bowlShape.AddChildShape(Matrix.Translation(0, -(BowlHeight + BowlThickness) / 2.0f, 0), new BoxShape(diameter2, thickness2, diameter2));
             Add(bowlShape);
 
-            CreateAndAddRigidBodyAndRenderable(30.0f, Matrix.Translation(-BowlDiameter, BowlHeight + BowlThickness + FloorHeight, 0), bowlShape, Colors.DarkRed, "Left bowl");
-            CreateAndAddRigidBodyAndRenderable(30.0f, Matrix.Translation(+BowlDiameter, BowlHeight + BowlThickness + FloorHeight, 0), bowlShape, Colors.DarkRed, "Right bowl");
+            CreateAndAddRigidBodyAndRenderable(30.0f, Matrix.Translation(-dist2, BowlHeight + BowlThickness + FloorHeight, 0), bowlShape, Colors.DarkRed, "Left bowl");
+            CreateAndAddRigidBodyAndRenderable(30.0f, Matrix.Translation(+dist2, BowlHeight + BowlThickness + FloorHeight, 0), bowlShape, Colors.DarkRed, "Right bowl");
 
             // create the ball
             SphereShape ballShape = new SphereShape(BallRadius);
