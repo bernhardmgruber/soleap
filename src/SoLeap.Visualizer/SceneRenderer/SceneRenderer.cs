@@ -109,7 +109,7 @@ namespace SoLeap.Visualizer
                 NearPlane = 1.0f,
                 FarPlane = 10000.0f,
                 MoveScaler = 100.0f,
-                //EnableYAxisMovement = false
+                AspectRatio = (float)ActualWidth / (float)ActualHeight
             };
         }
 
@@ -125,7 +125,6 @@ namespace SoLeap.Visualizer
                 return;
 
             Scene.Update();
-
 
             var lightsArray = new DirectionalLight[DirectionalLight.MaxLights] {
                 new DirectionalLight { Direction = new Vector3(-0.5f, -1.0f, -0.5f), Color = Color.White.ToColor3(), Enabled = true },

@@ -7,23 +7,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         x:Class="SoLeap.Visualizer.MainWindowView"
-        Title="SoLeap - Hand Reconstruction" Height="600" Width="1000"
+        Title="SoLeap - Hand Reconstruction" Height="768" Width="1024"
         d:DataContext="{d:DesignInstance Type=visualizer:MainWindowViewModel}"
         xmlns:diagnostics="clr-namespace:System.Diagnostics;assembly=WindowsBase"
         Name="window"
         >
     <Grid>
-        <Grid.ColumnDefinitions>
+        <!--<Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="200" />
-        </Grid.ColumnDefinitions>
+        </Grid.ColumnDefinitions>-->
 
         <visualizer:SceneRenderer x:Name="Renderer" 
                                   Scene="{Binding CurrentScene, Mode=OneWay}" 
                                   HandsManager="{Binding HandsManager, Mode=OneWay}"/>
         <wpf:DXElement Grid.Column="0" Renderer="{Binding ElementName=Renderer}"/>
         
-        <StackPanel Grid.Column="1" Orientation="Vertical">
+        <StackPanel Grid.Column="1" Orientation="Vertical" Width="200" HorizontalAlignment="Right">
             <GroupBox Header="Scene">
                 <StackPanel>
                     <ComboBox x:Name="SceneBox"
@@ -32,9 +32,9 @@
                     <Button Content="Reload Scene" Command="{Binding ReloadSceneCommand}" />
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="Leap Motion">
+            <!--<GroupBox Header="Leap Motion">
                 <Button Content="Recalibrate using current frame" Command="{Binding RecalibrateCommand}" />
-            </GroupBox>
+            </GroupBox>-->
         </StackPanel>
     </Grid>
 </Window>

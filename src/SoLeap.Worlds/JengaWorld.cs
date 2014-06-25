@@ -41,11 +41,11 @@ namespace SoLeap.Worlds
                         transform = Matrix.Multiply(transform, Matrix.RotationY((float)Math.PI / 2.0f));
 
                     var color = Colors.BurlyWood;
-                    color.R += (byte)(r.Next(11) - 5);
-                    color.G += (byte)(r.Next(11) - 5);
-                    color.B += (byte)(r.Next(11) - 5);
+                    color.R += (byte)(r.Next(41) - 20);
+                    color.G += (byte)(r.Next(41) - 20);
+                    color.B += (byte)(r.Next(41) - 20);
 
-                    CreateAndAddRigidBodyAndRenderable(1.0f, transform, brick, color, "brick " + i + " " + j);
+                    CreateAndAddRigidBodyAndRenderable(10.0f, transform, brick, color, "brick " + i + " " + j, 0.5f);
                 }
             }
         }

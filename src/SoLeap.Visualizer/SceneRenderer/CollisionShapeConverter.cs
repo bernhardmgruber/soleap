@@ -329,6 +329,7 @@ namespace SoLeap.Visualizer
                 var b = positions[2] - positions[1];
 
                 var normal = Vector3.Cross(a, b);
+                normal.Normalize();
 
                 for (int j = 0; j < 3; j++)
                     vertices.Add(new VertexPositionNormal(positions[j], normal));

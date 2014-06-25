@@ -110,7 +110,7 @@ namespace SoLeap
                 world.Add(shape);
 
                 // create rigid body
-                body = world.CreateAndAddRigidBody(0.0f, ConvertMatrix(bone.Transformation), shape, userObjectString, useKinematicBodies);
+                body = world.CreateAndAddRigidBody(0.0f, ConvertMatrix(bone.Transformation), shape, userObjectString, 1.0f, useKinematicBodies);
 
                 // store shape and body
                 fingerShapes[fingerType][boneType] = shape;
@@ -147,7 +147,7 @@ namespace SoLeap
             groundShapePoints.Add(ConvertPosition(hand.GetFinger(FingerType.Index).GetBone(BoneType.Metacarpal).NextJoint) + right);
             groundShapePoints.Add(ConvertPosition(hand.GetFinger(FingerType.Thumb).GetBone(BoneType.Metacarpal).PrevJoint));
 
-            // now extrude palm 3D shape using the palm's width
+            // extrude palm 3D shape using the palm's width
             Vector3 normal = ConvertDirection(hand.PalmNormal);
             normal.Normalize();
 
@@ -156,29 +156,33 @@ namespace SoLeap
             var lowerPointsTrans = groundShapePoints.Select(p => p + normal * palmHeight2).ToList();
             var upperPointsTrans = groundShapePoints.Select(p => p - normal * palmHeight2).ToList();
 
-            // now remove the palm's transformation from them
+            // remove the palm's transformation from them
             var inverseTransformation = Matrix.Invert(ConvertMatrix(hand.PalmTransformation));
 
             var lowerPoints = lowerPointsTrans.Select(p => { Vector4 v = Vector3.Transform(p, inverseTransformation); return new Vector3(v.X, v.Y, v.Z); }).ToList();
             var upperPoints = upperPointsTrans.Select(p => { Vector4 v = Vector3.Transform(p, inverseTransformation); return new Vector3(v.X, v.Y, v.Z); }).ToList();
 
-            // now triangulate ;)
+            // triangulate ;)
             var mesh = new TriangleMesh();
 
-            Action<IList<Vector3>, TriangleMesh> triangulatePolygon = (ps, m) => {
+            Action<IList<Vector3>, TriangleMesh, bool> triangulatePolygon = (ps, m, reverseWinding) => {
                 // triangle fan
                 var first = ps.First();
                 var last = ps[1];
                 for (int i = 2; i < ps.Count; i++) {
                     var cur = ps[i];
-                    m.AddTriangle(first, last, cur, false);
+                    if(reverseWinding)
+                        m.AddTriangle(first, cur, last, false);
+                    else
+                        m.AddTriangle(first, last, cur, false);
+
                     last = cur;
                 }
             };
 
             // generate top and bottom
-            triangulatePolygon(lowerPoints, mesh);
-            triangulatePolygon(upperPoints, mesh);
+            triangulatePolygon(lowerPoints, mesh, false);
+            triangulatePolygon(upperPoints, mesh, true);
 
             // generate side
             Debug.Assert(lowerPoints.Count == upperPoints.Count);
@@ -198,7 +202,7 @@ namespace SoLeap
             world.Add(palmShape);
 
             // create rigid body
-            palmBody = world.CreateAndAddRigidBody(0.0f, ConvertMatrix(hand.PalmTransformation), palmShape, "palm", useKinematicBodies);
+            palmBody = world.CreateAndAddRigidBody(0.0f, ConvertMatrix(hand.PalmTransformation), palmShape, "palm", 1.0f, useKinematicBodies);
         }
 
         public void Update(Domain.Hand hand)
