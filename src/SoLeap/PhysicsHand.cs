@@ -221,15 +221,7 @@ namespace SoLeap
 
         private void UpdateBody(RigidBody body, Matrix3D transformation)
         {
-            var newT = ConvertMatrix(transformation);
-            var oldT = body.MotionState.WorldTransform;
-            var delta = Matrix.Multiply(Matrix.Invert(oldT), newT);
-
-            //body.ProceedToTransform(newT);
-            //body.ApplyCentralForce(newT.Origin);
-            body.MotionState.WorldTransform = newT;
-            //body.ClearForces();
-            //body.LinearVelocity = delta.Origin;
+            body.MotionState.WorldTransform = ConvertMatrix(transformation);
         }
 
         private void ForAllBones(Action<FingerType, BoneType> func)

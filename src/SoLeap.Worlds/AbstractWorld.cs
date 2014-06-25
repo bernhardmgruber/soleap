@@ -17,7 +17,7 @@ namespace SoLeap.Worlds
         // the last time a physics update of the secene was done
         private long lastUpdate;
 
-        private Vector3 gravity;
+        private readonly Vector3 gravity;
 
         public string Name { get; private set; }
 
@@ -36,12 +36,6 @@ namespace SoLeap.Worlds
 
         // all shapes that are used in collision
         private AlignedCollisionShapeArray collisionShapes;
-
-        public Vector3 Gravity
-        {
-            get { return world.Gravity; }
-            set { world.Gravity = value; }
-        }
 
         public IDebugDraw DebugDrawer
         {

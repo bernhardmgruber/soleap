@@ -12,11 +12,11 @@ namespace SoLeap.Worlds
 
         private const float FloorHeight = 100f;
 
-        private const float subCubeSize = 20f;
-        private const float subCubeMass = 1.0f;
-        private const float bevel = 2f;
+        private const float subCubeSize = 30f;
+        private const float subCubeMass = 3.0f;
+        private const float bevel = 5f;
 
-        private const float subCubeGap = 0.1f;
+        private const float subCubeGap = 3f;
 
         private CollisionShape CreateSubCubeShape()
         {
@@ -81,7 +81,7 @@ namespace SoLeap.Worlds
             Add(new Point2PointConstraint(bodies[0, 2, 0], bodies[1, 1, 1], new Vector3(-cubeDist2_r3, +cubeDist2_r3, -cubeDist2_r3), Vector3.Zero));
             Add(new Point2PointConstraint(bodies[1, 1, 1], bodies[2, 0, 2], Vector3.Zero, new Vector3(+cubeDist2_r3, -cubeDist2_r3, +cubeDist2_r3)));
 
-            // add distance constraints between center and edges
+            //// add distance constraints between center and edges
             float cubeDist2_r2 = cubeDist2 * (float)Math.Sqrt(2);
 
             Add(new Point2PointConstraint(bodies[0, 1, 0], bodies[1, 1, 1], new Vector3(-cubeDist2_r2, 0, -cubeDist2_r2), Vector3.Zero));

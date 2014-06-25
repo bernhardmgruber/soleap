@@ -21,7 +21,7 @@ namespace SoLeap.Visualizer
 
         private IList<Tuple<int, int>> shapeRanges;
 
-        private ConstantBuffer<ObjectConstants> objectConstantsBuffer;
+        private readonly ConstantBuffer<ObjectConstants> objectConstantsBuffer;
 
         public GraphicsHand(PhysicsHand physicsHand, Device device)
         {
