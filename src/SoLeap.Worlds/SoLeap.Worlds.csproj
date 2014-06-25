@@ -210,13 +210,13 @@
   <ItemGroup>
     <Compile Include="AbstractWorld.cs" />
     <Compile Include="BowlWorld.cs" />
+    <Compile Include="JengaWorld.cs" />
     <Compile Include="LeverWorld.cs" />
     <Compile Include="CubesWorld.cs" />
     <Compile Include="DumbbellWorld.cs" />
     <Compile Include="HoleWorld.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RubicsWorld.cs" />
-    <Compile Include="SimpleWallWorld.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SoLeap\SoLeap.csproj">

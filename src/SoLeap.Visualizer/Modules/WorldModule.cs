@@ -12,10 +12,10 @@ namespace SoLeap.Visualizer.Modules
             Bind<IWorld>().To<CubesWorld>();
             Bind<IWorld>().To<BowlWorld>();
             Bind<IWorld>().To<DumbbellWorld>();
-            Bind<IWorld>().To<SimpleWallWorld>();
             Bind<IWorld>().To<HoleWorld>();
             Bind<IWorld>().To<LeverWorld>();
-            //Bind<IWorld>().To<RubicsWorld>();
+            Bind<IWorld>().To<JengaWorld>();
+            Bind<IWorld>().To<RubicsWorld>();
         }
     }
 }
