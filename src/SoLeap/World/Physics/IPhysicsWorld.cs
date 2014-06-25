@@ -12,9 +12,9 @@ namespace SoLeap.World
 
         void Add(TypedConstraint constraint);
 
-        RigidBody CreateAndAddRigidBody(float mass, Matrix startTransform, CollisionShape shape, object userObject = null, bool isKinematic = false);
+        RigidBody CreateAndAddRigidBody(float mass, Matrix startTransform, CollisionShape shape, object userObject = null, float friction = 1.0f, bool isKinematic = false);
 
-        RigidBody CreateAndAddRigidBodyAndRenderable(float mass, Matrix startTransform, CollisionShape shape, Color color = default(Color), object userObject = null, bool isKinematic = false);
+        RigidBody CreateAndAddRigidBodyAndRenderable(float mass, Matrix startTransform, CollisionShape shape, Color color = default(Color), object userObject = null, float friction = 1.0f, bool isKinematic = false);
 
         void Update();
 

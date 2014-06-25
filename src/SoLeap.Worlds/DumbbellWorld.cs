@@ -41,7 +41,7 @@ namespace SoLeap.Worlds
             Add(barShape);
             Add(dumbbellshape);
 
-            body = CreateAndAddRigidBodyAndRenderable(1f, Matrix.Translation(0, FloorHeight + weightCylinderDiameter2 * 2, 0), dumbbellshape, Colors.Gray, "Dumbbell");
+            body = CreateAndAddRigidBodyAndRenderable(100f, Matrix.Translation(0, FloorHeight + weightCylinderDiameter2 * 2, 0), dumbbellshape, Colors.Gray, "Dumbbell");
             body.SetDamping(0.2f, 0.2f);
         }
     }

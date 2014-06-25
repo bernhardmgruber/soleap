@@ -45,7 +45,7 @@ namespace SoLeap.Worlds
                     color.G += (byte)(r.Next(41) - 20);
                     color.B += (byte)(r.Next(41) - 20);
 
-                    CreateAndAddRigidBodyAndRenderable(1.0f, transform, brick, color, "brick " + i + " " + j);
+                    CreateAndAddRigidBodyAndRenderable(10.0f, transform, brick, color, "brick " + i + " " + j, 0.5f);
                 }
             }
         }
