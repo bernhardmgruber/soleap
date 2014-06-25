@@ -7,9 +7,9 @@ namespace SoLeap.Worlds
 {
     public class JengaWorld : AbstractWorld
     {
-        private const float BrickLength = 100.0f;
-        private const float BrickHeight = 20.0f;
-        private const int TowerHeight = 2;
+        private const float BrickLength = 120.0f;
+        private const float BrickHeight = 40.0f;
+        private const int TowerHeight = 7;
 
         private const float FloorHeight = 100f;
 
@@ -30,6 +30,7 @@ namespace SoLeap.Worlds
             const float brickHeight2 = BrickHeight / 2.0f;
 
             var brick = new BoxShape(brickLength2, brickHeight2, brickLength2 / 3.0f);
+            var r = new Random();
 
             for (int i = 0; i < TowerHeight; i++)
             {
@@ -38,7 +39,13 @@ namespace SoLeap.Worlds
                     var transform = Matrix.Translation(0, FloorHeight + i * BrickHeight, -brickLength3 + brickLength3 * j);
                     if ((i & 1) == 0)
                         transform = Matrix.Multiply(transform, Matrix.RotationY((float)Math.PI / 2.0f));
-                    CreateAndAddRigidBodyAndRenderable(1.0f, transform, brick, Colors.BurlyWood, "brick " + i + " " + j);
+
+                    var color = Colors.BurlyWood;
+                    color.R += (byte)(r.Next(11) - 5);
+                    color.G += (byte)(r.Next(11) - 5);
+                    color.B += (byte)(r.Next(11) - 5);
+
+                    CreateAndAddRigidBodyAndRenderable(1.0f, transform, brick, color, "brick " + i + " " + j);
                 }
             }
         }
